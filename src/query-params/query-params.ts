@@ -39,6 +39,14 @@ export class QueryParams implements IQueryParams {
     });
   }
 
+  protected navigate(url: string, replace?: boolean) {
+    if (replace) {
+      this.history.replaceState(null, '', url);
+    } else {
+      this.history.pushState(null, '', url);
+    }
+  }
+
   set(data: AnyObject, replace?: boolean) {
     const url = new URL(this.location.href);
 
@@ -48,11 +56,7 @@ export class QueryParams implements IQueryParams {
 
     const nextUrl = `${url.pathname}${searchParams ? `?${searchParams}` : ''}`;
 
-    if (replace) {
-      this.history.replaceState(null, '', nextUrl);
-    } else {
-      this.history.pushState(null, '', nextUrl);
-    }
+    this.navigate(nextUrl, replace);
   }
 
   update(data: AnyObject, replace?: boolean) {
