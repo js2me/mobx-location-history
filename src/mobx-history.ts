@@ -76,32 +76,27 @@ export class MobxHistory
   }
 
   protected handlePopState() {
-    console.info('ff', 'handlePopState');
     this.historyUpdate.reportChanged();
   }
 
   protected handlePushState() {
-    console.info('ff', 'handlePushState');
     this.historyUpdate.reportChanged();
   }
 
   protected handleReplaceState() {
-    console.info('ff', 'handleReplaceState');
     this.historyUpdate.reportChanged();
   }
 
   protected handleHashChange() {
-    console.info('ff', 'handleHashChange');
     this.historyUpdate.reportChanged();
   }
 
   pushState(...args: Parameters<History['pushState']>): void {
-    console.info('ff', 'pushState');
     alwaysBoundOriginHistoryMethods.pushState!(...args);
     this.historyUpdate.reportChanged();
   }
+
   replaceState(...args: Parameters<History['replaceState']>): void {
-    console.info('ff', 'replaceState');
     alwaysBoundOriginHistoryMethods.replaceState!(...args);
     this.historyUpdate.reportChanged();
   }
