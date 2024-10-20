@@ -1,6 +1,6 @@
 {
   "name": "mobx-location-history",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "",
   "scripts": {
     "clean": "rimraf dist",
