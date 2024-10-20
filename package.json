@@ -1,0 +1,33 @@
+{
+  "name": "mobx-location",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "clean": "rimraf dist",
+    "check": "eslint . --fix",
+
+    "prebuild": "npm run clean && npm run check",
+    "build": "tsc",
+    "postbuild": "node ./post-build.mjs",
+
+    "prepub": "pnpm run build",
+    "pub": "cd dist && npm publish",
+    "postpub": "npm run clean"
+  },
+  "keywords": ["mobx", "history", "location"],
+  "author": "js2me",
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {
+    "mobx": "^6.13.3",
+    "disposer-util": "^1.0.11"
+  },
+  "devDependencies": {
+    "@types/node": "22.7.7",
+    "@types/lodash-es": "4.17.12",
+    "eslint": "8.57.0",
+    "typescript": "5.6.3",
+    "js2me-eslint-config": "1.0.4",
+    "js2me-exports-post-build-script": "1.0.1"
+  }
+}
