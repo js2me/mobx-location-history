@@ -1,5 +1,5 @@
 {
-  "name": "mobx-location",
+  "name": "mobx-location-history",
   "version": "0.0.1",
   "description": "",
   "scripts": {
@@ -16,7 +16,7 @@
     "pub": "cd dist && npm publish",
     "postpub": "npm run clean"
   },
-  "keywords": ["mobx", "history", "location"],
+  "keywords": ["mobx", "history", "location", "observable"],
   "author": "js2me",
   "license": "MIT",
   "dependencies": {
