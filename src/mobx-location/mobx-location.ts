@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Disposable, Disposer, IDisposer } from 'disposer-util';
+import { Disposer, IDisposer } from 'disposer-util';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { MobxHistory } from './mobx-history';
+import { IMobxHistory } from '../mobx-history';
+
+import { IMobxLocation } from './mobx-location.types';
 
 const locationReadableFields = [
   'hash',
@@ -16,12 +18,9 @@ const locationReadableFields = [
   'search',
 ] as const;
 
-type LocationIgnoreFields = 'ancestorOrigins';
-
-export class MobxLocation
-  implements Omit<Location, LocationIgnoreFields>, Disposable
-{
-  disposer: IDisposer;
+export class MobxLocation implements IMobxLocation {
+  protected disposer: IDisposer;
+  protected originLocation: Location;
 
   hash!: string;
   host!: string;
@@ -31,13 +30,19 @@ export class MobxLocation
   pathname!: string;
   port!: string;
   protocol!: string;
+  ancestorOrigins!: DOMStringList;
   search!: string;
 
   constructor(
-    private history: MobxHistory,
+    private history: IMobxHistory,
     disposer?: IDisposer,
   ) {
     this.disposer = disposer || new Disposer();
+    this.originLocation = location;
+
+    /**
+     * Проводит инициализацию начальных значений всех свойств из location
+     */
     this.updateLocationData();
 
     makeObservable<this, 'updateLocationData'>(this, {
@@ -49,35 +54,39 @@ export class MobxLocation
       pathname: observable,
       port: observable,
       protocol: observable,
+      ancestorOrigins: observable.ref,
       search: observable,
       updateLocationData: action.bound,
     });
 
     this.disposer.add(
-      reaction(() => this.history.data, this.updateLocationData),
+      reaction(
+        () => [this.history.state, this.history.length],
+        this.updateLocationData,
+      ),
     );
   }
 
   protected updateLocationData() {
     locationReadableFields.forEach((field) => {
-      this[field] = location[field];
+      this[field] = this.originLocation[field];
     });
   }
 
   toString(): string {
-    return location.toString();
+    return this.originLocation.toString();
   }
 
   assign(...args: Parameters<Location['assign']>): void {
-    return location.assign(...args);
+    return this.originLocation.assign(...args);
   }
 
   reload(): void {
-    return location.reload();
+    return this.originLocation.reload();
   }
 
   replace(...args: Parameters<Location['assign']>): void {
-    return location.replace(...args);
+    return this.originLocation.replace(...args);
   }
 
   dispose(): void {

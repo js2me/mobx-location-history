@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { Disposable, Disposer, IDisposer } from 'disposer-util';
+import { Disposer, IDisposer } from 'disposer-util';
 import { action, computed, createAtom, makeObservable } from 'mobx';
+
+import { IMobxHistory } from './mobx-history.types';
 
 const alwaysBoundOriginHistoryMethods: Partial<History> = {};
 
-export class MobxHistory
-  implements Omit<History, 'scrollRestoration'>, Disposable
-{
-  disposer: IDisposer;
-
-  historyUpdate = createAtom('history_update');
+export class MobxHistory implements IMobxHistory {
+  protected disposer: IDisposer;
+  protected historyUpdateAtom = createAtom('history_update');
+  protected originHistory: History;
 
   constructor(disposer?: IDisposer) {
     this.disposer = disposer || new Disposer();
+    this.originHistory = history;
 
     makeObservable<
       this,
@@ -67,61 +68,75 @@ export class MobxHistory
     this.disposer.add(this.handlePopState);
   }
 
-  get data(): Pick<History, 'state' | 'length'> {
-    this.historyUpdate.reportObserved();
+  get scrollRestoration() {
+    this.historyUpdateAtom.reportObserved();
+    return this.originHistory.scrollRestoration;
+  }
+
+  set scrollRestoration(scrollRestoration: ScrollRestoration) {
+    this.historyUpdateAtom.reportChanged();
+    this.originHistory.scrollRestoration = scrollRestoration;
+  }
+
+  get data(): Pick<History, 'state' | 'length' | 'scrollRestoration'> {
+    this.historyUpdateAtom.reportObserved();
+
     return {
       length: history.length,
       state: history.state,
+      scrollRestoration: history.scrollRestoration,
     };
   }
 
   protected handlePopState() {
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   protected handlePushState() {
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   protected handleReplaceState() {
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   protected handleHashChange() {
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   pushState(...args: Parameters<History['pushState']>): void {
     alwaysBoundOriginHistoryMethods.pushState!(...args);
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   replaceState(...args: Parameters<History['replaceState']>): void {
     alwaysBoundOriginHistoryMethods.replaceState!(...args);
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   get length() {
-    return this.data.length;
+    this.historyUpdateAtom.reportObserved();
+    return this.originHistory.length;
   }
 
   get state() {
-    return this.data.state;
+    this.historyUpdateAtom.reportObserved();
+    return this.originHistory.state;
   }
 
   back(): void {
     alwaysBoundOriginHistoryMethods.back!();
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   forward(): void {
     alwaysBoundOriginHistoryMethods.forward!();
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   go(...args: Parameters<History['go']>): void {
     alwaysBoundOriginHistoryMethods.go!(...args);
-    this.historyUpdate.reportChanged();
+    this.historyUpdateAtom.reportChanged();
   }
 
   dispose(): void {

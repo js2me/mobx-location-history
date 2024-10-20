@@ -10,6 +10,8 @@
     "build": "tsc",
     "postbuild": "node ./post-build.mjs",
 
+    "build:watch": "tsc --watch",
+
     "prepub": "pnpm run build",
     "pub": "cd dist && npm publish",
     "postpub": "npm run clean"
@@ -17,7 +19,9 @@
   "keywords": ["mobx", "history", "location"],
   "author": "js2me",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "yammies": "^2.0.8"
+  },
   "peerDependencies": {
     "mobx": "^6.13.3",
     "disposer-util": "^1.0.11"
