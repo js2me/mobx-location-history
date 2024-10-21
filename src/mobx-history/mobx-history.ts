@@ -35,27 +35,11 @@ export class MobxHistory implements IMobxHistory {
       data: computed,
     });
 
-    const overrideHistoryMethod = (method: keyof History, handler: any) => {
-      // @ts-ignore
-      alwaysBoundOriginHistoryMethods[method] =
-        method in alwaysBoundOriginHistoryMethods
-          ? alwaysBoundOriginHistoryMethods[method]
-          : globalThis.history[method].bind(globalThis.history);
-
-      // @ts-ignore
-      globalThis.history[method] = handler;
-
-      this.disposer.add(() => {
-        // @ts-ignore
-        globalThis.history[method] = alwaysBoundOriginHistoryMethods[method];
-      });
-    };
-
-    overrideHistoryMethod('back', this.back);
-    overrideHistoryMethod('go', this.go);
-    overrideHistoryMethod('forward', this.forward);
-    overrideHistoryMethod('replaceState', this.replaceState);
-    overrideHistoryMethod('pushState', this.pushState);
+    this.overrideHistoryMethod('back', this.back);
+    this.overrideHistoryMethod('go', this.go);
+    this.overrideHistoryMethod('forward', this.forward);
+    this.overrideHistoryMethod('replaceState', this.replaceState);
+    this.overrideHistoryMethod('pushState', this.pushState);
 
     /**
      * History API docs @see https://developer.mozilla.org/en-US/docs/Web/API/History
@@ -66,6 +50,22 @@ export class MobxHistory implements IMobxHistory {
     globalThis.addEventListener('hashchange', this.handleHashChange);
 
     this.disposer.add(this.handlePopState);
+  }
+
+  protected overrideHistoryMethod(method: keyof History, handler: any) {
+    // @ts-ignore
+    alwaysBoundOriginHistoryMethods[method] =
+      method in alwaysBoundOriginHistoryMethods
+        ? alwaysBoundOriginHistoryMethods[method]
+        : this.originHistory[method].bind(this.originHistory);
+
+    // @ts-ignore
+    this.originHistory[method] = handler;
+
+    this.disposer.add(() => {
+      // @ts-ignore
+      this.originHistory[method] = alwaysBoundOriginHistoryMethods[method];
+    });
   }
 
   get scrollRestoration() {
@@ -82,9 +82,9 @@ export class MobxHistory implements IMobxHistory {
     this.historyUpdateAtom.reportObserved();
 
     return {
-      length: history.length,
-      state: history.state,
-      scrollRestoration: history.scrollRestoration,
+      length: this.originHistory.length,
+      state: this.originHistory.state,
+      scrollRestoration: this.originHistory.scrollRestoration,
     };
   }
 
