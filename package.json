@@ -1,6 +1,6 @@
 {
   "name": "mobx-location-history",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "scripts": {
     "clean": "rimraf dist",
@@ -11,7 +11,12 @@
     "pub:minor": "PUBLISH=true PUBLISH_VERSION=minor pnpm run build",
     "pub:major": "PUBLISH=true PUBLISH_VERSION=major pnpm run build"
   },
-  "keywords": ["mobx", "history", "location", "observable"],
+  "keywords": [
+    "mobx",
+    "history",
+    "location",
+    "observable"
+  ],
   "author": "js2me",
   "license": "MIT",
   "dependencies": {
