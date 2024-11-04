@@ -1,4 +1,4 @@
-import { postBuildScript, publishScript } from './dist/index.js';
+import { postBuildScript, publishScript } from 'js2me-exports-post-build-script';
 
 postBuildScript({
   buildDir: 'dist',
@@ -15,8 +15,9 @@ postBuildScript({
         commitAllCurrentChanges: true,
         createTag: true,
         githubRepoLink: 'https://github.com/js2me/mobx-location-history',
-        cleanupCommand: 'pnpm clean',  
-      });
+        cleanupCommand: 'pnpm clean', 
+      })
     }
   }
 });
+
