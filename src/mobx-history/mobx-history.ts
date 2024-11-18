@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { Disposer, IDisposer } from 'disposer-util';
+import { LinkedAbortController } from 'linked-abort-controller';
 import { action, computed, createAtom, makeObservable } from 'mobx';
 
 import { IMobxHistory } from './mobx-history.types';
@@ -8,12 +8,12 @@ import { IMobxHistory } from './mobx-history.types';
 const alwaysBoundOriginHistoryMethods: Partial<History> = {};
 
 export class MobxHistory implements IMobxHistory {
-  protected disposer: IDisposer;
+  protected abortController: AbortController;
   protected historyUpdateAtom = createAtom('history_update');
   protected originHistory: History;
 
-  constructor(disposer?: IDisposer) {
-    this.disposer = disposer || new Disposer();
+  constructor(abortSignal?: AbortSignal) {
+    this.abortController = new LinkedAbortController(abortSignal);
     this.originHistory = history;
 
     makeObservable<
@@ -44,12 +44,18 @@ export class MobxHistory implements IMobxHistory {
     /**
      * History API docs @see https://developer.mozilla.org/en-US/docs/Web/API/History
      */
-    globalThis.addEventListener('popstate', this.handlePopState);
-    globalThis.addEventListener('pushState', this.handlePushState);
-    globalThis.addEventListener('replaceState', this.handleReplaceState);
-    globalThis.addEventListener('hashchange', this.handleHashChange);
-
-    this.disposer.add(this.handlePopState);
+    globalThis.addEventListener('popstate', this.handlePopState, {
+      signal: this.abortController.signal,
+    });
+    globalThis.addEventListener('pushState', this.handlePushState, {
+      signal: this.abortController.signal,
+    });
+    globalThis.addEventListener('replaceState', this.handleReplaceState, {
+      signal: this.abortController.signal,
+    });
+    globalThis.addEventListener('hashchange', this.handleHashChange, {
+      signal: this.abortController.signal,
+    });
   }
 
   protected overrideHistoryMethod(method: keyof History, handler: any) {
@@ -62,7 +68,7 @@ export class MobxHistory implements IMobxHistory {
     // @ts-ignore
     this.originHistory[method] = handler;
 
-    this.disposer.add(() => {
+    this.abortController.signal.addEventListener('abort', () => {
       // @ts-ignore
       this.originHistory[method] = alwaysBoundOriginHistoryMethods[method];
     });
@@ -137,13 +143,5 @@ export class MobxHistory implements IMobxHistory {
   go(...args: Parameters<History['go']>): void {
     alwaysBoundOriginHistoryMethods.go!(...args);
     this.historyUpdateAtom.reportChanged();
-  }
-
-  dispose(): void {
-    globalThis.removeEventListener('popstate', this.handlePopState);
-    globalThis.removeEventListener('pushState', this.handlePushState);
-    globalThis.removeEventListener('replaceState', this.handleReplaceState);
-    globalThis.removeEventListener('hashchange', this.handleHashChange);
-    this.disposer.dispose();
   }
 }

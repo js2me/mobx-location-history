@@ -1,4 +1,4 @@
-import { Disposer, IDisposer } from 'disposer-util';
+import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 import { AnyObject } from 'yammies/utils/types';
 
@@ -8,28 +8,27 @@ import { IMobxLocation } from '../mobx-location';
 import { IQueryParams } from './query-params.types';
 
 export class QueryParams implements IQueryParams {
-  protected disposer: IDisposer;
+  protected abortController: AbortController;
 
   data!: Record<string, string>;
 
   constructor(
     private location: IMobxLocation,
     private history: IMobxHistory,
-    disposer?: IDisposer,
+    abortSignal?: AbortSignal,
   ) {
-    this.disposer = disposer || new Disposer();
+    this.abortController = new LinkedAbortController(abortSignal);
 
-    this.disposer.add(
-      reaction(
-        () => this.location.search,
-        (search) => {
-          const params = new URLSearchParams(search);
-          this.data = Object.fromEntries(params.entries());
-        },
-        {
-          fireImmediately: true,
-        },
-      ),
+    reaction(
+      () => this.location.search,
+      (search) => {
+        const params = new URLSearchParams(search);
+        this.data = Object.fromEntries(params.entries());
+      },
+      {
+        fireImmediately: true,
+        signal: this.abortController.signal,
+      },
     );
 
     makeObservable<this>(this, {
@@ -67,9 +66,5 @@ export class QueryParams implements IQueryParams {
       },
       replace,
     );
-  }
-
-  dispose() {
-    this.disposer.dispose();
   }
 }

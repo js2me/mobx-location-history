@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      disposer-util:
-        specifier: ^1.0.11
-        version: 1.0.11
+      linked-abort-controller:
+        specifier: ^1.0.2
+        version: 1.0.2
       mobx:
         specifier: ^6.13.3
         version: 6.13.5
@@ -1117,9 +1117,6 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
-  disposer-util@1.0.11:
-    resolution: {integrity: sha512-dpHIUPtCwHPulHWuBXarLPx5v928F9EqmPsENlgYWY4W+5NJil7hj/U01JfLLvgtnhBScVxJ1XraueH3vvsk/g==}
-
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
@@ -1706,6 +1703,9 @@ packages:
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+
+  linked-abort-controller@1.0.2:
+    resolution: {integrity: sha512-p+J0JzBDC9TNzH9r/qoqJ3xMtTjfUoU6uOu5vLX3rVM864vDxwerGjjWjWTIpxsIoLN7kb+T41naP4k0qFIxbw==}
 
   locate-path@5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
@@ -3619,8 +3619,6 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
-  disposer-util@1.0.11: {}
-
   doctrine@2.1.0:
     dependencies:
       esutils: 2.0.3
@@ -4391,6 +4389,8 @@ snapshots:
       type-check: 0.4.0
 
   lines-and-columns@1.2.4: {}
+
+  linked-abort-controller@1.0.2: {}
 
   locate-path@5.0.0:
     dependencies:

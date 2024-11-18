@@ -20,11 +20,11 @@
   "author": "js2me",
   "license": "MIT",
   "dependencies": {
-    "yammies": "^2.0.8"
+    "yammies": "^2.0.8",
+    "linked-abort-controller": "^1.0.2"
   },
   "peerDependencies": {
-    "mobx": "^6.13.3",
-    "disposer-util": "^1.0.11"
+    "mobx": "^6.13.3"
   },
   "devDependencies": {
     "@types/node": "22.7.7",

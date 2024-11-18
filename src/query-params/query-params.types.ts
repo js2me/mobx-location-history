@@ -1,10 +1,9 @@
-import { Disposable } from 'disposer-util';
 import { AnyObject } from 'yammies/utils/types';
 
 /**
  * Interface for working with query parameters
  */
-export interface IQueryParams extends Disposable {
+export interface IQueryParams {
   /**
    * Raw query parameter data (strings)
    */

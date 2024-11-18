@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Disposer, IDisposer } from 'disposer-util';
+import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
 import { IMobxHistory } from '../mobx-history';
@@ -19,7 +19,7 @@ const locationReadableFields = [
 ] as const;
 
 export class MobxLocation implements IMobxLocation {
-  protected disposer: IDisposer;
+  protected abortController: AbortController;
   protected originLocation: Location;
 
   hash!: string;
@@ -35,9 +35,9 @@ export class MobxLocation implements IMobxLocation {
 
   constructor(
     private history: IMobxHistory,
-    disposer?: IDisposer,
+    abortSignal?: AbortSignal,
   ) {
-    this.disposer = disposer || new Disposer();
+    this.abortController = new LinkedAbortController(abortSignal);
     this.originLocation = location;
 
     /**
@@ -59,11 +59,12 @@ export class MobxLocation implements IMobxLocation {
       updateLocationData: action.bound,
     });
 
-    this.disposer.add(
-      reaction(
-        () => [this.history.state, this.history.length],
-        this.updateLocationData,
-      ),
+    reaction(
+      () => [this.history.state, this.history.length],
+      this.updateLocationData,
+      {
+        signal: this.abortController.signal,
+      },
     );
   }
 
@@ -87,9 +88,5 @@ export class MobxLocation implements IMobxLocation {
 
   replace(...args: Parameters<Location['assign']>): void {
     return this.originLocation.replace(...args);
-  }
-
-  dispose(): void {
-    this.disposer.dispose();
   }
 }
