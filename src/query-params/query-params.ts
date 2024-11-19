@@ -6,6 +6,7 @@ import { IMobxHistory } from '../mobx-history';
 import { IMobxLocation } from '../mobx-location';
 
 import { IQueryParams } from './query-params.types';
+import { buildSearchString, parseSearchString } from './utils';
 
 export class QueryParams implements IQueryParams {
   protected abortController: AbortController;
@@ -22,8 +23,7 @@ export class QueryParams implements IQueryParams {
     reaction(
       () => this.location.search,
       (search) => {
-        const params = new URLSearchParams(search);
-        this.data = Object.fromEntries(params.entries());
+        this.data = parseSearchString(search);
       },
       {
         fireImmediately: true,
@@ -49,11 +49,8 @@ export class QueryParams implements IQueryParams {
   set(data: AnyObject, replace?: boolean) {
     const url = new URL(this.location.href);
 
-    const searchParams = new URLSearchParams(
-      Object.entries(data).filter(([, value]) => value != null),
-    ).toString();
-
-    const nextUrl = `${url.pathname}${searchParams ? `?${searchParams}` : ''}`;
+    const searchString = buildSearchString(data);
+    const nextUrl = `${url.pathname}${searchString}`;
 
     this.navigate(nextUrl, replace);
   }
