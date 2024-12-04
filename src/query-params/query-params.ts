@@ -1,6 +1,5 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
-import { AnyObject } from 'yammies/utils/types';
 
 import { IMobxHistory } from '../mobx-history';
 import { IMobxLocation } from '../mobx-location';
@@ -46,7 +45,7 @@ export class QueryParams implements IQueryParams {
     }
   }
 
-  set(data: AnyObject, replace?: boolean) {
+  set(data: Record<string, any>, replace?: boolean) {
     const url = new URL(this.location.href);
 
     const searchString = buildSearchString(data);
@@ -55,7 +54,7 @@ export class QueryParams implements IQueryParams {
     this.navigate(nextUrl, replace);
   }
 
-  update(data: AnyObject, replace?: boolean) {
+  update(data: Record<string, any>, replace?: boolean) {
     this.set(
       {
         ...this.data,

@@ -1,4 +1,8 @@
+<img src="assets/logo.png" align="right" height="156" alt="logo" />
+
 # mobx-location-history  
+
+_Browser Location and History charged by MobX + other utilities_  
 
 ## Observable browser [History](src/mobx-history/mobx-history.types.ts) and [Location](src/mobx-location/mobx-location.types.ts) interfaces + other utilities (like [QueryParams](src/query-params/query-params.types.ts))   
 

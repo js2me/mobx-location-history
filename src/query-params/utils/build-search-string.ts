@@ -1,5 +1,3 @@
-import { AnyObject } from 'yammies/utils/types';
-
 /**
  * Converts an object into a URL search string.
  * Filters out entries with null or undefined values.
@@ -15,8 +13,8 @@ import { AnyObject } from 'yammies/utils/types';
  * // returns ""
  * buildSearchString({ unset: null, other: undefined });
  */
-export const buildSearchString = (data: AnyObject) => {
-  const fixedData: AnyObject = {};
+export const buildSearchString = (data: Record<string, any>) => {
+  const fixedData: Record<string, any> = {};
 
   for (const [key, value] of Object.entries(data)) {
     if (value != null) {
