@@ -16,24 +16,18 @@ export class MobxHistory implements IMobxHistory {
     this.abortController = new LinkedAbortController(abortSignal);
     this.originHistory = history;
 
-    makeObservable<
-      this,
-      | 'handlePopState'
-      | 'handlePushState'
-      | 'handleReplaceState'
-      | 'handleHashChange'
-    >(this, {
-      handlePopState: action.bound,
-      handlePushState: action.bound,
-      handleReplaceState: action.bound,
-      handleHashChange: action.bound,
-      back: action.bound,
-      go: action.bound,
-      forward: action.bound,
-      replaceState: action.bound,
-      pushState: action.bound,
-      data: computed,
-    });
+    action.bound(this, 'handlePopState');
+    action.bound(this, 'handlePushState');
+    action.bound(this, 'handleReplaceState');
+    action.bound(this, 'handleHashChange');
+    action.bound(this, 'back');
+    action.bound(this, 'go');
+    action.bound(this, 'forward');
+    action.bound(this, 'replaceState');
+    action.bound(this, 'pushState');
+    computed(this, 'data');
+
+    makeObservable(this);
 
     this.overrideHistoryMethod('back', this.back);
     this.overrideHistoryMethod('go', this.go);

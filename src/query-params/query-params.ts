@@ -30,11 +30,11 @@ export class QueryParams implements IQueryParams {
       },
     );
 
-    makeObservable<this>(this, {
-      data: observable.deep,
-      set: action.bound,
-      update: action.bound,
-    });
+    observable.deep(this, 'data');
+    action.bound(this, 'set');
+    action.bound(this, 'update');
+
+    makeObservable(this);
   }
 
   protected navigate(url: string, replace?: boolean) {

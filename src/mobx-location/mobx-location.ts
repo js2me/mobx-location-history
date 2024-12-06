@@ -45,19 +45,19 @@ export class MobxLocation implements IMobxLocation {
      */
     this.updateLocationData();
 
-    makeObservable<this, 'updateLocationData'>(this, {
-      hash: observable,
-      host: observable,
-      hostname: observable,
-      href: observable,
-      origin: observable,
-      pathname: observable,
-      port: observable,
-      protocol: observable,
-      ancestorOrigins: observable.ref,
-      search: observable,
-      updateLocationData: action.bound,
-    });
+    observable(this, 'hash');
+    observable(this, 'host');
+    observable(this, 'hostname');
+    observable(this, 'href');
+    observable(this, 'origin');
+    observable(this, 'pathname');
+    observable(this, 'port');
+    observable(this, 'protocol');
+    observable.ref(this, 'ancestorOrigins');
+    observable(this, 'search');
+    action.bound(this, 'updateLocationData');
+
+    makeObservable(this);
 
     reaction(
       () => [this.history.state, this.history.length],
