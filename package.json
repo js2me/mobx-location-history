@@ -1,7 +1,6 @@
 {
   "name": "mobx-location-history",
   "version": "2.0.5",
-  "description": "",
   "scripts": {
     "clean": "rimraf dist",
     "check": "eslint . --fix",
@@ -19,6 +18,15 @@
   ],
   "author": "js2me",
   "license": "MIT",
+  "description": "Browser Location and History charged by MobX",
+  "bugs": {
+    "url": "https://github.com/js2me/mobx-location-history/issues"
+  },
+  "homepage": "https://github.com/js2me/mobx-location-history",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/js2me/mobx-location-history"
+  },
   "dependencies": {
     "linked-abort-controller": "^1.0.2"
   },
