@@ -1,3 +1,5 @@
+export type RawQueryParamsData = Record<string, string>;
+
 /**
  * Interface for working with query parameters
  */
@@ -5,7 +7,7 @@ export interface IQueryParams {
   /**
    * Raw query parameter data (strings)
    */
-  data: Record<string, string>;
+  data: RawQueryParamsData;
 
   /**
    * Sets the query parameters (replacing all existing query parameters in the address bar)
