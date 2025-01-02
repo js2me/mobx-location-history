@@ -22,6 +22,17 @@ export class MobxLocation implements IMobxLocation {
   protected abortController: AbortController;
   protected originLocation: Location;
 
+  private _hash!: string;
+  private _host!: string;
+  private _hostname!: string;
+  private _href!: string;
+  private _origin!: string;
+  private _pathname!: string;
+  private _port!: string;
+  private _protocol!: string;
+  private _ancestorOrigins!: DOMStringList;
+  private _search!: string;
+
   hash!: string;
   host!: string;
   hostname!: string;
@@ -43,18 +54,19 @@ export class MobxLocation implements IMobxLocation {
     /**
      * Проводит инициализацию начальных значений всех свойств из location
      */
-    this.updateLocationData();
+    this.initializeLocationProperties();
 
-    observable(this, 'hash');
-    observable(this, 'host');
-    observable(this, 'hostname');
-    observable(this, 'href');
-    observable(this, 'origin');
-    observable(this, 'pathname');
-    observable(this, 'port');
-    observable(this, 'protocol');
-    observable.ref(this, 'ancestorOrigins');
-    observable(this, 'search');
+    observable(this, '_hash');
+    observable(this, '_host');
+    observable(this, '_hostname');
+    observable(this, '_href');
+    observable(this, '_origin');
+    observable(this, '_pathname');
+    observable(this, '_port');
+    observable(this, '_protocol');
+    observable.ref(this, '_ancestorOrigins');
+    observable(this, '_search');
+
     action.bound(this, 'updateLocationData');
 
     makeObservable(this);
@@ -68,9 +80,23 @@ export class MobxLocation implements IMobxLocation {
     );
   }
 
+  protected initializeLocationProperties() {
+    locationReadableFields.forEach((field) => {
+      this[`_${field}`] = this.originLocation[field];
+      Object.defineProperty(this, field, {
+        get: () => this[`_${field}`],
+        set: (value) => {
+          this[`_${field}`] = value;
+          // @ts-ignore
+          this.originLocation[field] = value;
+        },
+      });
+    });
+  }
+
   protected updateLocationData() {
     locationReadableFields.forEach((field) => {
-      this[field] = this.originLocation[field];
+      this[`_${field}`] = this.originLocation[field];
     });
   }
 
