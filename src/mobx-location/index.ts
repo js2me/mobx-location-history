@@ -1,2 +1,2 @@
-export * from './mobx-location.types';
-export * from './mobx-location';
+export * from './mobx-location.types.js';
+export * from './mobx-location.js';

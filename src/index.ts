@@ -1,3 +1,3 @@
-export * from './mobx-history';
-export * from './mobx-location';
-export * from './query-params';
+export * from './mobx-history/index.js';
+export * from './mobx-location/index.js';
+export * from './query-params/index.js';

@@ -19,6 +19,7 @@
   "author": "js2me",
   "license": "MIT",
   "description": "Browser Location and History charged by MobX",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/js2me/mobx-location-history/issues"
   },
@@ -28,17 +29,17 @@
     "url": "git://github.com/js2me/mobx-location-history"
   },
   "dependencies": {
-    "linked-abort-controller": "^1.0.2"
+    "linked-abort-controller": "^1.1.0"
   },
   "peerDependencies": {
     "mobx": "^6.13.3"
   },
   "devDependencies": {
-    "@types/node": "22.7.7",
-    "@types/lodash-es": "4.17.12",
-    "eslint": "8.57.0",
-    "typescript": "5.6.3",
-    "js2me-eslint-config": "1.0.4",
-    "js2me-exports-post-build-script": "2.0.10"
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^22.14.0",
+    "eslint": "^8.57.1",
+    "js2me-eslint-config": "^1.0.7",
+    "js2me-exports-post-build-script": "^2.0.18",
+    "typescript": "^5.8.3"
   }
 }

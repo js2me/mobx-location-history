@@ -2,9 +2,9 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { IMobxHistory } from '../mobx-history';
+import { IMobxHistory } from '../mobx-history/index.js';
 
-import { IMobxLocation } from './mobx-location.types';
+import { IMobxLocation } from './mobx-location.types.js';
 
 const locationReadableFields = [
   'hash',

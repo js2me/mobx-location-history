@@ -1,11 +1,11 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { IMobxHistory } from '../mobx-history';
-import { IMobxLocation } from '../mobx-location';
+import { IMobxHistory } from '../mobx-history/index.js';
+import { IMobxLocation } from '../mobx-location/index.js';
 
-import { IQueryParams } from './query-params.types';
-import { buildSearchString, parseSearchString } from './utils';
+import { IQueryParams } from './query-params.types.js';
+import { buildSearchString, parseSearchString } from './utils/index.js';
 
 export class QueryParams implements IQueryParams {
   protected abortController: AbortController;

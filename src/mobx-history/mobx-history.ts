@@ -3,7 +3,7 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, computed, createAtom, makeObservable } from 'mobx';
 
-import { IMobxHistory } from './mobx-history.types';
+import { IMobxHistory } from './mobx-history.types.js';
 
 const alwaysBoundOriginHistoryMethods: Partial<History> = {};
 

@@ -1,3 +1,3 @@
-export * from './query-params.types';
-export * from './query-params';
-export * from './utils';
+export * from './query-params.types.js';
+export * from './query-params.js';
+export * from './utils/index.js';
