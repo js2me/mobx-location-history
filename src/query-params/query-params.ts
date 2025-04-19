@@ -63,4 +63,8 @@ export class QueryParams implements IQueryParams {
       replace,
     );
   }
+
+  destroy(): void {
+    this.abortController.abort();
+  }
 }

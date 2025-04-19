@@ -115,4 +115,8 @@ export class MobxLocation implements IMobxLocation {
   replace(...args: Parameters<Location['assign']>): void {
     return this.originLocation.replace(...args);
   }
+
+  destroy(): void {
+    this.abortController.abort();
+  }
 }

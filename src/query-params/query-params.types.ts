@@ -20,4 +20,9 @@ export interface IQueryParams {
    * If null or undefined is specified for value, the parameter will be removed ({ key: undefined })
    */
   update(data: Record<string, any>, replace?: boolean): void;
+
+  /**
+   * Destroy the QueryParams instance
+   */
+  destroy(): void;
 }

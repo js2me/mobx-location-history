@@ -138,4 +138,8 @@ export class MobxHistory implements IMobxHistory {
     alwaysBoundOriginHistoryMethods.go!(...args);
     this.historyUpdateAtom.reportChanged();
   }
+
+  destroy(): void {
+    this.abortController.abort();
+  }
 }
