@@ -1,11 +1,11 @@
 import { AnyObject } from 'yummies/utils/types';
 
-import type { QueryParams } from '../query-params/index.js';
+import type { IQueryParams } from '../query-params/index.js';
 
 import type { queryParamPresets } from './query-param-presets.js';
 
 export interface QueryParamsFieldModelConfig<T> {
-  queryParams: QueryParams;
+  queryParams: IQueryParams;
   /**
    * Name of the field in query parameters
    */

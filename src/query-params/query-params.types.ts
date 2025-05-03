@@ -22,6 +22,11 @@ export interface IQueryParams {
   update(data: Record<string, any>, replace?: boolean): void;
 
   /**
+   * Builds a URL with the query parameters (first argument)
+   */
+  buildUrl(data: Record<string, any>): string;
+
+  /**
    * Destroy the QueryParams instance
    */
   destroy(): void;
