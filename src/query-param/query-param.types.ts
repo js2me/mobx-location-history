@@ -48,4 +48,3 @@ export interface QueryParamsFieldModelPresetConfig<Preset extends PresetName, T>
   extends Omit<QueryParamsFieldModelConfig<T>, 'serialize' | 'deserialize'> {
   preset: Preset;
 }
-
