@@ -45,11 +45,16 @@ export class QueryParams implements IQueryParams {
     }
   }
 
-  set(data: Record<string, any>, replace?: boolean) {
+  buildUrl(data: Record<string, any>) {
     const url = new URL(this.location.href);
 
     const searchString = buildSearchString(data);
-    const nextUrl = `${url.pathname}${searchString}`;
+
+    return `${url.pathname}${searchString}`;
+  }
+
+  set(data: Record<string, any>, replace?: boolean) {
+    const nextUrl = this.buildUrl(data);
 
     this.navigate(nextUrl, replace);
   }
