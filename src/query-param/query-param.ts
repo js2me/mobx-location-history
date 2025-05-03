@@ -55,7 +55,7 @@ export class QueryParam<T> {
    * Create get\set value, which is synchronized with the query parameter
    * Create by preset
    */
-  static createWithPreset<T>(
+  static fromPreset<T>(
     config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
   ): QueryParam<T> {
     const { serialize, deserialize } = queryParamPresets[config.preset]!;
