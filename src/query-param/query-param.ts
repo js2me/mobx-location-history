@@ -7,6 +7,10 @@ import {
   QueryParamsFieldModelPresetConfig,
 } from './query-param.types.js';
 
+/**
+ * Create get\set value, which is synchronized with the query parameter
+ * Manual handling of the query parameter
+ */
 export class QueryParam<T> {
   name: string;
 
@@ -52,8 +56,8 @@ export class QueryParam<T> {
   };
 
   /**
-   * Create get\set value, which is synchronized with the query parameter
-   * Create by preset
+   * @deprecated
+   * use {createQueryParamFromPreset}
    */
   static fromPreset<T>(
     config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
@@ -68,10 +72,39 @@ export class QueryParam<T> {
   }
 
   /**
-   * Create get\set value, which is synchronized with the query parameter
-   * Manual handling of the query parameter
+   * @deprecated
+   * use {createQueryParam}
    */
   static create<T>(config: QueryParamsFieldModelConfig<T>): QueryParam<T> {
     return new QueryParam<any>(config);
   }
 }
+
+/**
+ * Create get\set value, which is synchronized with the query parameter
+ * Manual handling of the query parameter
+ */
+/*#__PURE__*/
+export const createQueryParam = <T>(
+  config: QueryParamsFieldModelConfig<T>,
+): QueryParam<T> => {
+  return new QueryParam<any>(config);
+};
+
+/**
+ * Create get\set value, which is synchronized with the query parameter
+ * Create by preset
+ */
+/*#__PURE__*/
+export const createQueryParamFromPreset = <T>(
+  config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
+  // eslint-disable-next-line sonarjs/no-identical-functions
+): QueryParam<T> => {
+  const { serialize, deserialize } = queryParamPresets[config.preset]!;
+
+  return new QueryParam<any>({
+    ...config,
+    serialize,
+    deserialize,
+  });
+};

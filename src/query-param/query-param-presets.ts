@@ -2,6 +2,7 @@ import { typeGuard } from 'yummies/type-guard';
 
 import { QueryParamsFieldModelConfig } from './query-param.types.js';
 
+/*#__PURE__*/
 export const queryParamPresets = {
   'string[]': {
     deserialize: (value) => value?.split(',') ?? null,

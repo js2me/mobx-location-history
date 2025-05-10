@@ -39,9 +39,9 @@ export class QueryParams implements IQueryParams {
 
   protected navigate(url: string, replace?: boolean) {
     if (replace) {
-      this.history.replaceState(null, '', url);
+      this.history.replace(url);
     } else {
-      this.history.pushState(null, '', url);
+      this.history.push(url);
     }
   }
 

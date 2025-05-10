@@ -5,10 +5,15 @@
     "clean": "rimraf dist",
     "check": "eslint . --fix",
     "prebuild": "npm run clean && npm run check",
+    "build:watch": "pnpm build && nodemon --delay 0.5 --watch src --ext ts,tsx --exec \"pnpm build\"",
     "build": "tsc && node ./post-build.mjs",
     "pub:patch": "PUBLISH=true PUBLISH_VERSION=patch pnpm run build",
     "pub:minor": "PUBLISH=true PUBLISH_VERSION=minor pnpm run build",
-    "pub:major": "PUBLISH=true PUBLISH_VERSION=major pnpm run build"
+    "pub:major": "PUBLISH=true PUBLISH_VERSION=major pnpm run build",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "dev": "pnpm test:watch"
   },
   "keywords": [
     "mobx",
@@ -38,9 +43,14 @@
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.14.0",
+    "@vitejs/plugin-react-swc": "^3.9.0",
+    "@vitest/coverage-istanbul": "^3.1.2",
     "eslint": "^8.57.1",
     "js2me-eslint-config": "^1.0.7",
     "js2me-exports-post-build-script": "^2.0.18",
-    "typescript": "^5.8.3"
+    "jsdom": "^26.1.0",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.8.3",
+    "vitest": "^3.1.2"
   }
 }

@@ -1,18 +1,22 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { LinkedAbortController } from 'linked-abort-controller';
-import { action, computed, createAtom, makeObservable } from 'mobx';
+import { action, createAtom, IAtom, makeObservable } from 'mobx';
 
-import { IMobxHistory } from './mobx-history.types.js';
+import { IMobxHistory, To } from './mobx-history.types.js';
+import { createPath } from './utils/create-path.js';
 
-const alwaysBoundOriginHistoryMethods: Partial<History> = {};
+const historyEvents = ['popstate', 'pushState', 'replaceState', 'hashchange'];
+
+const originHistoryMethods: Partial<History> = {};
 
 export class MobxHistory implements IMobxHistory {
   protected abortController: AbortController;
-  protected historyUpdateAtom = createAtom('history_update');
+  protected atom: IAtom;
   protected originHistory: History;
 
   constructor(abortSignal?: AbortSignal) {
+    this.atom = createAtom('history_update');
     this.abortController = new LinkedAbortController(abortSignal);
     this.originHistory = history;
 
@@ -25,7 +29,6 @@ export class MobxHistory implements IMobxHistory {
     action.bound(this, 'forward');
     action.bound(this, 'replaceState');
     action.bound(this, 'pushState');
-    computed(this, 'data');
 
     makeObservable(this);
 
@@ -38,48 +41,42 @@ export class MobxHistory implements IMobxHistory {
     /**
      * History API docs @see https://developer.mozilla.org/en-US/docs/Web/API/History
      */
-    globalThis.addEventListener('popstate', this.handlePopState, {
-      signal: this.abortController.signal,
-    });
-    globalThis.addEventListener('pushState', this.handlePushState, {
-      signal: this.abortController.signal,
-    });
-    globalThis.addEventListener('replaceState', this.handleReplaceState, {
-      signal: this.abortController.signal,
-    });
-    globalThis.addEventListener('hashchange', this.handleHashChange, {
-      signal: this.abortController.signal,
+    historyEvents.forEach((event) => {
+      globalThis.addEventListener(event, this.reportChanged, {
+        signal: this.abortController.signal,
+      });
     });
   }
 
   protected overrideHistoryMethod(method: keyof History, handler: any) {
-    // @ts-ignore
-    alwaysBoundOriginHistoryMethods[method] =
-      method in alwaysBoundOriginHistoryMethods
-        ? alwaysBoundOriginHistoryMethods[method]
-        : this.originHistory[method].bind(this.originHistory);
+    if (!(method in originHistoryMethods)) {
+      // @ts-ignore
+      originHistoryMethods[method] = this.originHistory[method].bind(
+        this.originHistory,
+      );
+    }
 
     // @ts-ignore
     this.originHistory[method] = handler;
 
     this.abortController.signal.addEventListener('abort', () => {
       // @ts-ignore
-      this.originHistory[method] = alwaysBoundOriginHistoryMethods[method];
+      this.originHistory[method] = originHistoryMethods[method];
     });
   }
 
   get scrollRestoration() {
-    this.historyUpdateAtom.reportObserved();
+    this.atom.reportObserved();
     return this.originHistory.scrollRestoration;
   }
 
   set scrollRestoration(scrollRestoration: ScrollRestoration) {
-    this.historyUpdateAtom.reportChanged();
+    this.reportChanged();
     this.originHistory.scrollRestoration = scrollRestoration;
   }
 
   get data(): Pick<History, 'state' | 'length' | 'scrollRestoration'> {
-    this.historyUpdateAtom.reportObserved();
+    this.atom.reportObserved();
 
     return {
       length: this.originHistory.length,
@@ -88,58 +85,58 @@ export class MobxHistory implements IMobxHistory {
     };
   }
 
-  protected handlePopState() {
-    this.historyUpdateAtom.reportChanged();
-  }
-
-  protected handlePushState() {
-    this.historyUpdateAtom.reportChanged();
-  }
-
-  protected handleReplaceState() {
-    this.historyUpdateAtom.reportChanged();
-  }
-
-  protected handleHashChange() {
-    this.historyUpdateAtom.reportChanged();
+  push(to: To, state?: any): void {
+    this.pushState(typeof to === 'string' ? to : createPath(to), '', state);
   }
 
   pushState(...args: Parameters<History['pushState']>): void {
-    alwaysBoundOriginHistoryMethods.pushState!(...args);
-    this.historyUpdateAtom.reportChanged();
+    originHistoryMethods.pushState!(...args);
+    this.reportChanged();
+  }
+
+  replace(to: To, state?: any): void {
+    this.replaceState(typeof to === 'string' ? to : createPath(to), '', state);
   }
 
   replaceState(...args: Parameters<History['replaceState']>): void {
-    alwaysBoundOriginHistoryMethods.replaceState!(...args);
-    this.historyUpdateAtom.reportChanged();
+    originHistoryMethods.replaceState!(...args);
+    this.reportChanged();
   }
 
   get length() {
-    this.historyUpdateAtom.reportObserved();
+    this.atom.reportObserved();
     return this.originHistory.length;
   }
 
   get state() {
-    this.historyUpdateAtom.reportObserved();
+    this.atom.reportObserved();
     return this.originHistory.state;
   }
 
   back(): void {
-    alwaysBoundOriginHistoryMethods.back!();
-    this.historyUpdateAtom.reportChanged();
+    originHistoryMethods.back!();
+    this.reportChanged();
   }
 
   forward(): void {
-    alwaysBoundOriginHistoryMethods.forward!();
-    this.historyUpdateAtom.reportChanged();
+    originHistoryMethods.forward!();
+    this.reportChanged();
   }
 
   go(...args: Parameters<History['go']>): void {
-    alwaysBoundOriginHistoryMethods.go!(...args);
-    this.historyUpdateAtom.reportChanged();
+    originHistoryMethods.go!(...args);
+    this.reportChanged();
   }
 
   destroy(): void {
     this.abortController.abort();
   }
+
+  private reportChanged = () => {
+    this.atom.reportChanged();
+  };
 }
+
+/*#__PURE__*/
+export const createMobxHistory = (abortSignal?: AbortSignal) =>
+  new MobxHistory(abortSignal);

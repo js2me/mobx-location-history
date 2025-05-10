@@ -6,16 +6,17 @@ import { IMobxHistory } from '../mobx-history/index.js';
 
 import { IMobxLocation } from './mobx-location.types.js';
 
-const locationReadableFields = [
-  'hash',
-  'host',
-  'hostname',
-  'href',
-  'origin',
-  'pathname',
-  'port',
-  'protocol',
-  'search',
+const locationFieldConfigs = [
+  ['hash', observable.ref],
+  ['host', observable.ref],
+  ['hostname', observable.ref],
+  ['href', observable.ref],
+  ['origin', observable.ref],
+  ['pathname', observable.ref],
+  ['port', observable.ref],
+  ['protocol', observable.ref],
+  ['ancestorOrigins', observable.ref],
+  ['search', observable.ref],
 ] as const;
 
 export class MobxLocation implements IMobxLocation {
@@ -49,23 +50,16 @@ export class MobxLocation implements IMobxLocation {
     abortSignal?: AbortSignal,
   ) {
     this.abortController = new LinkedAbortController(abortSignal);
-    this.originLocation = location;
+    this.originLocation = globalThis.location;
 
     /**
      * Проводит инициализацию начальных значений всех свойств из location
      */
     this.initializeLocationProperties();
 
-    observable(this, '_hash');
-    observable(this, '_host');
-    observable(this, '_hostname');
-    observable(this, '_href');
-    observable(this, '_origin');
-    observable(this, '_pathname');
-    observable(this, '_port');
-    observable(this, '_protocol');
-    observable.ref(this, '_ancestorOrigins');
-    observable(this, '_search');
+    locationFieldConfigs.forEach(([field, config]) => {
+      config(this, `_${field}`);
+    });
 
     action.bound(this, 'updateLocationData');
 
@@ -81,7 +75,8 @@ export class MobxLocation implements IMobxLocation {
   }
 
   protected initializeLocationProperties() {
-    locationReadableFields.forEach((field) => {
+    locationFieldConfigs.forEach(([field]) => {
+      // @ts-ignore
       this[`_${field}`] = this.originLocation[field];
       Object.defineProperty(this, field, {
         get: () => this[`_${field}`],
@@ -95,7 +90,8 @@ export class MobxLocation implements IMobxLocation {
   }
 
   protected updateLocationData() {
-    locationReadableFields.forEach((field) => {
+    locationFieldConfigs.forEach(([field]) => {
+      // @ts-ignore
       this[`_${field}`] = this.originLocation[field];
     });
   }
@@ -120,3 +116,9 @@ export class MobxLocation implements IMobxLocation {
     this.abortController.abort();
   }
 }
+
+/*#__PURE__*/
+export const createMobxLocation = (
+  history: IMobxHistory,
+  abortSignal?: AbortSignal,
+) => new MobxLocation(history, abortSignal);
