@@ -23,12 +23,105 @@ describe('MobxLocation', () => {
     await vi.runAllTimersAsync();
   });
 
+  it('href test', () => {
+    const reactionSpy1 = vi.fn();
+    const history = new MobxHistory();
+    const location = new MobxLocation(history);
+
+    reaction(
+      () => location.href,
+      (fieldValue) => reactionSpy1(fieldValue),
+    );
+
+    history.pushState(null, '', '/home/bar/baz');
+    history.pushState(null, '', '/home/bar/baz/bad');
+    history.pushState(null, '', '/home/bar/aa/a/adf/f/f/bad/back');
+    history.pushState(null, '', '/dsafdsz/bacll');
+    history.pushState(null, '', '/dsafdsafe');
+    history.pushState(null, '', '#asdfdsaffa');
+
+    sleep(1000);
+    vi.runAllTimers();
+
+    expect(reactionSpy1).toHaveBeenCalledTimes(6);
+    expect(reactionSpy1).toHaveBeenNthCalledWith(
+      1,
+      'http://localhost:3000/home/bar/baz',
+    );
+    expect(reactionSpy1).toHaveBeenNthCalledWith(
+      2,
+      'http://localhost:3000/home/bar/baz/bad',
+    );
+    expect(reactionSpy1).toHaveBeenNthCalledWith(
+      3,
+      'http://localhost:3000/home/bar/aa/a/adf/f/f/bad/back',
+    );
+    expect(reactionSpy1).toHaveBeenNthCalledWith(
+      4,
+      'http://localhost:3000/dsafdsz/bacll',
+    );
+    expect(reactionSpy1).toHaveBeenNthCalledWith(
+      5,
+      'http://localhost:3000/dsafdsafe',
+    );
+    expect(reactionSpy1).toHaveBeenNthCalledWith(
+      6,
+      'http://localhost:3000/dsafdsafe#asdfdsaffa',
+    );
+
+    const reactionSpy2 = vi.fn();
+
+    reaction(
+      () => location.href,
+      (fieldValue) => reactionSpy2(fieldValue),
+    );
+
+    history.push('/home/bar/baz');
+    history.push('/home/bar/baz/bad');
+    history.push('/home/bar/aa/a/adf/f/f/bad/back');
+    history.push('/dsafdsz/bacll');
+    history.push('/dsafdsafe');
+    history.push('#asdfdsaffa');
+
+    sleep(1000);
+    vi.runAllTimers();
+
+    expect(reactionSpy2).toHaveBeenCalledTimes(6);
+    expect(reactionSpy2).toHaveBeenNthCalledWith(
+      1,
+      'http://localhost:3000/home/bar/baz',
+    );
+    expect(reactionSpy2).toHaveBeenNthCalledWith(
+      2,
+      'http://localhost:3000/home/bar/baz/bad',
+    );
+    expect(reactionSpy2).toHaveBeenNthCalledWith(
+      3,
+      'http://localhost:3000/home/bar/aa/a/adf/f/f/bad/back',
+    );
+    expect(reactionSpy2).toHaveBeenNthCalledWith(
+      4,
+      'http://localhost:3000/dsafdsz/bacll',
+    );
+    expect(reactionSpy2).toHaveBeenNthCalledWith(
+      5,
+      'http://localhost:3000/dsafdsafe',
+    );
+    expect(reactionSpy2).toHaveBeenNthCalledWith(
+      6,
+      'http://localhost:3000/dsafdsafe#asdfdsaffa',
+    );
+
+    history.destroy();
+    location.destroy();
+  });
+
   const reactiveFieldsToTest: [
     keyof MobxLocation,
     {
       ignoredUrls?: string[];
       reactedUrls: string[];
-      reactedValues: any[];
+      reactedValues?: any[];
       skip?: boolean;
     },
   ][] = [
@@ -79,9 +172,9 @@ describe('MobxLocation', () => {
           describe(`using "${historyType}" for update`, () => {
             changeStateStrategies.forEach((changeStateStrategy) => {
               describe(`change state using: "${changeStateStrategy}"`, () => {
-                if (ignoredUrls?.length) {
+                ignoredUrls?.forEach((ignoreUrl) => {
                   (skip ? it.skip : it)(
-                    `should have reactive "${field}" (ignore reaction)`,
+                    `[ignore reaction] "${ignoreUrl}"`,
                     () => {
                       const reactionSpy = vi.fn();
                       const history = new MobxHistory();
@@ -97,7 +190,46 @@ describe('MobxLocation', () => {
                           ? globalThis.history
                           : history;
 
-                      ignoredUrls.forEach((url) => {
+                      if (changeStateStrategy === 'pushState') {
+                        historyToUse.pushState(null, '', ignoreUrl);
+                      } else {
+                        historyToUse.replaceState(null, '', ignoreUrl);
+                      }
+
+                      sleep(1000);
+                      vi.runAllTimers();
+
+                      expect(reactionSpy).toHaveBeenCalledTimes(0);
+                      history.destroy();
+                      location.destroy();
+                    },
+                  );
+                });
+
+                reactedUrls?.forEach((reactedUrl, i) => {
+                  const expectedReactedValue = reactedValues?.[i];
+
+                  (skip ? it.skip : it)(
+                    `[reaction works] "${reactedUrl}"` +
+                      (expectedReactedValue === undefined
+                        ? ''
+                        : ` -> location.${field} = ${JSON.stringify(expectedReactedValue)}`),
+                    () => {
+                      const reactionSpy = vi.fn();
+                      const history = new MobxHistory();
+                      const location = new MobxLocation(history);
+
+                      reaction(
+                        () => location[field],
+                        (fieldValue) => reactionSpy(fieldValue),
+                      );
+
+                      const historyToUse =
+                        historyType === 'globalThis.history'
+                          ? globalThis.history
+                          : history;
+
+                      reactedUrls.forEach((url) => {
                         if (changeStateStrategy === 'pushState') {
                           historyToUse.pushState(null, '', url);
                         } else {
@@ -108,53 +240,21 @@ describe('MobxLocation', () => {
                       sleep(1000);
                       vi.runAllTimers();
 
-                      expect(reactionSpy).toHaveBeenCalledTimes(0);
+                      expect(reactionSpy).toHaveBeenCalledTimes(
+                        reactedUrls.length,
+                      );
+
+                      if (expectedReactedValue !== undefined) {
+                        expect(reactionSpy).toHaveBeenCalledWith(
+                          expectedReactedValue,
+                        );
+                      }
+
                       history.destroy();
                       location.destroy();
                     },
                   );
-                }
-
-                (skip ? it.skip : it)(
-                  `should have reactive "${field}" (work reaction)`,
-                  () => {
-                    const reactionSpy = vi.fn();
-                    const history = new MobxHistory();
-                    const location = new MobxLocation(history);
-
-                    reaction(
-                      () => location[field],
-                      (fieldValue) => reactionSpy(fieldValue),
-                    );
-
-                    const historyToUse =
-                      historyType === 'globalThis.history'
-                        ? globalThis.history
-                        : history;
-
-                    reactedUrls.forEach((url) => {
-                      if (changeStateStrategy === 'pushState') {
-                        historyToUse.pushState(null, '', url);
-                      } else {
-                        historyToUse.replaceState(null, '', url);
-                      }
-                    });
-
-                    sleep(1000);
-                    vi.runAllTimers();
-
-                    expect(reactionSpy).toHaveBeenCalledTimes(
-                      reactedUrls.length,
-                    );
-
-                    reactedValues.forEach((value, i) => {
-                      expect(reactionSpy).toHaveBeenNthCalledWith(i + 1, value);
-                    });
-
-                    history.destroy();
-                    location.destroy();
-                  },
-                );
+                });
               });
             });
           });

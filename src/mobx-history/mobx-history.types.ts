@@ -37,4 +37,9 @@ export interface IMobxHistory extends History {
    * Removes event listeners
    */
   destroy(): void;
+
+  listen(
+    listener: (history: IMobxHistory) => void,
+    opts?: { signal?: AbortSignal },
+  ): () => void;
 }

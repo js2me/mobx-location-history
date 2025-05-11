@@ -88,5 +88,7 @@ describe('MobxHistory', () => {
     changeStateTest('replace', '/destroyed_home_10', 'global', 12, 8);
     changeStateTest('replace', '/destroyed_home_11', 'global', 12, 8);
     changeStateTest('replace', '/destroyed_home_12', 'global', 12, 8);
+
+    vi.useRealTimers();
   });
 });

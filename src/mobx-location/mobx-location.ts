@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { LinkedAbortController } from 'linked-abort-controller';
-import { action, makeObservable, observable, reaction } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 
 import { IMobxHistory } from '../mobx-history/index.js';
 
@@ -65,9 +65,10 @@ export class MobxLocation implements IMobxLocation {
 
     makeObservable(this);
 
-    reaction(
-      () => [this.history.state, this.history.length],
-      this.updateLocationData,
+    history.listen(
+      () => {
+        this.updateLocationData();
+      },
       {
         signal: this.abortController.signal,
       },

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { LinkedAbortController } from 'linked-abort-controller';
-import { action, createAtom, IAtom, makeObservable } from 'mobx';
+import { action, createAtom, IAtom, makeObservable, reaction } from 'mobx';
 
 import { IMobxHistory, To } from './mobx-history.types.js';
 import { createPath } from './utils/create-path.js';
@@ -86,7 +86,7 @@ export class MobxHistory implements IMobxHistory {
   }
 
   push(to: To, state?: any): void {
-    this.pushState(typeof to === 'string' ? to : createPath(to), '', state);
+    this.pushState(state, '', typeof to === 'string' ? to : createPath(to));
   }
 
   pushState(...args: Parameters<History['pushState']>): void {
@@ -95,7 +95,7 @@ export class MobxHistory implements IMobxHistory {
   }
 
   replace(to: To, state?: any): void {
-    this.replaceState(typeof to === 'string' ? to : createPath(to), '', state);
+    this.replaceState(state, '', typeof to === 'string' ? to : createPath(to));
   }
 
   replaceState(...args: Parameters<History['replaceState']>): void {
@@ -130,6 +130,17 @@ export class MobxHistory implements IMobxHistory {
 
   destroy(): void {
     this.abortController.abort();
+  }
+
+  listen(
+    listener: (history: IMobxHistory) => void,
+    opts?: { signal?: AbortSignal },
+  ): () => void {
+    return reaction(
+      () => [this.state, this.length, this.scrollRestoration],
+      () => listener(this),
+      { signal: opts?.signal ?? this.abortController.signal },
+    );
   }
 
   private reportChanged = () => {
