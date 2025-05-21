@@ -1,6 +1,6 @@
 {
   "name": "mobx-location-history",
-  "version": "2.3.2",
+  "version": "2.4.0",
   "scripts": {
     "clean": "rimraf dist",
     "check": "eslint . --fix",
