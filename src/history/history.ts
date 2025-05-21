@@ -3,17 +3,17 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, createAtom, IAtom, makeObservable, reaction } from 'mobx';
 
-import { IMobxHistory, To } from './mobx-history.types.js';
+import { IHistory, To } from './history.types.js';
 import { createPath } from './utils/create-path.js';
 
 const historyEvents = ['popstate', 'pushState', 'replaceState', 'hashchange'];
 
-const originHistoryMethods: Partial<History> = {};
+const originHistoryMethods: Partial<globalThis.History> = {};
 
-export class MobxHistory implements IMobxHistory {
+export class History implements IHistory {
   protected abortController: AbortController;
   protected atom: IAtom;
-  protected originHistory: History;
+  protected originHistory: globalThis.History;
 
   constructor(abortSignal?: AbortSignal) {
     this.atom = createAtom('history_update');
@@ -89,7 +89,7 @@ export class MobxHistory implements IMobxHistory {
     this.pushState(state, '', typeof to === 'string' ? to : createPath(to));
   }
 
-  pushState(...args: Parameters<History['pushState']>): void {
+  pushState(...args: Parameters<IHistory['pushState']>): void {
     originHistoryMethods.pushState!(...args);
     this.reportChanged();
   }
@@ -98,7 +98,7 @@ export class MobxHistory implements IMobxHistory {
     this.replaceState(state, '', typeof to === 'string' ? to : createPath(to));
   }
 
-  replaceState(...args: Parameters<History['replaceState']>): void {
+  replaceState(...args: Parameters<IHistory['replaceState']>): void {
     originHistoryMethods.replaceState!(...args);
     this.reportChanged();
   }
@@ -123,7 +123,7 @@ export class MobxHistory implements IMobxHistory {
     this.reportChanged();
   }
 
-  go(...args: Parameters<History['go']>): void {
+  go(...args: Parameters<IHistory['go']>): void {
     originHistoryMethods.go!(...args);
     this.reportChanged();
   }
@@ -133,7 +133,7 @@ export class MobxHistory implements IMobxHistory {
   }
 
   listen(
-    listener: (history: IMobxHistory) => void,
+    listener: (history: IHistory) => void,
     opts?: { signal?: AbortSignal },
   ): () => void {
     return reaction(
@@ -149,5 +149,5 @@ export class MobxHistory implements IMobxHistory {
 }
 
 /*#__PURE__*/
-export const createMobxHistory = (abortSignal?: AbortSignal) =>
-  new MobxHistory(abortSignal);
+export const createHistory = (abortSignal?: AbortSignal) =>
+  new History(abortSignal);

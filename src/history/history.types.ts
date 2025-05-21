@@ -22,7 +22,7 @@ export type To = string | Partial<Path>;
  * Interface for working with the History API
  * adds reactivity to fields from the History API
  */
-export interface IMobxHistory extends History {
+export interface IHistory extends globalThis.History {
   /**
    * history npm package like api
    */
@@ -39,7 +39,7 @@ export interface IMobxHistory extends History {
   destroy(): void;
 
   listen(
-    listener: (history: IMobxHistory) => void,
+    listener: (history: IHistory) => void,
     opts?: { signal?: AbortSignal },
   ): () => void;
 }

@@ -2,15 +2,15 @@ import { reaction } from 'mobx';
 import { describe, expect, it, vi } from 'vitest';
 import { sleep } from 'yummies/async';
 
-import { MobxHistory } from './mobx-history.js';
+import { History } from './history.js';
 
-describe('MobxHistory', () => {
+describe('History', () => {
   it('"pushState" & "replaceState" should work', async () => {
     vi.useFakeTimers();
 
     const lengthReactionSpy = vi.fn();
 
-    const mobxHistory = new MobxHistory();
+    const mobxHistory = new History();
     const globalHistory = history;
 
     reaction(

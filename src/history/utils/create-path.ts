@@ -1,4 +1,4 @@
-import { Path } from '../mobx-history.types.js';
+import { Path } from '../history.types.js';
 
 /**
  * Creates a string URL path from the given pathname, search, and hash components.

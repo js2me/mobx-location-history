@@ -3,9 +3,9 @@ import { reaction } from 'mobx';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { sleep } from 'yummies/async';
 
-import { MobxHistory } from '../mobx-history/mobx-history.js';
+import { History } from '../history/index.js';
 
-import { MobxLocation } from './mobx-location.js';
+import { Location } from './location.js';
 
 describe('MobxLocation', () => {
   beforeEach(async () => {
@@ -25,8 +25,8 @@ describe('MobxLocation', () => {
 
   it('href test', () => {
     const reactionSpy1 = vi.fn();
-    const history = new MobxHistory();
-    const location = new MobxLocation(history);
+    const history = new History();
+    const location = new Location(history);
 
     reaction(
       () => location.href,
@@ -117,7 +117,7 @@ describe('MobxLocation', () => {
   });
 
   const reactiveFieldsToTest: [
-    keyof MobxLocation,
+    keyof Location,
     {
       ignoredUrls?: string[];
       reactedUrls: string[];
@@ -177,8 +177,8 @@ describe('MobxLocation', () => {
                     `[ignore reaction] "${ignoreUrl}"`,
                     () => {
                       const reactionSpy = vi.fn();
-                      const history = new MobxHistory();
-                      const location = new MobxLocation(history);
+                      const history = new History();
+                      const location = new Location(history);
 
                       reaction(
                         () => location[field],
@@ -216,8 +216,8 @@ describe('MobxLocation', () => {
                         : ` -> location.${field} = ${JSON.stringify(expectedReactedValue)}`),
                     () => {
                       const reactionSpy = vi.fn();
-                      const history = new MobxHistory();
-                      const location = new MobxLocation(history);
+                      const history = new History();
+                      const location = new Location(history);
 
                       reaction(
                         () => location[field],

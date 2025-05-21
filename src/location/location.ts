@@ -2,9 +2,9 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable } from 'mobx';
 
-import { IMobxHistory } from '../mobx-history/index.js';
+import { IHistory } from '../history/index.js';
 
-import { IMobxLocation } from './mobx-location.types.js';
+import { ILocation } from './location.types.js';
 
 const locationFieldConfigs = [
   ['hash', observable.ref],
@@ -19,9 +19,9 @@ const locationFieldConfigs = [
   ['search', observable.ref],
 ] as const;
 
-export class MobxLocation implements IMobxLocation {
+export class Location implements ILocation {
   protected abortController: AbortController;
-  protected originLocation: Location;
+  protected originLocation: globalThis.Location;
 
   private _hash!: string;
   private _host!: string;
@@ -46,7 +46,7 @@ export class MobxLocation implements IMobxLocation {
   search!: string;
 
   constructor(
-    private history: IMobxHistory,
+    private history: IHistory,
     abortSignal?: AbortSignal,
   ) {
     this.abortController = new LinkedAbortController(abortSignal);
@@ -101,7 +101,7 @@ export class MobxLocation implements IMobxLocation {
     return this.originLocation.toString();
   }
 
-  assign(...args: Parameters<Location['assign']>): void {
+  assign(...args: Parameters<ILocation['assign']>): void {
     return this.originLocation.assign(...args);
   }
 
@@ -109,7 +109,7 @@ export class MobxLocation implements IMobxLocation {
     return this.originLocation.reload();
   }
 
-  replace(...args: Parameters<Location['assign']>): void {
+  replace(...args: Parameters<ILocation['assign']>): void {
     return this.originLocation.replace(...args);
   }
 
@@ -119,7 +119,5 @@ export class MobxLocation implements IMobxLocation {
 }
 
 /*#__PURE__*/
-export const createMobxLocation = (
-  history: IMobxHistory,
-  abortSignal?: AbortSignal,
-) => new MobxLocation(history, abortSignal);
+export const createLocation = (history: IHistory, abortSignal?: AbortSignal) =>
+  new Location(history, abortSignal);
