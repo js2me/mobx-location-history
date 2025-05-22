@@ -2,7 +2,11 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable } from 'mobx';
 
-import { ILocation, LocationOptions } from './location.types.js';
+import {
+  ILocation,
+  LocationOptions,
+  LocationWritableField,
+} from './location.types.js';
 
 const locationFieldConfigs = [
   ['hash', observable.ref],
@@ -13,24 +17,23 @@ const locationFieldConfigs = [
   ['pathname', observable.ref],
   ['port', observable.ref],
   ['protocol', observable.ref],
-  ['ancestorOrigins', observable.ref],
   ['search', observable.ref],
-] as const;
+] as const satisfies [keyof ILocation, any][];
+
+const defaultFieldSetter: Required<LocationOptions>['setField'] = (
+  field,
+  value,
+) => {
+  globalThis.location[field] = value;
+};
+
+const defaultFieldGetter: Required<LocationOptions>['getField'] = (field) =>
+  globalThis.location[field];
 
 export class Location implements ILocation {
   protected abortController: AbortController;
-  protected originLocation: globalThis.Location;
 
-  private _hash!: string;
-  private _host!: string;
-  private _hostname!: string;
-  private _href!: string;
-  private _origin!: string;
-  private _pathname!: string;
-  private _port!: string;
-  private _protocol!: string;
-  private _ancestorOrigins!: DOMStringList;
-  private _search!: string;
+  private _observableFields!: Record<keyof ILocation, any>;
 
   hash!: string;
   host!: string;
@@ -40,29 +43,44 @@ export class Location implements ILocation {
   pathname!: string;
   port!: string;
   protocol!: string;
-  ancestorOrigins!: DOMStringList;
   search!: string;
+
+  private fieldSetter: Required<LocationOptions>['setField'];
+  private fieldGetter: Required<LocationOptions>['getField'];
 
   constructor(options: LocationOptions) {
     this.abortController = new LinkedAbortController(options.abortSignal);
-    this.originLocation = globalThis.location;
+    this._observableFields = {} as Record<keyof ILocation, any>;
+
+    this.fieldSetter = options.setField ?? defaultFieldSetter;
+    this.fieldGetter = options.getField ?? defaultFieldGetter;
 
     /**
      * Проводит инициализацию начальных значений всех свойств из location
      */
-    this.initializeLocationProperties();
-
-    locationFieldConfigs.forEach(([field, config]) => {
-      config(this, `_${field}`);
+    locationFieldConfigs.forEach(([field]) => {
+      this._observableFields[field] = this.fieldGetter(field);
+      Object.defineProperty(this, field, {
+        get: () => this._observableFields[field],
+        set: (value) => {
+          this._observableFields[field] = value;
+          this.fieldSetter(field as LocationWritableField, value);
+        },
+      });
     });
 
-    action.bound(this, 'updateLocationData');
+    locationFieldConfigs.forEach(([field, config]) => {
+      config(this._observableFields, field);
+    });
 
+    action.bound(this, 'syncLocationData');
+
+    makeObservable(this._observableFields);
     makeObservable(this);
 
     options.history.listen(
       () => {
-        this.updateLocationData();
+        this.syncLocationData();
       },
       {
         signal: this.abortController.signal,
@@ -70,42 +88,14 @@ export class Location implements ILocation {
     );
   }
 
-  protected initializeLocationProperties() {
+  protected syncLocationData() {
     locationFieldConfigs.forEach(([field]) => {
-      // @ts-ignore
-      this[`_${field}`] = this.originLocation[field];
-      Object.defineProperty(this, field, {
-        get: () => this[`_${field}`],
-        set: (value) => {
-          this[`_${field}`] = value;
-          // @ts-ignore
-          this.originLocation[field] = value;
-        },
-      });
-    });
-  }
-
-  protected updateLocationData() {
-    locationFieldConfigs.forEach(([field]) => {
-      // @ts-ignore
-      this[`_${field}`] = this.originLocation[field];
+      this._observableFields[field] = this.fieldGetter(field);
     });
   }
 
   toString(): string {
-    return this.originLocation.toString();
-  }
-
-  assign(...args: Parameters<ILocation['assign']>): void {
-    return this.originLocation.assign(...args);
-  }
-
-  reload(): void {
-    return this.originLocation.reload();
-  }
-
-  replace(...args: Parameters<ILocation['assign']>): void {
-    return this.originLocation.replace(...args);
+    return this.href;
   }
 
   destroy(): void {

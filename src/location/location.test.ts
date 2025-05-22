@@ -7,7 +7,7 @@ import { History } from '../history/index.js';
 
 import { Location } from './location.js';
 
-describe('MobxLocation', () => {
+describe('Location', () => {
   beforeEach(async () => {
     vi.useFakeTimers();
   });
