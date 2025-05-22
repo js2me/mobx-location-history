@@ -34,20 +34,6 @@ export interface IHistory
   location: ILocation;
 
   /**
-   * @deprecated use `push()`. This method will be removed
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/History/pushState)
-   */
-  pushState(data: any, unused: string, url?: string | URL | null): void;
-
-  /**
-   * @deprecated use `replace()`. This method will be removed
-   *
-   * [MDN Reference](https://developer.mozilla.org/docs/Web/API/History/replaceState)
-   */
-  replaceState(data: any, unused: string, url?: string | URL | null): void;
-
-  /**
    * history npm package like api
    */
   push(to: To, state?: any): void;

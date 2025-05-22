@@ -84,7 +84,6 @@ export class QueryParam<T> {
  * Create get\set value, which is synchronized with the query parameter
  * Manual handling of the query parameter
  */
-/*#__PURE__*/
 export const createQueryParam = <T>(
   config: QueryParamsFieldModelConfig<T>,
 ): QueryParam<T> => {
@@ -95,7 +94,6 @@ export const createQueryParam = <T>(
  * Create get\set value, which is synchronized with the query parameter
  * Create by preset
  */
-/*#__PURE__*/
 export const createQueryParamFromPreset = <T>(
   config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
   // eslint-disable-next-line sonarjs/no-identical-functions

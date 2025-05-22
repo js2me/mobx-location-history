@@ -94,21 +94,25 @@ export class History implements IHistory {
   }
 
   push(to: To, state?: any): void {
-    this.pushState(state, '', normalizePath(to));
-  }
-
-  pushState(...args: Parameters<globalThis.History['pushState']>): void {
-    originHistoryMethods.pushState!(...args);
+    originHistoryMethods.pushState!(state, '', normalizePath(to));
     this.reportChanged();
   }
 
   replace(to: To, state?: any): void {
-    this.replaceState(state, '', normalizePath(to));
+    originHistoryMethods.replaceState!(state, '', normalizePath(to));
+    this.reportChanged();
+  }
+
+  pushState(...args: Parameters<globalThis.History['pushState']>): void {
+    if (args[2] != null) {
+      this.push(args[2], args[0]);
+    }
   }
 
   replaceState(...args: Parameters<globalThis.History['replaceState']>): void {
-    originHistoryMethods.replaceState!(...args);
-    this.reportChanged();
+    if (args[2] != null) {
+      this.replace(args[2], args[0]);
+    }
   }
 
   get length() {
@@ -156,5 +160,4 @@ export class History implements IHistory {
   }
 }
 
-/*#__PURE__*/
 export const createHistory = (params?: HistoryOptions) => new History(params);

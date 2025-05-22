@@ -103,6 +103,5 @@ export class Location implements ILocation {
   }
 }
 
-/*#__PURE__*/
 export const createLocation = (options: LocationOptions) =>
   new Location(options);

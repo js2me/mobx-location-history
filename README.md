@@ -4,14 +4,13 @@
 
 _Browser Location and History charged by MobX + other utilities_  
 
-## Observable browser [History](src/mobx-history/mobx-history.types.ts) and [Location](src/mobx-location/mobx-location.types.ts) interfaces + other utilities (like [QueryParams](src/query-params/query-params.types.ts))   
+## Observable browser [History](src/history/history.ts) and [Location](src/location/location.ts) interfaces + other utilities (like [QueryParams](src/query-params/query-params.types.ts))   
 
 ```ts
 import { reaction } from "mobx"
-import { MobxHistory, MobxLocation, QueryParams } from "mobx-location-history";
+import { History, Location, QueryParams } from "mobx-location-history";
 
-const history = new MobxHistory()
-const location = new MobxLocation(history);
+const history = new History()
 const queryParams = new QueryParams(location, history);
 
 
