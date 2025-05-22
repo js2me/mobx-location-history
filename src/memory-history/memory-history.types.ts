@@ -39,7 +39,7 @@ export interface MemoryLocation extends Path {
 }
 
 export interface IMemoryHistory extends Omit<IHistory, 'location' | 'listen'> {
-  location: Readonly<MemoryLocation>;
+  location: MemoryLocation;
 
   listen(
     listener: (history: IMemoryHistory) => void,
