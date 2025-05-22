@@ -1,4 +1,4 @@
-import type { HistoryOptions, Path } from '../history/index.js';
+import type { HistoryOptions, IHistory, Path } from '../history/index.js';
 
 /**
  * MemoryHistory specific options
@@ -38,12 +38,11 @@ export interface MemoryLocation extends Path {
   scrollRestoration: ScrollRestoration;
 }
 
-/**
- * History state object with index tracking
- */
-export interface HistoryState {
-  /**
-   * Index of the current location in the entries array
-   */
-  idx: number;
+export interface IMemoryHistory extends Omit<IHistory, 'location' | 'listen'> {
+  location: Readonly<MemoryLocation>;
+
+  listen(
+    listener: (history: IMemoryHistory) => void,
+    opts?: { signal?: AbortSignal },
+  ): () => void;
 }

@@ -8,11 +8,11 @@ import {
   runInAction,
 } from 'mobx';
 
-import { IHistory, To } from '../history/index.js';
+import { To } from '../history/index.js';
 import { normalizePath } from '../history/utils/normalize-path.js';
-import { ILocation, Location } from '../location/index.js';
 
 import {
+  IMemoryHistory,
   MemoryHistoryOptions,
   MemoryLocation,
 } from './memory-history.types.js';
@@ -23,9 +23,7 @@ import { generateKey } from './utils/generate-key.js';
  * This is useful for tests, non-DOM environments, or scenarios where you
  * want to have full control over the history stack.
  */
-export class MemoryHistory implements IHistory {
-  location: ILocation;
-
+export class MemoryHistory implements IMemoryHistory {
   protected abortController: AbortController;
 
   protected entries: MemoryLocation[] = [];
@@ -65,27 +63,20 @@ export class MemoryHistory implements IHistory {
     action.bound(this, 'pushState');
 
     makeObservable(this);
-
-    this.location =
-      options?.location ??
-      new Location({
-        history: this,
-        abortSignal: this.abortController.signal,
-      });
   }
 
-  private get activeEntry() {
+  get location() {
     return this.entries[this.index];
   }
 
   get scrollRestoration() {
-    return this.activeEntry?.scrollRestoration ?? 'auto';
+    return this.location?.scrollRestoration ?? 'auto';
   }
 
   set scrollRestoration(scrollRestoration: ScrollRestoration) {
     runInAction(() => {
-      if (this.activeEntry) {
-        this.activeEntry.scrollRestoration = scrollRestoration;
+      if (this.location) {
+        this.location.scrollRestoration = scrollRestoration;
       }
     });
   }
@@ -98,7 +89,7 @@ export class MemoryHistory implements IHistory {
     const currentIndexIsLast = this.index === this.length - 1;
     const nextLocation = this.createLocation(args[2] ?? {}, {
       state: args[0],
-      scrollRestoration: this.activeEntry?.scrollRestoration,
+      scrollRestoration: this.location?.scrollRestoration,
     });
 
     if (!currentIndexIsLast) {
@@ -114,13 +105,13 @@ export class MemoryHistory implements IHistory {
   }
 
   replaceState(...args: Parameters<globalThis.History['replaceState']>): void {
-    if (this.activeEntry) {
+    if (this.location) {
       const nextLocation = this.createLocation(args[2] ?? {}, {
         state: args[0],
-        scrollRestoration: this.activeEntry.scrollRestoration,
+        scrollRestoration: this.location.scrollRestoration,
       });
 
-      Object.assign(this.activeEntry, nextLocation);
+      Object.assign(this.location, nextLocation);
     }
   }
 
@@ -129,7 +120,7 @@ export class MemoryHistory implements IHistory {
   }
 
   get state() {
-    return this.activeEntry?.state;
+    return this.location?.state;
   }
 
   back(): void {
@@ -152,11 +143,11 @@ export class MemoryHistory implements IHistory {
   }
 
   listen(
-    listener: (history: IHistory) => void,
+    listener: (history: IMemoryHistory) => void,
     opts?: { signal?: AbortSignal },
   ): () => void {
     return reaction(
-      () => [Object.values(this.activeEntry), this.length, this.state],
+      () => [Object.values(this.location), this.length, this.state],
       () => listener(this),
       { signal: opts?.signal ?? this.abortController.signal },
     );
