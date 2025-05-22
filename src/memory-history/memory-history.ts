@@ -2,8 +2,6 @@ import { LinkedAbortController } from 'linked-abort-controller';
 import {
   action,
   computed,
-  createAtom,
-  IAtom,
   makeObservable,
   observable,
   reaction,
@@ -28,18 +26,13 @@ import { generateKey } from './utils/generate-key.js';
 export class MemoryHistory implements IHistory {
   location: ILocation;
 
-  private _scrollRestoration: ScrollRestoration;
-
   protected abortController: AbortController;
-  protected atom: IAtom;
 
   protected entries: MemoryLocation[] = [];
-  protected backEntries: MemoryLocation[] = [];
 
   index: number;
 
   constructor(options?: MemoryHistoryOptions) {
-    this.atom = createAtom('history_update');
     this.abortController = new LinkedAbortController(options?.abortSignal);
 
     this.entries = (options?.initialEntries ?? ['/']).map((path) => {
@@ -54,16 +47,17 @@ export class MemoryHistory implements IHistory {
       });
     });
 
-    this._scrollRestoration = 'auto';
     this.index = Math.min(
       Math.max(0, options?.initialIndex ?? this.entries.length - 1),
       this.entries.length - 1,
     );
 
-    observable.ref(this, '_scrollRestoration');
+    observable.ref(this, 'index');
     observable.deep(this, 'entries');
-    observable.deep(this, 'backEntries');
     computed.struct(this, 'lastEntry');
+    computed.struct(this, 'length');
+    computed.struct(this, 'state');
+
     action.bound(this, 'back');
     action.bound(this, 'go');
     action.bound(this, 'forward');
@@ -80,18 +74,20 @@ export class MemoryHistory implements IHistory {
       });
   }
 
+  private get activeEntry() {
+    return this.entries[this.index];
+  }
+
   get scrollRestoration() {
-    return this._scrollRestoration;
+    return this.activeEntry?.scrollRestoration ?? 'auto';
   }
 
   set scrollRestoration(scrollRestoration: ScrollRestoration) {
     runInAction(() => {
-      this._scrollRestoration = scrollRestoration;
+      if (this.activeEntry) {
+        this.activeEntry.scrollRestoration = scrollRestoration;
+      }
     });
-  }
-
-  private get lastEntry() {
-    return this.entries.at(-1) ?? null;
   }
 
   push(to: To, state?: any): void {
@@ -99,7 +95,18 @@ export class MemoryHistory implements IHistory {
   }
 
   pushState(...args: Parameters<globalThis.History['pushState']>): void {
-    this.entries.push(this.createLocation(args[2] ?? {}, args[0]));
+    const currentIndexIsLast = this.index === this.length - 1;
+    const nextLocation = this.createLocation(args[2] ?? {}, {
+      state: args[0],
+      scrollRestoration: this.activeEntry?.scrollRestoration,
+    });
+
+    if (!currentIndexIsLast) {
+      this.entries.splice(this.index);
+    }
+
+    this.entries.push(nextLocation);
+    this.index = this.entries.length - 1;
   }
 
   replace(to: To, state?: any): void {
@@ -107,8 +114,14 @@ export class MemoryHistory implements IHistory {
   }
 
   replaceState(...args: Parameters<globalThis.History['replaceState']>): void {
-    const lastEntry = this.entries.at(-1)!;
-    Object.assign(lastEntry, this.createLocation(args[2] ?? {}, args[0]));
+    if (this.activeEntry) {
+      const nextLocation = this.createLocation(args[2] ?? {}, {
+        state: args[0],
+        scrollRestoration: this.activeEntry.scrollRestoration,
+      });
+
+      Object.assign(this.activeEntry, nextLocation);
+    }
   }
 
   get length() {
@@ -116,36 +129,26 @@ export class MemoryHistory implements IHistory {
   }
 
   get state() {
-    return this.lastEntry?.state;
+    return this.activeEntry?.state;
   }
 
   back(): void {
-    const [entry] = this.entries.splice(-1, 1);
-    if (entry) {
-      this.backEntries.unshift(entry);
-    }
+    this.go(-1);
   }
 
   forward(): void {
-    if (this.backEntries.length > 0) {
-      const entry = this.backEntries.shift()!;
-      this.entries.push(entry);
-    }
+    this.go(1);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   go(...args: Parameters<globalThis.History['go']>): void {
-    throw new Error('not implemented');
-    // const delta = args[0] ?? 0;
+    const delta = args[0] ?? 0;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const nextIndex = Math.min(
-    //   Math.max(this.index + delta, 0),
-    //   this.entries.length - 1,
-    // );
-  }
+    const nextIndex = Math.min(
+      Math.max(this.index + delta, 0),
+      this.length - 1,
+    );
 
-  destroy(): void {
-    this.abortController.abort();
+    this.index = nextIndex;
   }
 
   listen(
@@ -153,13 +156,16 @@ export class MemoryHistory implements IHistory {
     opts?: { signal?: AbortSignal },
   ): () => void {
     return reaction(
-      () => [this.state, this.length, this.scrollRestoration],
+      () => [Object.values(this.activeEntry), this.length, this.state],
       () => listener(this),
       { signal: opts?.signal ?? this.abortController.signal },
     );
   }
 
-  private createLocation(to: To, state?: any): MemoryLocation {
+  private createLocation(
+    to: To,
+    extra?: Partial<Pick<MemoryLocation, 'state' | 'scrollRestoration'>>,
+  ): MemoryLocation {
     let pathname: string;
     let search: string = '';
     let hash: string = '';
@@ -181,10 +187,14 @@ export class MemoryHistory implements IHistory {
       pathname,
       search,
       hash,
-      state: state ?? null,
-      scrollRestoration: 'auto',
+      state: extra?.state ?? null,
+      scrollRestoration: extra?.scrollRestoration ?? 'auto',
       key: generateKey(),
     };
+  }
+
+  destroy(): void {
+    this.abortController.abort();
   }
 }
 

@@ -136,10 +136,6 @@ export class History implements IHistory {
     this.reportChanged();
   }
 
-  destroy(): void {
-    this.abortController.abort();
-  }
-
   listen(
     listener: (history: IHistory) => void,
     opts?: { signal?: AbortSignal },
@@ -154,6 +150,10 @@ export class History implements IHistory {
   protected reportChanged = () => {
     this.atom.reportChanged();
   };
+
+  destroy(): void {
+    this.abortController.abort();
+  }
 }
 
 /*#__PURE__*/

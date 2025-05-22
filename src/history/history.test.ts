@@ -107,19 +107,33 @@ describe('History', () => {
   });
 
   it('should handle dispose function in .listen() method', async () => {
+    vi.useFakeTimers();
     const history = new History();
     const listener = vi.fn();
 
     const removeListener = history.listen(listener);
 
     history.push('/new-location');
+    sleep(1000);
+    vi.runAllTimers();
     expect(listener).toHaveBeenCalledTimes(1);
 
     history.replace('/replaced-location');
+    sleep(1000);
+    vi.runAllTimers();
     expect(listener).toHaveBeenCalledTimes(2);
+
+    history.replace('/replaced-location');
+    sleep(1000);
+    vi.runAllTimers();
+    expect(listener).toHaveBeenCalledTimes(3);
 
     removeListener();
     history.push('/no-listener');
-    expect(listener).toHaveBeenCalledTimes(2);
+    sleep(1000);
+    vi.runAllTimers();
+    expect(listener).toHaveBeenCalledTimes(3);
+
+    vi.useRealTimers();
   });
 });

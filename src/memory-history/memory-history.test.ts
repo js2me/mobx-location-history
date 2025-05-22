@@ -5,63 +5,78 @@ import { sleep } from 'yummies/async';
 import { MemoryHistory } from './memory-history.js';
 
 describe('MemoryHistory', () => {
-  it.skip('"pushState" & "replaceState" should work', async () => {
+  it('"pushState" & "replaceState" should work', async () => {
     vi.useFakeTimers();
 
     const lengthReactionSpy = vi.fn();
 
     const mobxHistory = new MemoryHistory();
-    const globalHistory = history;
 
     reaction(
       () => mobxHistory.length,
       (length) => lengthReactionSpy(length),
     );
 
-    const changeStateTest = (
-      change: 'push' | 'replace' | false,
-      path: string | false,
-      using: 'global' | 'mobx' | false,
-      lengthChanged: number,
-      lengthReactionChanged: number,
-    ) => {
-      if (change !== false && path !== false) {
-        if (change === 'push') {
-          if (using === 'global') {
-            globalHistory.pushState(null, '', path);
-          } else {
-            mobxHistory.push(path);
-          }
-        } else if (using === 'global') {
-          globalHistory.replaceState(null, '', path);
+    const changeStateTest = ({
+      action,
+      path,
+      expected,
+    }: {
+      action?: 'push' | 'replace';
+      path?: string;
+      expected: {
+        length: number;
+        lengthReactions: number;
+      };
+    }) => {
+      if (action && path) {
+        if (action === 'push') {
+          mobxHistory.push(path);
         } else {
           mobxHistory.replace(path);
         }
       }
 
-      expect(globalHistory.length).toBe(lengthChanged);
-      expect(mobxHistory.length).toBe(lengthChanged);
+      expect(mobxHistory.length).toBe(expected.length);
 
       sleep(1000);
       vi.runAllTimers();
 
-      expect(lengthReactionSpy).toHaveBeenCalledTimes(lengthReactionChanged);
+      expect(lengthReactionSpy).toHaveBeenCalledTimes(expected.lengthReactions);
     };
 
-    changeStateTest(false, false, false, 1, 0);
-    changeStateTest('push', '/home', 'mobx', 2, 1);
-    changeStateTest('push', '/about', 'mobx', 3, 2);
-    changeStateTest('replace', '/bak', 'mobx', 3, 2);
-    changeStateTest('replace', '/baz', 'mobx', 3, 2);
-    changeStateTest('push', '/bal', 'mobx', 4, 3);
-    changeStateTest('replace', '/bal', 'mobx', 4, 3);
-    changeStateTest('push', '/bal', 'global', 5, 4);
-    changeStateTest('replace', '/bal', 'global', 5, 4);
-    changeStateTest('replace', '/bal', 'global', 5, 4);
-    changeStateTest('push', '/bal', 'global', 6, 5);
-    changeStateTest('replace', '/bal', 'global', 6, 5);
-    changeStateTest('replace', '/bal', 'global', 6, 5);
-    changeStateTest(false, false, false, 6, 5);
+    changeStateTest({ expected: { length: 1, lengthReactions: 0 } });
+    changeStateTest({
+      action: 'push',
+      path: '/home',
+      expected: { length: 2, lengthReactions: 1 },
+    });
+    changeStateTest({
+      action: 'push',
+      path: '/about',
+      expected: { length: 3, lengthReactions: 2 },
+    });
+    changeStateTest({
+      action: 'replace',
+      path: '/bak',
+      expected: { length: 3, lengthReactions: 2 },
+    });
+    changeStateTest({
+      action: 'replace',
+      path: '/baz',
+      expected: { length: 3, lengthReactions: 2 },
+    });
+    changeStateTest({
+      action: 'push',
+      path: '/bal',
+      expected: { length: 4, lengthReactions: 3 },
+    });
+    changeStateTest({
+      action: 'replace',
+      path: '/bal',
+      expected: { length: 4, lengthReactions: 3 },
+    });
+    changeStateTest({ expected: { length: 4, lengthReactions: 3 } });
 
     /// DESTROY
     mobxHistory.destroy();
@@ -70,29 +85,46 @@ describe('MemoryHistory', () => {
     // change listeners works because
     // after destroy we ONLY remove event listeners
     // from global history and it is all.
-    changeStateTest('push', '/destroyed_home', 'mobx', 7, 6);
-    changeStateTest('push', '/destroyed_home_2', 'mobx', 8, 7);
-    changeStateTest('push', '/destroyed_home_3', 'mobx', 9, 8);
+    changeStateTest({
+      action: 'push',
+      path: '/destroyed_home',
+      expected: { length: 5, lengthReactions: 4 },
+    });
+    changeStateTest({
+      action: 'push',
+      path: '/destroyed_home_2',
+      expected: { length: 6, lengthReactions: 5 },
+    });
+    changeStateTest({
+      action: 'push',
+      path: '/destroyed_home_3',
+      expected: { length: 7, lengthReactions: 6 },
+    });
 
-    changeStateTest('replace', '/destroyed_home_4', 'mobx', 9, 8);
-    changeStateTest('replace', '/destroyed_home_5', 'mobx', 9, 8);
-    changeStateTest('replace', '/destroyed_home_6', 'mobx', 9, 8);
+    changeStateTest({
+      action: 'replace',
+      path: '/destroyed_home_4',
+      expected: { length: 7, lengthReactions: 6 },
+    });
+    changeStateTest({
+      action: 'replace',
+      path: '/destroyed_home_5',
+      expected: { length: 7, lengthReactions: 6 },
+    });
+    changeStateTest({
+      action: 'replace',
+      path: '/destroyed_home_6',
+      expected: { length: 7, lengthReactions: 6 },
+    });
 
     // but if we will using global history
     // updates for mobx will not work
     // because listeners was died
-    changeStateTest('push', '/destroyed_home_7', 'global', 10, 8);
-    changeStateTest('push', '/destroyed_home_8', 'global', 11, 8);
-    changeStateTest('push', '/destroyed_home_9', 'global', 12, 8);
-
-    changeStateTest('replace', '/destroyed_home_10', 'global', 12, 8);
-    changeStateTest('replace', '/destroyed_home_11', 'global', 12, 8);
-    changeStateTest('replace', '/destroyed_home_12', 'global', 12, 8);
 
     vi.useRealTimers();
   });
 
-  it.skip('should handle AbortController signals', () => {
+  it('should handle AbortController signals', () => {
     const abortController = new AbortController();
     const history = new MemoryHistory();
     const listener = vi.fn();
@@ -106,20 +138,34 @@ describe('MemoryHistory', () => {
     expect(listener).toHaveBeenCalledTimes(1);
   });
 
-  it.skip('should handle dispose function in .listen() method', async () => {
+  it('should handle dispose function in .listen() method', async () => {
+    vi.useFakeTimers();
     const history = new MemoryHistory();
     const listener = vi.fn();
 
     const removeListener = history.listen(listener);
 
     history.push('/new-location');
+    sleep(1000);
+    vi.runAllTimers();
     expect(listener).toHaveBeenCalledTimes(1);
 
     history.replace('/replaced-location');
+    sleep(1000);
+    vi.runAllTimers();
     expect(listener).toHaveBeenCalledTimes(2);
+
+    history.replace('/replaced-location');
+    sleep(1000);
+    vi.runAllTimers();
+    expect(listener).toHaveBeenCalledTimes(3);
 
     removeListener();
     history.push('/no-listener');
-    expect(listener).toHaveBeenCalledTimes(2);
+    sleep(1000);
+    vi.runAllTimers();
+    expect(listener).toHaveBeenCalledTimes(3);
+
+    vi.useRealTimers();
   });
 });
