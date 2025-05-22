@@ -1,3 +1,10 @@
+import { IHistory } from '../history/index.js';
+
+export interface LocationOptions {
+  history: IHistory;
+  abortSignal?: AbortSignal;
+}
+
 /**
  * Interface for working with the Location API
  * adds reactivity to fields from the Location API

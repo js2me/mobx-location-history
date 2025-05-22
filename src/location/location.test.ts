@@ -26,7 +26,9 @@ describe('MobxLocation', () => {
   it('href test', () => {
     const reactionSpy1 = vi.fn();
     const history = new History();
-    const location = new Location(history);
+    const location = new Location({
+      history,
+    });
 
     reaction(
       () => location.href,
@@ -178,7 +180,7 @@ describe('MobxLocation', () => {
                     () => {
                       const reactionSpy = vi.fn();
                       const history = new History();
-                      const location = new Location(history);
+                      const location = new Location({ history });
 
                       reaction(
                         () => location[field],
@@ -217,7 +219,7 @@ describe('MobxLocation', () => {
                     () => {
                       const reactionSpy = vi.fn();
                       const history = new History();
-                      const location = new Location(history);
+                      const location = new Location({ history });
 
                       reaction(
                         () => location[field],

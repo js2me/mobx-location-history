@@ -2,3 +2,4 @@ export * from './history/index.js';
 export * from './location/index.js';
 export * from './query-params/index.js';
 export * from './query-param/index.js';
+export * from './memory-history/index.js';

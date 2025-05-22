@@ -2,9 +2,7 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable } from 'mobx';
 
-import { IHistory } from '../history/index.js';
-
-import { ILocation } from './location.types.js';
+import { ILocation, LocationOptions } from './location.types.js';
 
 const locationFieldConfigs = [
   ['hash', observable.ref],
@@ -45,11 +43,8 @@ export class Location implements ILocation {
   ancestorOrigins!: DOMStringList;
   search!: string;
 
-  constructor(
-    private history: IHistory,
-    abortSignal?: AbortSignal,
-  ) {
-    this.abortController = new LinkedAbortController(abortSignal);
+  constructor(options: LocationOptions) {
+    this.abortController = new LinkedAbortController(options.abortSignal);
     this.originLocation = globalThis.location;
 
     /**
@@ -65,7 +60,7 @@ export class Location implements ILocation {
 
     makeObservable(this);
 
-    history.listen(
+    options.history.listen(
       () => {
         this.updateLocationData();
       },
@@ -119,5 +114,5 @@ export class Location implements ILocation {
 }
 
 /*#__PURE__*/
-export const createLocation = (history: IHistory, abortSignal?: AbortSignal) =>
-  new Location(history, abortSignal);
+export const createLocation = (options: LocationOptions) =>
+  new Location(options);

@@ -3,27 +3,28 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, createAtom, IAtom, makeObservable, reaction } from 'mobx';
 
-import { IHistory, To } from './history.types.js';
-import { createPath } from './utils/create-path.js';
+import { ILocation } from '../location/index.js';
+import { Location } from '../location/location.js';
+
+import { HistoryOptions, IHistory, To } from './history.types.js';
+import { normalizePath } from './utils/normalize-path.js';
 
 const historyEvents = ['popstate', 'pushState', 'replaceState', 'hashchange'];
 
 const originHistoryMethods: Partial<globalThis.History> = {};
 
 export class History implements IHistory {
+  location: ILocation;
+
   protected abortController: AbortController;
   protected atom: IAtom;
   protected originHistory: globalThis.History;
 
-  constructor(abortSignal?: AbortSignal) {
+  constructor(options?: HistoryOptions) {
     this.atom = createAtom('history_update');
-    this.abortController = new LinkedAbortController(abortSignal);
+    this.abortController = new LinkedAbortController(options?.abortSignal);
     this.originHistory = history;
 
-    action.bound(this, 'handlePopState');
-    action.bound(this, 'handlePushState');
-    action.bound(this, 'handleReplaceState');
-    action.bound(this, 'handleHashChange');
     action.bound(this, 'back');
     action.bound(this, 'go');
     action.bound(this, 'forward');
@@ -37,6 +38,13 @@ export class History implements IHistory {
     this.overrideHistoryMethod('forward', this.forward);
     this.overrideHistoryMethod('replaceState', this.replaceState);
     this.overrideHistoryMethod('pushState', this.pushState);
+
+    this.location =
+      options?.location ??
+      new Location({
+        history: this,
+        abortSignal: this.abortController.signal,
+      });
 
     /**
      * History API docs @see https://developer.mozilla.org/en-US/docs/Web/API/History
@@ -86,19 +94,19 @@ export class History implements IHistory {
   }
 
   push(to: To, state?: any): void {
-    this.pushState(state, '', typeof to === 'string' ? to : createPath(to));
+    this.pushState(state, '', normalizePath(to));
   }
 
-  pushState(...args: Parameters<IHistory['pushState']>): void {
+  pushState(...args: Parameters<globalThis.History['pushState']>): void {
     originHistoryMethods.pushState!(...args);
     this.reportChanged();
   }
 
   replace(to: To, state?: any): void {
-    this.replaceState(state, '', typeof to === 'string' ? to : createPath(to));
+    this.replaceState(state, '', normalizePath(to));
   }
 
-  replaceState(...args: Parameters<IHistory['replaceState']>): void {
+  replaceState(...args: Parameters<globalThis.History['replaceState']>): void {
     originHistoryMethods.replaceState!(...args);
     this.reportChanged();
   }
@@ -143,11 +151,10 @@ export class History implements IHistory {
     );
   }
 
-  private reportChanged = () => {
+  protected reportChanged = () => {
     this.atom.reportChanged();
   };
 }
 
 /*#__PURE__*/
-export const createHistory = (abortSignal?: AbortSignal) =>
-  new History(abortSignal);
+export const createHistory = (params?: HistoryOptions) => new History(params);
