@@ -8,3 +8,4 @@ export * from './query-param/index.js';
 export * from './memory-history/index.js';
 
 export type AnyHistory = IMemoryHistory | IHistory;
+export type AnyLocation = AnyHistory['location'];

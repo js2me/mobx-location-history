@@ -1,26 +1,25 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { IHistory } from '../history/index.js';
-import { ILocation } from '../location/index.js';
+import { AnyHistory, AnyLocation } from '../index.js';
 
-import { IQueryParams } from './query-params.types.js';
+import { IQueryParams, QueryParamsOptions } from './query-params.types.js';
 import { buildSearchString, parseSearchString } from './utils/index.js';
 
 export class QueryParams implements IQueryParams {
   protected abortController: AbortController;
+  private history: AnyHistory;
+  private location: AnyLocation;
 
   data!: Record<string, string>;
 
-  constructor(
-    private location: ILocation,
-    private history: IHistory,
-    abortSignal?: AbortSignal,
-  ) {
-    this.abortController = new LinkedAbortController(abortSignal);
+  constructor(options: QueryParamsOptions) {
+    this.history = options.history;
+    this.location = this.history.location;
+    this.abortController = new LinkedAbortController(options?.abortSignal);
 
     reaction(
-      () => this.location.search,
+      () => options.history.location.search,
       (search) => {
         this.data = parseSearchString(search);
       },
@@ -46,11 +45,18 @@ export class QueryParams implements IQueryParams {
   }
 
   buildUrl(data: Record<string, any>) {
-    const url = new URL(this.location.href);
+    let pathname: string;
+
+    if ('href' in this.location) {
+      const url = new URL(this.location.href);
+      pathname = url.pathname;
+    } else {
+      pathname = this.location.pathname;
+    }
 
     const searchString = buildSearchString(data);
 
-    return `${url.pathname}${searchString}`;
+    return `${pathname}${searchString}`;
   }
 
   set(data: Record<string, any>, replace?: boolean) {

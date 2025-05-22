@@ -1,4 +1,11 @@
+import { AnyHistory } from '../index.js';
+
 export type RawQueryParamsData = Record<string, string>;
+
+export interface QueryParamsOptions {
+  history: AnyHistory;
+  abortSignal?: AbortSignal;
+}
 
 /**
  * Interface for working with query parameters

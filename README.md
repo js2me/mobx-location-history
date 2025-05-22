@@ -11,7 +11,7 @@ import { reaction } from "mobx"
 import { History, Location, QueryParams } from "mobx-location-history";
 
 const history = new History()
-const queryParams = new QueryParams(location, history);
+const queryParams = new QueryParams({ location });
 
 
 reaction(() => location.href, href => {
