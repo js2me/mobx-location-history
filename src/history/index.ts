@@ -8,7 +8,7 @@ import {
   History,
   MemoryHistoryOptions,
 } from 'history';
-import { makeObservable, observable } from 'mobx';
+import { makeObservable, observable, runInAction } from 'mobx';
 
 export * from 'history';
 
@@ -36,10 +36,12 @@ const createObservableHistory = <THistory extends History>(
   makeObservable(history);
 
   const unsubscribe = history.listen(({ action, location }) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    history.action = action;
-    Object.assign(history.location, location);
+    runInAction(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      history.action = action;
+      Object.assign(history.location, location);
+    });
   });
 
   return Object.assign(history, {
