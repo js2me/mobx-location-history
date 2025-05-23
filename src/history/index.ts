@@ -6,9 +6,11 @@ import {
   createMemoryHistory as createMemoryHistoryLib,
   HashHistoryOptions,
   History,
+  Listener,
   MemoryHistoryOptions,
 } from 'history';
 import { makeObservable, observable, runInAction } from 'mobx';
+import { AnyObject } from 'yummies/utils/types';
 
 export * from 'history';
 
@@ -16,8 +18,13 @@ export type ObservableHistory<THistory extends History> = THistory & {
   destroy: VoidFunction;
 };
 
-const createObservableHistory = <THistory extends History>(
+export type WithObservableHistoryParams<TParams extends AnyObject> = TParams & {
+  listener?: Listener;
+};
+
+const makeHistoryObservable = <THistory extends History>(
   history: THistory,
+  observableParams?: WithObservableHistoryParams<AnyObject>,
 ): ObservableHistory<THistory> => {
   const location = { ...history.location };
   const action = history.action;
@@ -35,12 +42,13 @@ const createObservableHistory = <THistory extends History>(
   observable.ref(history, 'action');
   makeObservable(history);
 
-  const unsubscribe = history.listen(({ action, location }) => {
+  const unsubscribe = history.listen((update) => {
     runInAction(() => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      history.action = action;
-      Object.assign(history.location, location);
+      history.action = update.action;
+      Object.assign(history.location, update.location);
+      observableParams?.listener?.(update);
     });
   });
 
@@ -49,14 +57,17 @@ const createObservableHistory = <THistory extends History>(
   });
 };
 
-export const createBrowserHistory = (options?: BrowserHistoryOptions) =>
-  createObservableHistory(createBrowserHistoryLib(options));
+export const createBrowserHistory = (
+  options?: WithObservableHistoryParams<BrowserHistoryOptions>,
+) => makeHistoryObservable(createBrowserHistoryLib(options), options);
 
-export const createHashHistory = (options?: HashHistoryOptions) =>
-  createObservableHistory(createHashHistoryLib(options));
+export const createHashHistory = (
+  options?: WithObservableHistoryParams<HashHistoryOptions>,
+) => makeHistoryObservable(createHashHistoryLib(options), options);
 
-export const createMemoryHistory = (options?: MemoryHistoryOptions) =>
-  createObservableHistory(createMemoryHistoryLib(options));
+export const createMemoryHistory = (
+  options?: WithObservableHistoryParams<MemoryHistoryOptions>,
+) => makeHistoryObservable(createMemoryHistoryLib(options), options);
 
 export const isObservableHistory = <THistory extends History>(
   history: THistory,
