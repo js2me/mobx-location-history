@@ -23,7 +23,7 @@ export class History implements IHistory {
   constructor(options?: HistoryOptions) {
     this.atom = createAtom('history_update');
     this.abortController = new LinkedAbortController(options?.abortSignal);
-    this.originHistory = history;
+    this.originHistory = globalThis.history;
 
     action.bound(this, 'back');
     action.bound(this, 'go');
@@ -94,7 +94,14 @@ export class History implements IHistory {
   }
 
   push(to: To, state?: any): void {
-    originHistoryMethods.pushState!(state, '', normalizePath(to));
+    const path = normalizePath(to);
+    // borrowed from npm history package
+    // https://github.com/remix-run/history/blob/dev/packages/history/index.ts#L494
+    try {
+      originHistoryMethods.pushState!(state, '', path);
+    } catch {
+      globalThis.location.assign(path);
+    }
     this.reportChanged();
   }
 

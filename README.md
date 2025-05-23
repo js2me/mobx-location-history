@@ -3,6 +3,7 @@
 # mobx-location-history  
 
 _Browser Location and History charged by MobX + other utilities_  
+_API inspired by [`history` NPM package](https://www.npmjs.com/package/history)_  
 
 ## Observable browser [History](src/history/history.ts) and [Location](src/location/location.ts) interfaces + other utilities (like [QueryParams](src/query-params/query-params.types.ts))   
 
