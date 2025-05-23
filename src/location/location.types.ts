@@ -1,12 +1,16 @@
 import { AnyPrimitive, NonReadonly, PickByValue } from 'yummies/utils/types';
 
-import { IHistory } from '../history/index.js';
+import { AnyHistory } from '../index.js';
 
 export interface LocationOptions {
-  history: IHistory;
+  history: AnyHistory;
   abortSignal?: AbortSignal;
-  getField?: (field: LocationField) => any;
-  setField?: (field: LocationWritableField, value: any) => void;
+  getField?: (field: LocationField, history: AnyHistory) => any;
+  setField?: (
+    field: LocationWritableField,
+    value: any,
+    history: AnyHistory,
+  ) => void;
 }
 
 /**

@@ -2,6 +2,8 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable } from 'mobx';
 
+import { AnyHistory } from '../index.js';
+
 import {
   ILocation,
   LocationOptions,
@@ -18,20 +20,27 @@ const locationFieldConfigs = [
   ['port', observable.ref],
   ['protocol', observable.ref],
   ['search', observable.ref],
+  // ['key', observable.ref],
+  // ['scrollRestoration', observable.ref],
+  // ['state', observable.ref],
 ] as const satisfies [keyof ILocation, any][];
 
-const defaultFieldSetter: Required<LocationOptions>['setField'] = (
+export const defaultFieldSetter: Required<LocationOptions>['setField'] = (
   field,
   value,
 ) => {
   globalThis.location[field] = value;
 };
 
-const defaultFieldGetter: Required<LocationOptions>['getField'] = (field) =>
-  globalThis.location[field];
+export const defaultFieldGetter: Required<LocationOptions>['getField'] = (
+  field,
+) => {
+  return globalThis.location[field];
+};
 
 export class Location implements ILocation {
   protected abortController: AbortController;
+  protected history: AnyHistory;
 
   private _observableFields!: Record<keyof ILocation, any>;
 
@@ -44,6 +53,9 @@ export class Location implements ILocation {
   port!: string;
   protocol!: string;
   search!: string;
+  key!: string;
+  scrollRestoration!: ScrollRestoration;
+  state!: any;
 
   private fieldSetter: Required<LocationOptions>['setField'];
   private fieldGetter: Required<LocationOptions>['getField'];
@@ -52,6 +64,7 @@ export class Location implements ILocation {
     this.abortController = new LinkedAbortController(options.abortSignal);
     this._observableFields = {} as Record<keyof ILocation, any>;
 
+    this.history = options.history;
     this.fieldSetter = options.setField ?? defaultFieldSetter;
     this.fieldGetter = options.getField ?? defaultFieldGetter;
 
@@ -59,12 +72,12 @@ export class Location implements ILocation {
      * Проводит инициализацию начальных значений всех свойств из location
      */
     locationFieldConfigs.forEach(([field]) => {
-      this._observableFields[field] = this.fieldGetter(field);
+      this._observableFields[field] = this.fieldGetter(field, this.history);
       Object.defineProperty(this, field, {
         get: () => this._observableFields[field],
         set: (value) => {
           this._observableFields[field] = value;
-          this.fieldSetter(field as LocationWritableField, value);
+          this.fieldSetter(field as LocationWritableField, value, this.history);
         },
       });
     });
@@ -90,7 +103,7 @@ export class Location implements ILocation {
 
   protected syncLocationData() {
     locationFieldConfigs.forEach(([field]) => {
-      this._observableFields[field] = this.fieldGetter(field);
+      this._observableFields[field] = this.fieldGetter(field, this.history);
     });
   }
 

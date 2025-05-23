@@ -3,7 +3,13 @@ import { Path } from '../history.types.js';
 /**
  * normalize a string URL path from the given pathname, search, and hash components.
  */
-export const normalizePath = (path: string | URL | Partial<Path>) => {
+export const normalizePath = (
+  path: string | URL | Partial<Path> | null | undefined,
+) => {
+  if (path == null) {
+    return '';
+  }
+
   if (typeof path === 'string') {
     return path;
   }

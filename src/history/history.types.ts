@@ -18,7 +18,7 @@ export interface Path {
   hash: string;
 }
 
-export type To = string | Partial<Path> | URL;
+export type To = string | Partial<Path> | URL | null | undefined;
 
 export interface HistoryOptions {
   location?: ILocation;

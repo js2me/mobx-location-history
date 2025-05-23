@@ -169,9 +169,9 @@ export class MemoryHistory implements IMemoryHistory {
       hash = url.hash;
     } else {
       // Use provided path parts
-      pathname = to.pathname ?? '/';
-      search = to.search ?? '';
-      hash = to.hash ?? '';
+      pathname = to?.pathname ?? '/';
+      search = to?.search ?? '';
+      hash = to?.hash ?? '';
     }
 
     return {
