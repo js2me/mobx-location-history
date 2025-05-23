@@ -42,3 +42,7 @@ export const createHashHistory = (options?: HashHistoryOptions) =>
 
 export const createMemoryHistory = (options?: MemoryHistoryOptions) =>
   createObservableHistory(createMemoryHistoryLib(options));
+
+export const isObservableHistory = <THistory extends History>(
+  history: THistory,
+): history is ObservableHistory<THistory> => 'destroy' in history;
