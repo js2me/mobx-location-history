@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   BrowserHistoryOptions,
   createBrowserHistory as createBrowserHistoryLib,
@@ -18,6 +19,18 @@ export type ObservableHistory<THistory extends History> = THistory & {
 const createObservableHistory = <THistory extends History>(
   history: THistory,
 ): ObservableHistory<THistory> => {
+  const location = { ...history.location };
+  const action = history.action;
+
+  // @ts-ignore
+  delete history['location'];
+  // @ts-ignore
+  delete history['action'];
+  // @ts-ignore
+  history.location = { ...location };
+  // @ts-ignore
+  history.action = action;
+
   observable.deep(history, 'location');
   observable.ref(history, 'action');
   makeObservable(history);
