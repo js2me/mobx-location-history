@@ -1,20 +1,51 @@
-import { createHistory } from './history.js';
-import { IHistory } from './history.types.js';
+import {
+  BrowserHistory,
+  BrowserHistoryOptions,
+  createBrowserHistory as createBrowserHistoryLib,
+  createHashHistory as createHashHistoryLib,
+  createMemoryHistory as createMemoryHistoryLib,
+  HashHistoryOptions,
+  History,
+  MemoryHistoryOptions,
+} from 'history';
+import { makeObservable, observable } from 'mobx';
 
-export * from './history.types.js';
-export * from './history.js';
+export * from 'history';
 
-/**
- * @deprecated use {createLocation}. Will be removed in next major release
- */
-export const createMobxHistory = createHistory;
+export type BrowserObservableHistory = BrowserHistory & {
+  destroy: VoidFunction;
+};
 
-/**
- * @deprecated use {History}. Will be removed in next major release
- */
-export const MobxHistory = History;
+export type ObservableHistory<THistory extends History> = THistory & {
+  destroy: VoidFunction;
+};
 
-/**
- * @deprecated use {ILocation}. Will be removed in next major release
- */
-export type IMobxHistory = IHistory;
+const createObservableHistory = <THistory extends History>(
+  history: THistory,
+): ObservableHistory<THistory> => {
+  observable.deep(history, 'location');
+  observable.ref(history, 'action');
+  makeObservable(history);
+
+  const unsubscribe = history.listen(({ action, location }) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    history.action = action;
+    Object.assign(history.location, location);
+  });
+
+  return Object.assign(history, {
+    destroy: unsubscribe,
+  });
+};
+
+export const createBrowserHistory = (
+  options?: BrowserHistoryOptions,
+): BrowserObservableHistory =>
+  createObservableHistory(createBrowserHistoryLib(options));
+
+export const createHashHistory = (options?: HashHistoryOptions) =>
+  createObservableHistory(createHashHistoryLib(options));
+
+export const createMemoryHistory = (options?: MemoryHistoryOptions) =>
+  createObservableHistory(createMemoryHistoryLib(options));

@@ -2,29 +2,27 @@
 
 # mobx-location-history  
 
-_Browser Location and History charged by MobX + other utilities_  
-_API inspired by [`history` NPM package](https://www.npmjs.com/package/history)_  
-
-## Observable browser [History](src/history/history.ts) and [Location](src/location/location.ts) interfaces + other utilities (like [QueryParams](src/query-params/query-params.types.ts))   
+_MobX charged [`history` NPM package](https://www.npmjs.com/package/history) + other utilities_   
 
 ```ts
 import { reaction } from "mobx"
-import { History, Location, QueryParams } from "mobx-location-history";
+import { createQueryParams, createBrowserHistory } from "mobx-location-history";
 
-const history = new History()
-const queryParams = new QueryParams({ location });
+const history = createBrowserHistory()
+const queryParams = new QueryParams({ history });
 
 
-reaction(() => location.href, href => {
+reaction(() => history.location, location => {
   // do things
 })
 
-history.pushState(null, '', '/home')
+history.push('/home')
 
 queryParams.set({
   foo: 11,
   bar: 'kek',
   willBeRemoved: undefined,
 })
-```
 
+history.destroy();
+```

@@ -23,7 +23,7 @@
   ],
   "author": "js2me",
   "license": "MIT",
-  "description": "Browser Location and History charged by MobX",
+  "description": "MobX charged history NPM package (+ other utils)",
   "type": "module",
   "bugs": {
     "url": "https://github.com/js2me/mobx-location-history/issues"
@@ -34,6 +34,7 @@
     "url": "git://github.com/js2me/mobx-location-history"
   },
   "dependencies": {
+    "history": "^5.3.0",
     "linked-abort-controller": "^1.1.0",
     "yummies": "^3.2.6"
   },

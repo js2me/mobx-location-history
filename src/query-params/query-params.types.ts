@@ -1,9 +1,9 @@
-import { AnyHistory } from '../index.js';
+import { History } from 'history';
 
 export type RawQueryParamsData = Record<string, string>;
 
 export interface QueryParamsOptions {
-  history: AnyHistory;
+  history: History;
   abortSignal?: AbortSignal;
 }
 
