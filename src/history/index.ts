@@ -1,5 +1,4 @@
 import {
-  BrowserHistory,
   BrowserHistoryOptions,
   createBrowserHistory as createBrowserHistoryLib,
   createHashHistory as createHashHistoryLib,
@@ -11,10 +10,6 @@ import {
 import { makeObservable, observable } from 'mobx';
 
 export * from 'history';
-
-export type BrowserObservableHistory = BrowserHistory & {
-  destroy: VoidFunction;
-};
 
 export type ObservableHistory<THistory extends History> = THistory & {
   destroy: VoidFunction;
@@ -39,9 +34,7 @@ const createObservableHistory = <THistory extends History>(
   });
 };
 
-export const createBrowserHistory = (
-  options?: BrowserHistoryOptions,
-): BrowserObservableHistory =>
+export const createBrowserHistory = (options?: BrowserHistoryOptions) =>
   createObservableHistory(createBrowserHistoryLib(options));
 
 export const createHashHistory = (options?: HashHistoryOptions) =>
