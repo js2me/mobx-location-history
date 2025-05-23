@@ -6,11 +6,17 @@ _MobX charged [`history` NPM package](https://www.npmjs.com/package/history) + o
 
 ```ts
 import { reaction } from "mobx"
-import { createQueryParams, createBrowserHistory } from "mobx-location-history";
+import {
+  createQueryParams,
+  createBrowserHistory,
+  createHashHistory,
+  createMemoryHistory,
+} from "mobx-location-history";
 
-const history = createBrowserHistory()
-const queryParams = new QueryParams({ history });
-
+const history = createBrowserHistory();
+// const history = createHashHistory();
+// const history = createMemoryHistory();
+const queryParams = createQueryParams({ history });
 
 reaction(() => history.location, location => {
   // do things

@@ -68,3 +68,6 @@ export class QueryParams implements IQueryParams {
     this.abortController.abort();
   }
 }
+
+export const createQueryParams = (options: QueryParamsOptions) =>
+  new QueryParams(options);
