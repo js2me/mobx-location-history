@@ -51,6 +51,9 @@ const makeHistoryObservable = <THistory extends History>(
       // @ts-ignore
       history.action = update.action;
       Object.assign(history.location, update.location);
+      if ('hash' in update.location) {
+        history.location.hash = update.location.hash;
+      }
       observableParams?.listener?.(update);
     });
   });
