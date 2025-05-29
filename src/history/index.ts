@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
+  Blocker,
   BrowserHistoryOptions,
   createBrowserHistory as createBrowserHistoryLib,
   createHashHistory as createHashHistoryLib,
@@ -9,12 +10,14 @@ import {
   Listener,
   MemoryHistoryOptions,
 } from 'history';
-import { makeObservable, observable, runInAction } from 'mobx';
+import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { AnyObject } from 'yummies/utils/types';
 
 export * from 'history';
 
 export type ObservableHistory<THistory extends History> = THistory & {
+  blockersCount: number;
+  isBlocked: boolean;
   /**
    * Unsubscribe from original history.listen
    */
@@ -26,11 +29,13 @@ export type WithObservableHistoryParams<TParams extends AnyObject> = TParams & {
 };
 
 const makeHistoryObservable = <THistory extends History>(
-  history: THistory,
+  originHistory: THistory,
   observableParams?: WithObservableHistoryParams<AnyObject>,
 ): ObservableHistory<THistory> => {
-  const location = { ...history.location };
-  const action = history.action;
+  const location = { ...originHistory.location };
+  const action = originHistory.action;
+
+  const history = originHistory as unknown as ObservableHistory<THistory>;
 
   // @ts-ignore
   delete history['location'];
@@ -41,8 +46,19 @@ const makeHistoryObservable = <THistory extends History>(
   // @ts-ignore
   history.action = action;
 
+  history.blockersCount = 0;
+  history.isBlocked = false;
+
+  const blockOrigin = history.block;
+
+  Object.defineProperty(history, 'isBlocked', {
+    get: () => history.blockersCount > 0,
+  });
+
+  computed.struct(history, 'isBlocked');
   observable.deep(history, 'location');
   observable.ref(history, 'action');
+  observable.ref(history, 'blockersCount');
   makeObservable(history);
 
   const unsubscribe = history.listen((update) => {
@@ -60,6 +76,18 @@ const makeHistoryObservable = <THistory extends History>(
 
   return Object.assign(history, {
     destroy: unsubscribe,
+    block: (blocker: Blocker) => {
+      runInAction(() => {
+        history.blockersCount++;
+      });
+      const unblockerOrigin = blockOrigin(blocker);
+      return () => {
+        runInAction(() => {
+          history.blockersCount--;
+        });
+        return unblockerOrigin();
+      };
+    },
   });
 };
 
@@ -73,6 +101,8 @@ const makeHistoryObservable = <THistory extends History>(
  * MobX enhancers:
  * - `observable.deep` `history.location`
  * - `observable.ref` `history.action`
+ * - `observable.ref` `history.blockersCount`
+ * - `computed.struct` `history.isBlocked`
  */
 export const createBrowserHistory = (
   options?: WithObservableHistoryParams<BrowserHistoryOptions>,
@@ -89,6 +119,8 @@ export const createBrowserHistory = (
  * MobX enhancers:
  * - `observable.deep` `history.location`
  * - `observable.ref` `history.action`
+ * - `observable.ref` `history.blockersCount`
+ * - `computed.struct` `history.isBlocked`
  */
 export const createHashHistory = (
   options?: WithObservableHistoryParams<HashHistoryOptions>,
@@ -103,6 +135,8 @@ export const createHashHistory = (
  * MobX enhancers:
  * - `observable.deep` `history.location`
  * - `observable.ref` `history.action`
+ * - `observable.ref` `history.blockersCount`
+ * - `computed.struct` `history.isBlocked`
  */
 export const createMemoryHistory = (
   options?: WithObservableHistoryParams<MemoryHistoryOptions>,

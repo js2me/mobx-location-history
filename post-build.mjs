@@ -6,12 +6,14 @@ postBuildScript({
   srcDirName: 'src',
   filesToCopy: ['LICENSE', 'README.md', 'assets'],
   updateVersion: process.env.PUBLISH_VERSION,
-  onPackageVersionChanged: (nextVersion, currVersion) => {
+  onDone: (versionsDiff, { $ }, packageJson) => {
     if (process.env.PUBLISH) {
+      $('pnpm test');
+
       publishScript({
-        nextVersion,
-        currVersion,
-        publishCommand: 'pnpm publish',
+        nextVersion: versionsDiff?.next ?? packageJson.version,
+        currVersion: versionsDiff?.current,
+        packageManager: 'pnpm',
         commitAllCurrentChanges: true,
         createTag: true,
         githubRepoLink: 'https://github.com/js2me/mobx-location-history',

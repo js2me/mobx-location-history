@@ -40,8 +40,8 @@ importers:
         specifier: ^1.0.8
         version: 1.0.8(eslint@8.57.1)(prettier@3.3.3)(typescript@5.8.3)
       js2me-exports-post-build-script:
-        specifier: ^2.0.18
-        version: 2.0.18
+        specifier: ^3.0.1
+        version: 3.0.1
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0
@@ -2347,8 +2347,8 @@ packages:
       eslint: ^8.57.0
       prettier: ^3.3.3
 
-  js2me-exports-post-build-script@2.0.18:
-    resolution: {integrity: sha512-gpweGPEJwXwysYD0CQFRGkIPgl2NHnD8qSqSSpTLQihNV2KGLpuTHUjiGdMLzZYnrlpSDSCQoHfKj6ZsYNmigg==}
+  js2me-exports-post-build-script@3.0.1:
+    resolution: {integrity: sha512-8qCSWEUEKSTG2wPXOhgajT2R0FiOJMicmu+c3gzliAEvuiL5nZOAxo0EFyHjzk9xHwJar9wMBsjS1sS0kUTs6g==}
 
   jsdom@26.1.0:
     resolution: {integrity: sha512-Cvc9WUhxSMEo4McES3P7oK3QaXldCfNWp7pl2NNeiIFlCoLr3kfq9kb1fxftiwk1FLV7CvpvDfonxtzUDeSOPg==}
@@ -5944,7 +5944,7 @@ snapshots:
       - supports-color
       - typescript
 
-  js2me-exports-post-build-script@2.0.18:
+  js2me-exports-post-build-script@3.0.1:
     dependencies:
       simple-git: 3.27.0
     transitivePeerDependencies:

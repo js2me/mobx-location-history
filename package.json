@@ -1,12 +1,13 @@
 {
   "name": "mobx-location-history",
-  "version": "6.0.8",
+  "version": "6.1.0",
   "scripts": {
     "clean": "rimraf dist",
     "check": "eslint . --fix",
     "prebuild": "npm run clean && npm run check",
     "build:watch": "pnpm build && nodemon --delay 0.5 --watch src --ext ts,tsx --exec \"pnpm build\"",
     "build": "tsc && node ./post-build.mjs",
+    "pub": "PUBLISH=true pnpm run build",
     "pub:patch": "PUBLISH=true PUBLISH_VERSION=patch pnpm run build",
     "pub:minor": "PUBLISH=true PUBLISH_VERSION=minor pnpm run build",
     "pub:major": "PUBLISH=true PUBLISH_VERSION=major pnpm run build",
@@ -48,7 +49,7 @@
     "@vitest/coverage-istanbul": "^3.1.4",
     "eslint": "^8.57.1",
     "js2me-eslint-config": "^1.0.8",
-    "js2me-exports-post-build-script": "^2.0.18",
+    "js2me-exports-post-build-script": "^3.0.1",
     "jsdom": "^26.1.0",
     "nodemon": "^3.1.10",
     "typescript": "^5.8.3",
