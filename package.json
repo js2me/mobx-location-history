@@ -20,6 +20,9 @@
     "mobx",
     "history",
     "location",
+    "mobx-location",
+    "mobx-history",
+    "router",
     "observable"
   ],
   "author": "js2me",

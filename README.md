@@ -4,6 +4,8 @@
 
 _MobX charged [`history` NPM package](https://www.npmjs.com/package/history) + other utilities_   
 
+## Documentaion is [here](https://js2me.github.io/mobx-location-history/)  
+
 ```ts
 import { reaction } from "mobx"
 import {
