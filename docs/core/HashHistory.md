@@ -9,11 +9,21 @@ The full documentation for `HashHistory` can be found [here](https://github.com/
 [Reference to source code](/src/history/index.ts)   
 
 
-## Creation   
+## Usage   
 ```ts
 import { createHashHistory } from "mobx-location-history";
+import { reaction } from "mobx";
 
 export const history = createHashHistory();
+
+reaction(
+  () => history.location.pathname,
+  pathname => {
+    console.log(pathname);
+  }
+)
+
+history.push()
 ```
 
 

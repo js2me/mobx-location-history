@@ -17,8 +17,8 @@ export class QueryParam<T> {
   constructor(private config: QueryParamsFieldModelConfig<T>) {
     this.name = this.config.name;
 
-    computed(this, 'rawValue');
-    computed(this, 'value');
+    computed.struct(this, 'rawValue');
+    computed.struct(this, 'value');
     action(this, 'set');
 
     makeObservable(this);
@@ -29,7 +29,10 @@ export class QueryParam<T> {
   }
 
   get value(): T {
-    return this.config.deserialize(this.rawValue) ?? this.config.defaultValue;
+    return (
+      this.config.deserialize(this.rawValue, this.config.queryParams) ??
+      this.config.defaultValue
+    );
   }
 
   set = async (value: T | undefined) => {
@@ -37,7 +40,10 @@ export class QueryParam<T> {
       return;
     }
 
-    const serializedValue = this.config.serialize(value);
+    const serializedValue = this.config.serialize(
+      value,
+      this.config.queryParams,
+    );
 
     this.config.queryParams.update(
       {
@@ -48,36 +54,15 @@ export class QueryParam<T> {
   };
 
   buildUrl = (value?: T) => {
-    const serializedValue = this.config.serialize(value ?? this.value);
+    const serializedValue = this.config.serialize(
+      value ?? this.value,
+      this.config.queryParams,
+    );
 
     return this.config.queryParams.buildUrl({
       [this.name]: serializedValue,
     });
   };
-
-  /**
-   * @deprecated
-   * use {createQueryParamFromPreset}
-   */
-  static fromPreset<T>(
-    config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
-  ): QueryParam<T> {
-    const { serialize, deserialize } = queryParamPresets[config.preset]!;
-
-    return new QueryParam<any>({
-      ...config,
-      serialize,
-      deserialize,
-    });
-  }
-
-  /**
-   * @deprecated
-   * use {createQueryParam}
-   */
-  static create<T>(config: QueryParamsFieldModelConfig<T>): QueryParam<T> {
-    return new QueryParam<any>(config);
-  }
 }
 
 /**

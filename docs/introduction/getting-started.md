@@ -21,3 +21,36 @@ pnpm add {packageJson.name}
 ```
 
 :::
+
+
+## Usage   
+
+```ts
+import {
+  createBrowserHistory,
+  createHashHistory,
+  createMemoryHistory,
+  createQueryParams,
+} from "mobx-location-history";
+import { reaction } from "mobx";
+
+const history = createBrowserHistory();
+
+reaction(
+  () => history.location,
+  location => {
+    console.log(location)
+  }
+);
+
+const queryParams = createQueryParams({
+  history
+});
+
+reaction(
+  () => queryParams.data,
+  queryParams => {
+    console.log(queryParams)
+  }
+);
+```

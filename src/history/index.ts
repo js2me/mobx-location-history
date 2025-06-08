@@ -16,10 +16,16 @@ import { AnyObject } from 'yummies/utils/types';
 export * from 'history';
 
 export type ObservableHistory<THistory extends History> = THistory & {
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#blockerscount-number)
+   */
   blockersCount: number;
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#isblocked-blocked)
+   */
   isBlocked: boolean;
   /**
-   * Unsubscribe from original history.listen
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#destroy)
    */
   destroy: VoidFunction;
 };

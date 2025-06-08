@@ -35,7 +35,7 @@ export default defineConfig({
     },
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Introduction', link: '/introduction/getting-started' },
+      { text: 'Introduction', link: '/introduction/overview' },
       {
         text: `v${version}`,
         items: [
@@ -71,6 +71,7 @@ export default defineConfig({
         items: [
           { text: 'QueryParams', link: '/utilities/QueryParams' },
           { text: 'QueryParam', link: '/utilities/QueryParam' },
+          { text: 'isObservableHistory', link: '/utilities/isObservableHistory' },
         ],
       },
     ],

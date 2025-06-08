@@ -40,7 +40,7 @@
   "dependencies": {
     "history": "^5.3.0",
     "linked-abort-controller": "^1.1.0",
-    "yummies": "^3.2.6"
+    "yummies": "^3.2.9"
   },
   "peerDependencies": {
     "mobx": "^6.13.3"

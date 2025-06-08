@@ -8,13 +8,22 @@ The full documentation for `BrowserHistory` can be found [here](https://github.c
 [Reference to source code](/src/history/index.ts)   
 
 
-## Creation   
+## Usage   
 ```ts
 import { createBrowserHistory } from "mobx-location-history";
+import { reaction } from "mobx";
 
 export const history = createBrowserHistory();
-```
 
+reaction(
+  () => history.location.pathname,
+  pathname => {
+    console.log(pathname);
+  }
+)
+
+history.push()
+```
 
 ## MobX modifications     
 

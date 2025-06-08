@@ -7,11 +7,21 @@ The full documentation for `MemoryHistory` can be found [here](https://github.co
 [Reference to source code](/src/history/index.ts)   
 
 
-## Creation   
+## Usage   
 ```ts
 import { createMemoryHistory } from "mobx-location-history";
+import { reaction } from "mobx";
 
 export const history = createMemoryHistory();
+
+reaction(
+  () => history.location.pathname,
+  pathname => {
+    console.log(pathname);
+  }
+)
+
+history.push()
 ```
 
 

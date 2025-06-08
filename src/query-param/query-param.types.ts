@@ -21,11 +21,11 @@ export interface QueryParamsFieldModelConfig<T> {
   /**
    * Serialize query param value
    */
-  serialize: (value: T | undefined) => any;
+  serialize: (value: T | undefined, queryParams: IQueryParams) => any;
   /**
    * Deserialize to working value
    */
-  deserialize: (value: any) => T | null;
+  deserialize: (value: any, queryParams: IQueryParams) => T | null;
 }
 
 export type PresetName = keyof typeof queryParamPresets;
