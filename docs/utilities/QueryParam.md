@@ -10,7 +10,7 @@ import {
   createBrowserHistory,
   createQueryParam,
   createQueryParamFromPreset,
-} from "mobx-locatin-history"
+} from "mobx-location-history"
 
 const queryParams = createQueryParams({
   history: createBrowserHistory(),
