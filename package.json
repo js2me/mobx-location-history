@@ -2,7 +2,7 @@
   "name": "mobx-location-history",
   "version": "7.0.0",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "rm -rf dist",
     "check": "eslint . --fix",
     "prebuild": "npm run clean && npm run check",
     "build:watch": "pnpm build && nodemon --delay 0.5 --watch src --ext ts,tsx --exec \"pnpm build\"",

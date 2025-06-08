@@ -1,5 +1,5 @@
 clean:
-	rm -rf node_modules
+	pnpm clean
 install:
 	pnpm i
 reinstall:
