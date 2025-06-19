@@ -1,6 +1,6 @@
 {
   "name": "mobx-location-history",
-  "version": "7.0.3",
+  "version": "7.0.4",
   "scripts": {
     "clean": "rm -rf dist",
     "check": "eslint . --fix",
