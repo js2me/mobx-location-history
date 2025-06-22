@@ -29,7 +29,7 @@ export type ObservableHistory<THistory extends History> = THistory & {
    */
   destroy: VoidFunction;
   /**
-   * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#locationUrl)
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#locationurl)
    */
   locationUrl: string;
 };
