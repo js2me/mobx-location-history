@@ -1,5 +1,5 @@
 import { reaction } from 'mobx';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   createBrowserHistory,
@@ -13,6 +13,11 @@ describe('history', () => {
     { name: 'hash', creator: () => createHashHistory() },
     { name: 'memory', creator: () => createMemoryHistory() },
   ];
+
+  afterEach(() => {
+    history.replaceState(null, '', '/');
+    location.hash = '';
+  });
 
   histories.forEach((history) => {
     describe(history.name, () => {
@@ -77,6 +82,32 @@ describe('history', () => {
         unblock2();
         unblock1();
         expect(reactionSpy).toBeCalledTimes(2);
+      });
+
+      it('should have "locationUrl"', () => {
+        const instance = history.creator();
+        expect(instance.locationUrl).toBe('/');
+
+        instance.push('/foo/bar/baz');
+        expect(instance.locationUrl).toBe('/foo/bar/baz');
+
+        instance.push('/bagasdfdsaf#32143214');
+        expect(instance.locationUrl).toBe('/bagasdfdsaf#32143214');
+
+        instance.push('/asdfdsafas?adsfadsf');
+        expect(instance.locationUrl).toBe('/asdfdsafas?adsfadsf');
+
+        instance.push('/asdfdsafas?adsfadsf=12341324');
+        expect(instance.locationUrl).toBe('/asdfdsafas?adsfadsf=12341324');
+
+        instance.push('/asdfdsafas#dsafdsafdsa?adsfadsf=12341324');
+        expect(instance.locationUrl).toBe(
+          '/asdfdsafas#dsafdsafdsa?adsfadsf=12341324',
+        );
+
+        expect(instance.location.pathname).toBe('/asdfdsafas');
+        expect(instance.location.hash).toBe('#dsafdsafdsa?adsfadsf=12341324');
+        expect(instance.location.search).toBe('');
       });
     });
   });

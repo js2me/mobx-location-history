@@ -43,3 +43,18 @@ This property is needed to detect block statement [provided by original history 
 
 ### `destroy()`   
 This method is needed for destroy all subscriptions and reactions created inside function `createMemoryHistory`   
+
+### `locationUrl` <Badge type="warning" text="computed.struct" />   
+This property represents stringified version of the `location` property   
+
+Example:   
+```ts
+/*
+{ // location
+  pathname: '/en-US/docs/Location.search',
+  hash: '',
+  search: '?q=123'
+}
+*/
+history.locationUrl; // '/en-US/docs/Location.search?q=123'
+```

@@ -28,6 +28,10 @@ export type ObservableHistory<THistory extends History> = THistory & {
    * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#destroy)
    */
   destroy: VoidFunction;
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#locationUrl)
+   */
+  locationUrl: string;
 };
 
 export type WithObservableHistoryParams<TParams extends AnyObject> = TParams & {
@@ -54,6 +58,7 @@ const makeHistoryObservable = <THistory extends History>(
 
   history.blockersCount = 0;
   history.isBlocked = false;
+  history.locationUrl = '';
 
   const blockOrigin = history.block;
 
@@ -61,7 +66,15 @@ const makeHistoryObservable = <THistory extends History>(
     get: () => history.blockersCount > 0,
   });
 
+  Object.defineProperty(history, 'locationUrl', {
+    get: () => {
+      const { pathname, search, hash } = history.location;
+      return `${pathname}${hash}${search}`;
+    },
+  });
+
   computed.struct(history, 'isBlocked');
+  computed.struct(history, 'locationUrl');
   observable.deep(history, 'location');
   observable.ref(history, 'action');
   observable.ref(history, 'blockersCount');
