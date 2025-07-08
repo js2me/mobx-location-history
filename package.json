@@ -3,7 +3,7 @@
   "version": "7.1.2",
   "scripts": {
     "prepare": "pnpm dev:install-hooks",
-    "clean": "rimraf dist",
+    "clean": "rm -rf dist",
     "lint:check": "eslint . --fix",
     "ts:check": "tsc --noEmit",
     "check": "npm run lint:check && npm run ts:check",
