@@ -47,3 +47,7 @@ queryParams.set({
 
 history.destroy();
 ```
+
+## Contribution Guide    
+
+Want to contribute ? [Follow this guide](https://github.com/js2me/mobx-view-model/blob/master/CONTRIBUTING.md)  
