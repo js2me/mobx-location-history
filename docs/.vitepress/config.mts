@@ -69,6 +69,7 @@ export default defineConfig({
       {
         text: 'Utilities',
         items: [
+          { text: 'blockHistoryWhile', link: '/utilities/blockHistoryWhile'},  
           { text: 'QueryParams', link: '/utilities/QueryParams' },
           { text: 'QueryParam', link: '/utilities/QueryParam' },
           { text: 'isObservableHistory', link: '/utilities/isObservableHistory' },
