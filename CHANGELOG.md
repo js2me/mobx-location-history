@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 7.3.0
+
+### Minor Changes
+
+- [`bd98ba1`](https://github.com/js2me/mobx-location-history/commit/bd98ba18a7815a8a9fc9cbfba460c85333f56557) Thanks [@js2me](https://github.com/js2me)! - added `blockHistoryWhile` utility function based on MobX reaction
+
 ## 7.2.0
 
 ### Minor Changes
