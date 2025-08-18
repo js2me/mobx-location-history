@@ -1,5 +1,32 @@
 # mobx-location-history
 
+## 8.0.0
+
+### Major Changes
+
+- [`0e006fb`](https://github.com/js2me/mobx-location-history/commit/0e006fbd938c79c592edb900de566262b7e50711) Thanks [@js2me](https://github.com/js2me)! - modified `blockHistoryWhile` input arguments (3 args -> 2 args, history passing in second arg, first arg is trueFn blocker)
+
+  PREVIOUS:
+
+  ```ts
+  blockHistoryWhile(history, () => true, {
+    blocker: () => {},
+  });
+  ```
+
+  CURRENT:
+
+  ```ts
+  blockHistoryWhile(() => true, {
+    history,
+    blocker: () => {},
+  });
+  ```
+
+### Minor Changes
+
+- [`0e006fb`](https://github.com/js2me/mobx-location-history/commit/0e006fbd938c79c592edb900de566262b7e50711) Thanks [@js2me](https://github.com/js2me)! - added `lastBlockedTx` for history to detect dynamically last blocked transition
+
 ## 7.3.0
 
 ### Minor Changes
