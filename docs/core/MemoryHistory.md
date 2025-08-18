@@ -58,3 +58,34 @@ Example:
 */
 history.locationUrl; // '/en-US/docs/Location.search?q=123'
 ```
+
+### `lastBlockedTx: Transition | null` <Badge type="tip" text="observable.ref" />
+
+Last blocked transition.  
+This property is helpful if you want to watch about blocked history transitions while history is blocked.  
+More information about blocking history you can find [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyblockblocker-blocker)
+
+::: tip will be `null` if history is not blocked
+:::
+
+Example:
+
+```ts
+import { createBrowserHistory } from "mobx-location-history";
+
+const history = createBrowserHistory();
+
+...
+const unblock = history.block(() => {
+  //
+})
+...
+
+history.push('/foo/bar');
+
+history.lastBlockedTx; // { // Transition
+
+unblock();
+
+history.lastBlockedTx; // null
+```

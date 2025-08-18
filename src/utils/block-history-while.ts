@@ -1,4 +1,4 @@
-import { History, Transition } from 'history';
+import { Blocker, History } from 'history';
 import { LinkedAbortController } from 'linked-abort-controller';
 import { IReactionOptions, reaction } from 'mobx';
 
@@ -14,12 +14,26 @@ export const blockHistoryWhile = <
   THistory extends ObservableHistory<History>,
   FireImmediately extends boolean,
 >(
-  history: THistory,
   whileTrueFn: () => boolean,
-  opts?: IReactionOptions<boolean, FireImmediately> & {
-    blocker?: (tx: Transition) => void;
-  },
+  optsOrHistory:
+    | THistory
+    | (Partial<IReactionOptions<boolean, FireImmediately>> & {
+        history: THistory;
+        blocker?: Blocker;
+      }),
 ) => {
+  const opts =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    optsOrHistory.go
+      ? { history: optsOrHistory as THistory }
+      : (optsOrHistory as Partial<
+          IReactionOptions<boolean, FireImmediately>
+        > & {
+          history: THistory;
+          blocker?: Blocker;
+        });
+
   const abortController = new LinkedAbortController();
 
   let historyBlocker: VoidFunction | undefined;
@@ -29,14 +43,14 @@ export const blockHistoryWhile = <
     historyBlocker = undefined;
   });
 
-  const dispose = reaction(
+  reaction(
     () => whileTrueFn(),
     (isNeedToBlock) => {
       if (isNeedToBlock) {
         if (historyBlocker) {
           return;
         }
-        historyBlocker = history.block(opts?.blocker ?? (() => {}));
+        historyBlocker = opts.history.block(opts?.blocker ?? (() => {}));
       } else {
         historyBlocker?.();
         historyBlocker = undefined;
@@ -44,6 +58,7 @@ export const blockHistoryWhile = <
     },
     {
       ...opts,
+      fireImmediately: true,
       signal: abortController.signal,
     },
   );
@@ -52,5 +67,7 @@ export const blockHistoryWhile = <
     opts?.signal?.addEventListener?.('abort', () => abortController.abort());
   }
 
-  return dispose;
+  return () => {
+    abortController.abort();
+  };
 };

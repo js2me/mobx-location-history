@@ -26,6 +26,32 @@ describe('history', () => {
         expect(instance).toBeDefined();
       });
 
+      it('should have "block"', () => {
+        const instance = history.creator();
+        instance.push('/foo/bar/baz');
+        expect(instance.location.pathname).toBe('/foo/bar/baz');
+
+        const unblock = instance.block(() => {});
+
+        instance.push('/foo/bar/baz/bad');
+        expect(instance.location.pathname).toBe('/foo/bar/baz');
+        expect(instance.lastBlockedTx).toStrictEqual({
+          ...instance.lastBlockedTx,
+          action: 'PUSH',
+          location: {
+            ...instance.lastBlockedTx?.location,
+            hash: '',
+            pathname: '/foo/bar/baz/bad',
+            search: '',
+            state: null,
+          },
+        });
+
+        unblock();
+
+        expect(instance.location.pathname).toBe('/foo/bar/baz');
+      });
+
       it('should have "blockersCount"', () => {
         const instance = history.creator();
         const unblock1 = instance.block(() => {});

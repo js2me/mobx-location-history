@@ -9,6 +9,7 @@ import {
   History,
   Listener,
   MemoryHistoryOptions,
+  Transition,
 } from 'history';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
 import { AnyObject } from 'yummies/utils/types';
@@ -32,6 +33,10 @@ export type ObservableHistory<THistory extends History> = THistory & {
    * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#locationurl)
    */
   locationUrl: string;
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#lastblockedtx-transition-null)
+   */
+  lastBlockedTx: Transition | null;
 };
 
 export type WithObservableHistoryParams<TParams extends AnyObject> = TParams & {
@@ -58,6 +63,7 @@ const makeHistoryObservable = <THistory extends History>(
 
   history.blockersCount = 0;
   history.isBlocked = false;
+  history.lastBlockedTx = null;
   history.locationUrl = '';
 
   const blockOrigin = history.block;
@@ -78,6 +84,7 @@ const makeHistoryObservable = <THistory extends History>(
   observable.deep(history, 'location');
   observable.ref(history, 'action');
   observable.ref(history, 'blockersCount');
+  observable.ref(history, 'lastBlockedTx');
   makeObservable(history);
 
   const unsubscribe = history.listen((update) => {
@@ -99,10 +106,18 @@ const makeHistoryObservable = <THistory extends History>(
       runInAction(() => {
         history.blockersCount++;
       });
-      const unblockerOrigin = blockOrigin(blocker);
+      const unblockerOrigin = blockOrigin((tx) => {
+        runInAction(() => {
+          history.lastBlockedTx = tx;
+        });
+        blocker(tx);
+      });
       return () => {
         runInAction(() => {
           history.blockersCount--;
+          if (history.blockersCount === 0) {
+            history.lastBlockedTx = null;
+          }
         });
         return unblockerOrigin();
       };

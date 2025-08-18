@@ -10,9 +10,11 @@ Blocks history while passed function `whileTrueFn` returns `true`.
 
 ```ts
 blockHistoryWhile(
-  history: ObservableHistory,
   whileTrueFn: () => boolean,
-  reactionOptions?: IReactionOptions
+  opts: Partial<IReactionOptions<boolean, FireImmediately>> & {
+    history: THistory;
+    blocker?: Blocker;
+  },
 ): IReactionDesposer
 ```
 
@@ -29,9 +31,9 @@ const history = createBrowserHistory();
 
 ...
 blockHistoryWhile(
-  history,
   () => this.form.isDirty,
   {
+    history,
     signal: this.abortSignal,
   }
 )
@@ -39,7 +41,7 @@ blockHistoryWhile(
 
 const val = observable.box(0);
 
-const disposer = blockHistoryWhile(history, () => val > 50);
+const disposer = blockHistoryWhile(() => val > 50, { history });
 
 val.set(10); // not blocks
 
