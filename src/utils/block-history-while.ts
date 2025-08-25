@@ -9,14 +9,11 @@ import { ObservableHistory } from '../history/index.js';
  * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/blockHistoryWhile)
  *
  */
-export const blockHistoryWhile = <
-  THistory extends ObservableHistory<History>,
-  FireImmediately extends boolean,
->(
+export const blockHistoryWhile = <THistory extends ObservableHistory<History>>(
   whileTrueFn: () => boolean,
   optsOrHistory:
     | THistory
-    | (Partial<IReactionOptions<boolean, FireImmediately>> & {
+    | (Partial<IReactionOptions<boolean, true>> & {
         history: THistory;
         blocker?: Blocker;
       }),
@@ -26,9 +23,7 @@ export const blockHistoryWhile = <
     // @ts-ignore
     optsOrHistory.go
       ? { history: optsOrHistory as THistory }
-      : (optsOrHistory as Partial<
-          IReactionOptions<boolean, FireImmediately>
-        > & {
+      : (optsOrHistory as Partial<IReactionOptions<boolean, true>> & {
           history: THistory;
           blocker?: Blocker;
         });
