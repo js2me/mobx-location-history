@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 8.0.1
+
+### Patch Changes
+
+- [`e687f9e`](https://github.com/js2me/mobx-location-history/commit/e687f9ede500cd9c2c627ba3b63910ba17bd5f04) Thanks [@js2me](https://github.com/js2me)! - fixed `blockHistoryWhile` method with unsubscriptions
+
 ## 8.0.0
 
 ### Major Changes
