@@ -1,5 +1,4 @@
 import { Blocker, History } from 'history';
-import { LinkedAbortController } from 'linked-abort-controller';
 import { IReactionOptions, reaction } from 'mobx';
 
 import { ObservableHistory } from '../history/index.js';
@@ -22,7 +21,7 @@ export const blockHistoryWhile = <
         blocker?: Blocker;
       }),
 ) => {
-  const opts =
+  const { signal, ...opts } =
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     optsOrHistory.go
@@ -34,16 +33,9 @@ export const blockHistoryWhile = <
           blocker?: Blocker;
         });
 
-  const abortController = new LinkedAbortController();
-
   let historyBlocker: VoidFunction | undefined;
 
-  abortController.signal.addEventListener('abort', () => {
-    historyBlocker?.();
-    historyBlocker = undefined;
-  });
-
-  reaction(
+  const disposeFn = reaction(
     () => whileTrueFn(),
     (isNeedToBlock) => {
       if (isNeedToBlock) {
@@ -59,15 +51,16 @@ export const blockHistoryWhile = <
     {
       ...opts,
       fireImmediately: true,
-      signal: abortController.signal,
     },
   );
 
-  if (opts?.signal) {
-    opts?.signal?.addEventListener?.('abort', () => abortController.abort());
-  }
-
-  return () => {
-    abortController.abort();
+  const cleanup = () => {
+    historyBlocker?.();
+    historyBlocker = undefined;
+    disposeFn();
   };
+
+  signal?.addEventListener?.('abort', cleanup);
+
+  return cleanup;
 };
