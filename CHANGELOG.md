@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 8.0.2
+
+### Patch Changes
+
+- [`724cd85`](https://github.com/js2me/mobx-location-history/commit/724cd856c4a9ee1de243d4683eadc1ab0b0fba56) Thanks [@js2me](https://github.com/js2me)! - fixed typings in `blockHistoryWhile` operator
+
 ## 8.0.1
 
 ### Patch Changes

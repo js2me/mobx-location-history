@@ -1,6 +1,6 @@
 {
   "name": "mobx-location-history",
-  "version": "8.0.1",
+  "version": "8.0.2",
   "scripts": {
     "prepare": "pnpm dev:install-hooks",
     "clean": "rm -rf dist",
