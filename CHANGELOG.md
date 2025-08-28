@@ -1,5 +1,15 @@
 # mobx-location-history
 
+## 8.1.0
+
+### Minor Changes
+
+- [`32f1ed9`](https://github.com/js2me/mobx-location-history/commit/32f1ed968184fe13e8c76365369c35fc84a9979f) Thanks [@js2me](https://github.com/js2me)! - added docs for parseSearchString buildSearchString
+
+### Patch Changes
+
+- [`32f1ed9`](https://github.com/js2me/mobx-location-history/commit/32f1ed968184fe13e8c76365369c35fc84a9979f) Thanks [@js2me](https://github.com/js2me)! - update docs for blockHistoryWhile
+
 ## 8.0.2
 
 ### Patch Changes
