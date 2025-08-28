@@ -1,4 +1,4 @@
-import { AnyObject } from 'yummies/utils/types';
+import type { AnyObject } from 'yummies/utils/types';
 
 import type { IQueryParams } from '../query-params/index.js';
 

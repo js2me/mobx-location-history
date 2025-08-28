@@ -1,11 +1,10 @@
 import { action, computed, makeObservable } from 'mobx';
-
-import { queryParamPresets } from './query-param-presets.js';
-import {
+import type {
   DefinePresetByType,
   QueryParamsFieldModelConfig,
   QueryParamsFieldModelPresetConfig,
 } from './query-param.types.js';
+import { queryParamPresets } from './query-param-presets.js';
 
 /**
  * Create get\set value, which is synchronized with the query parameter
@@ -81,7 +80,6 @@ export const createQueryParam = <T>(
  */
 export const createQueryParamFromPreset = <T>(
   config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
-  // eslint-disable-next-line sonarjs/no-identical-functions
 ): QueryParam<T> => {
   const { serialize, deserialize } = queryParamPresets[config.preset]!;
 

@@ -1,18 +1,17 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
-  Blocker,
-  BrowserHistoryOptions,
+  type Blocker,
+  type BrowserHistoryOptions,
   createBrowserHistory as createBrowserHistoryLib,
   createHashHistory as createHashHistoryLib,
   createMemoryHistory as createMemoryHistoryLib,
-  HashHistoryOptions,
-  History,
-  Listener,
-  MemoryHistoryOptions,
-  Transition,
+  type HashHistoryOptions,
+  type History,
+  type Listener,
+  type MemoryHistoryOptions,
+  type Transition,
 } from 'history';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
-import { AnyObject } from 'yummies/utils/types';
+import type { AnyObject } from 'yummies/utils/types';
 
 export * from 'history';
 
@@ -53,9 +52,9 @@ const makeHistoryObservable = <THistory extends History>(
   const history = originHistory as unknown as ObservableHistory<THistory>;
 
   // @ts-ignore
-  delete history['location'];
+  delete history.location;
   // @ts-ignore
-  delete history['action'];
+  delete history.action;
   // @ts-ignore
   history.location = { ...location };
   // @ts-ignore
@@ -89,7 +88,6 @@ const makeHistoryObservable = <THistory extends History>(
 
   const unsubscribe = history.listen((update) => {
     runInAction(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       history.action = update.action;
       Object.assign(history.location, update.location);

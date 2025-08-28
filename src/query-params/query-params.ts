@@ -1,9 +1,9 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { History } from '../index.js';
+import type { History } from '../index.js';
 
-import { IQueryParams, QueryParamsOptions } from './query-params.types.js';
+import type { IQueryParams, QueryParamsOptions } from './query-params.types.js';
 import { buildSearchString, parseSearchString } from './utils/index.js';
 
 export class QueryParams implements IQueryParams {

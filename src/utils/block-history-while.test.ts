@@ -60,7 +60,6 @@ describe('block-history-while', () => {
     expect(history.location.pathname).toBe('/');
 
     history.push('/foo/bar/baz/bad');
-    // eslint-disable-next-line unicorn/no-array-push-push
     history.push('/foo/bar/baz/bag');
 
     expect(history.location.pathname).toBe('/foo/bar/baz/bag');

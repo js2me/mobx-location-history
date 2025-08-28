@@ -1,7 +1,7 @@
-import { Blocker, History } from 'history';
-import { IReactionOptions, reaction } from 'mobx';
+import type { Blocker, History } from 'history';
+import { type IReactionOptions, reaction } from 'mobx';
 
-import { ObservableHistory } from '../history/index.js';
+import type { ObservableHistory } from '../history/index.js';
 
 /**
  * Blocks history while passed function `whileTrueFn` returns `true`.
@@ -19,7 +19,6 @@ export const blockHistoryWhile = <THistory extends ObservableHistory<History>>(
       }),
 ) => {
   const { signal, ...opts } =
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     optsOrHistory.go
       ? { history: optsOrHistory as THistory }
