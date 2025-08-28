@@ -1,6 +1,6 @@
 # `buildSearchString()`
 
-The function takes an object as an argument and returns a URL search string. If the object contains any properties with `null` or `undefined` values, they will be excluded from the resulting string.
+The function takes an object as an argument and returns a URL search string. If the object contains any properties with `undefined` values, they will be excluded from the resulting string.
 
 #### Example
 
@@ -8,6 +8,6 @@ The function takes an object as an argument and returns a URL search string. If 
 buildSearchString({ foo: "bar", baz: "qux", unset: null });
 // returns "?foo=bar&baz=qux"
 
-buildSearchString({ unset: null, other: undefined });
-// returns ""
+buildSearchString({ kek: null, other: undefined });
+// returns "?kek=null"
 ```
