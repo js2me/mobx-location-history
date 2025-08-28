@@ -18,7 +18,7 @@ export const buildSearchString = (data: Record<string, any>) => {
 
   for (const [key, value] of Object.entries(data)) {
     if (value != null) {
-      fixedData[key] = value;
+      fixedData[key] = String(value);
     }
   }
 

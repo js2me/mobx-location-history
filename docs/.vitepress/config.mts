@@ -73,6 +73,8 @@ export default defineConfig({
           { text: 'QueryParams', link: '/utilities/QueryParams' },
           { text: 'QueryParam', link: '/utilities/QueryParam' },
           { text: 'isObservableHistory', link: '/utilities/isObservableHistory' },
+          { text: 'buildSearchString', link: '/utilities/buildSearchString' },
+          { text: 'parseSearchString', link: '/utilities/parseSearchString' },
         ],
       },
     ],

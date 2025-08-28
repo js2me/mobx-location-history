@@ -1,12 +1,11 @@
-# `blockHistoryWhile()`   
+# `blockHistoryWhile()`
 
-Blocks history while passed function `whileTrueFn` returns `true`.   
+Blocks history while passed function `whileTrueFn` returns `true`.
 
-::: tip This function creates MobX `reaction()` and works like `reaction` 
+::: tip This function creates MobX `reaction()` and works like `reaction`
 :::
 
-
-**API Signature**  
+**API Signature**
 
 ```ts
 blockHistoryWhile(
@@ -18,7 +17,7 @@ blockHistoryWhile(
 ): IReactionDesposer
 ```
 
-## Examples   
+## Examples
 
 ```ts
 import {
@@ -49,3 +48,4 @@ val.set(100); // blocks
 
 disposer();
 ```
+

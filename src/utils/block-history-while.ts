@@ -31,7 +31,7 @@ export const blockHistoryWhile = <THistory extends ObservableHistory<History>>(
   let historyBlocker: VoidFunction | undefined;
 
   const disposeFn = reaction(
-    () => whileTrueFn(),
+    whileTrueFn,
     (isNeedToBlock) => {
       if (isNeedToBlock) {
         if (historyBlocker) {
