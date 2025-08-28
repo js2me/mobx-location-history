@@ -1,5 +1,13 @@
 # mobx-location-history
 
+## 8.1.1
+
+### Patch Changes
+
+- [`a244fdf`](https://github.com/js2me/mobx-location-history/commit/a244fdf5f43dbaae8b13c961c23095040e06234f) Thanks [@js2me](https://github.com/js2me)! - added unit tests for `buildSearchString` and `parseSearchString`
+
+- [`a244fdf`](https://github.com/js2me/mobx-location-history/commit/a244fdf5f43dbaae8b13c961c23095040e06234f) Thanks [@js2me](https://github.com/js2me)! - `buildSearchString` writes nullish values
+
 ## 8.1.0
 
 ### Minor Changes
