@@ -12,7 +12,7 @@ describe('buildSearchString', () => {
   it('should filter out null values', () => {
     const data = { foo: 'bar', baz: null, qux: 'quux' };
     const result = buildSearchString(data);
-    expect(result).toBe('?foo=bar&qux=quux');
+    expect(result).toBe('?foo=bar&baz=null&qux=quux');
   });
 
   it('should filter out undefined values', () => {
@@ -60,7 +60,7 @@ describe('buildSearchString', () => {
       nullVal: null,
     };
     const result = buildSearchString(data);
-    expect(result).toBe('?trueVal=true&falseVal=false');
+    expect(result).toBe('?trueVal=true&falseVal=false&nullVal=null');
   });
 
   it('should handle special characters in values', () => {
@@ -106,7 +106,7 @@ describe('buildSearchString', () => {
     };
     const result = buildSearchString(data);
     expect(result).toBe(
-      '?name=John+Doe&age=30&active=true&score=95.5&hobbies=reading%2Cswimming&counts=1%2C2%2C3%2C4%2C5&email=&weight=0&verified=false',
+      '?name=John+Doe&age=30&active=true&score=95.5&hobbies=reading%2Cswimming&counts=1%2C2%2C3%2C4%2C5&address=null&email=&weight=0&verified=false',
     );
   });
 });

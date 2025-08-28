@@ -8,7 +8,7 @@ export const buildSearchString = (data: Record<string, any>) => {
   const fixedData: Record<string, any> = {};
 
   for (const [key, value] of Object.entries(data)) {
-    if (value != null) {
+    if (value !== undefined) {
       let stringifiedValue: string;
 
       if (Array.isArray(value)) {
