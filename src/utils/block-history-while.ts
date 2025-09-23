@@ -19,7 +19,7 @@ export const blockHistoryWhile = <THistory extends ObservableHistory<History>>(
       }),
 ) => {
   const { signal, ...opts } =
-    // @ts-ignore
+    // @ts-expect-error
     optsOrHistory.go
       ? { history: optsOrHistory as THistory }
       : (optsOrHistory as Partial<IReactionOptions<boolean, true>> & {

@@ -51,13 +51,13 @@ const makeHistoryObservable = <THistory extends History>(
 
   const history = originHistory as unknown as ObservableHistory<THistory>;
 
-  // @ts-ignore
+  // @ts-expect-error
   delete history.location;
-  // @ts-ignore
+  // @ts-expect-error
   delete history.action;
-  // @ts-ignore
+  // @ts-expect-error
   history.location = { ...location };
-  // @ts-ignore
+  // @ts-expect-error
   history.action = action;
 
   history.blockersCount = 0;
@@ -88,7 +88,7 @@ const makeHistoryObservable = <THistory extends History>(
 
   const unsubscribe = history.listen((update) => {
     runInAction(() => {
-      // @ts-ignore
+      // @ts-expect-error
       history.action = update.action;
       Object.assign(history.location, update.location);
       if ('hash' in update.location) {

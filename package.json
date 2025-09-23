@@ -9,12 +9,11 @@
     "check": "npm run lint:check && npm run ts:check",
     "prebuild": "npm run clean && npm run check",
     "build:watch": "npm run build && nodemon --watch src --ext ts --exec \"tsc && node ./post-build.mjs\"",
-    "build": "tsc && node ./post-build.mjs",
-    "pub": "PUBLISH=true pnpm run build",
-    "pub-ci": "PUBLISH=true CI=true pnpm run build",
-    "pub:patch": "PUBLISH=true PUBLISH_VERSION=patch pnpm run build",
-    "pub:minor": "PUBLISH=true PUBLISH_VERSION=minor pnpm run build",
-    "pub:major": "PUBLISH=true PUBLISH_VERSION=major pnpm run build",
+    "build": "zshy",
+    "pub": "pnpm build && sborshik publish",
+    "pub:patch": "PUBLISH_VERSION=patch pnpm run build",
+    "pub:minor": "PUBLISH_VERSION=minor pnpm run build",
+    "pub:major": "PUBLISH_VERSION=major pnpm run build",
     "test": "vitest run --config vitest.config.ts",
     "test:watch": "vitest watch --config vitest.config.ts",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
@@ -46,30 +45,51 @@
     "type": "git",
     "url": "git://github.com/js2me/mobx-location-history"
   },
+  "zshy": {
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
   "dependencies": {
     "history": "^5.3.0",
     "linked-abort-controller": "^1.1.0",
-    "yummies": "^4.12.2"
+    "yummies": "^5.4.8"
   },
   "peerDependencies": {
     "mobx": "^6.13.3"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.4",
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.5",
-    "@biomejs/biome": "2.1.4",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.15.21",
     "@vitejs/plugin-react-swc": "^3.9.0",
     "@vitest/coverage-istanbul": "^3.1.4",
     "commitfmt": "^1.0.4",
-    "js2me-biome-config": "^1.0.3",
-    "js2me-exports-post-build-script": "^4.1.5",
+    "js2me-biome-config": "^1.0.5",
     "jsdom": "^26.1.0",
     "lefthook": "^1.11.16",
     "nodemon": "^3.1.10",
+    "sborshik": "^1.0.6",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.4"
+    "vitest": "^3.1.4",
+    "zshy": "^0.4.2"
   },
-  "packageManager": "pnpm@9.5.0"
+  "packageManager": "pnpm@9.5.0",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.cts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  }
 }
