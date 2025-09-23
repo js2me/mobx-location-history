@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 8.1.2
+
+### Patch Changes
+
+- [`0d61990`](https://github.com/js2me/mobx-location-history/commit/0d619909081086013f8818a9b1ac1a78534bc6ed) Thanks [@js2me](https://github.com/js2me)! - refactored build (switch tsc -> zshy for more compatibility)
+
 ## 8.1.1
 
 ### Patch Changes
