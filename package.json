@@ -9,7 +9,7 @@
     "check": "npm run lint:check && npm run ts:check",
     "prebuild": "npm run clean && npm run check",
     "build:watch": "npm run build && nodemon --watch src --ext ts --exec \"tsc && node ./post-build.mjs\"",
-    "build": "sborshik build --fillDist",
+    "build": "vite build",
     "pub": "pnpm build && sborshik publish --useDistDir",
     "pub:patch": "PUBLISH_VERSION=patch pnpm run build",
     "pub:minor": "PUBLISH_VERSION=minor pnpm run build",
@@ -45,16 +45,12 @@
     "type": "git",
     "url": "git://github.com/js2me/mobx-location-history"
   },
-  "zshy": {
-    "exports": {
-      "./package.json": "./package.json",
-      ".": "./src/index.ts"
-    }
-  },
   "dependencies": {
+    "@types/qs": "^6.14.0",
     "history": "^5.3.0",
     "linked-abort-controller": "^1.1.0",
-    "yummies": "^5.4.8"
+    "qs": "^6.14.0",
+    "yummies": "^5.11.1"
   },
   "peerDependencies": {
     "mobx": "^6.13.3"
@@ -72,10 +68,10 @@
     "jsdom": "^26.1.0",
     "lefthook": "^1.11.16",
     "nodemon": "^3.1.10",
-    "sborshik": "^1.0.10",
+    "sborshik": "^1.0.33",
     "typescript": "^5.8.3",
-    "vitest": "^3.1.4",
-    "zshy": "^0.4.2"
+    "vite": "^7.1.11",
+    "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@9.5.0"
 }

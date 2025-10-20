@@ -1,30 +1,32 @@
 import { LinkedAbortController } from 'linked-abort-controller';
 import { action, makeObservable, observable, reaction } from 'mobx';
-
-import type { History } from '../index.js';
-
+import { lazyObserve } from 'yummies/mobx';
+import type { History, ParsedSearchString } from '../index.js';
 import type { IQueryParams, QueryParamsOptions } from './query-params.types.js';
 import { buildSearchString, parseSearchString } from './utils/index.js';
 
-export class QueryParams implements IQueryParams {
+export class QueryParams<TData = ParsedSearchString>
+  implements IQueryParams<TData>
+{
+  /**
+   * @deprecated not needed
+   */
   protected abortController: AbortController;
   private history: History;
 
-  data!: Record<string, string>;
+  data: TData;
 
-  constructor(options: QueryParamsOptions) {
+  protected parser: typeof parseSearchString<TData>;
+  protected builder: typeof buildSearchString;
+
+  constructor(protected options: QueryParamsOptions<TData>) {
     this.history = options.history;
-    this.abortController = new LinkedAbortController(options?.abortSignal);
-
-    reaction(
-      () => options.history.location.search,
-      (search) => {
-        this.data = parseSearchString(search);
-      },
-      {
-        fireImmediately: true,
-        signal: this.abortController.signal,
-      },
+    this.abortController = new LinkedAbortController();
+    this.parser = options.parser || parseSearchString;
+    this.builder = options.builder || buildSearchString;
+    this.data = this.parser(
+      options.history.location.search,
+      options.parseOptions,
     );
 
     observable.deep(this, 'data');
@@ -32,6 +34,21 @@ export class QueryParams implements IQueryParams {
     action.bound(this, 'update');
 
     makeObservable(this);
+
+    lazyObserve({
+      context: this,
+      property: 'data',
+      onStart: () =>
+        reaction(
+          () => options.history.location.search,
+          action((search) => {
+            this.data = this.parser(search, options.parseOptions);
+          }),
+        ),
+      onEnd: (disposer) => {
+        return disposer();
+      },
+    });
   }
 
   protected navigate(url: string, replace?: boolean) {
@@ -43,8 +60,7 @@ export class QueryParams implements IQueryParams {
   }
 
   buildUrl(data: Record<string, any>) {
-    const searchString = buildSearchString(data);
-
+    const searchString = this.builder(data, this.options.buildOptions);
     return `${this.history.location.pathname}${searchString}`;
   }
 
@@ -64,9 +80,11 @@ export class QueryParams implements IQueryParams {
     );
   }
 
-  destroy(): void {
-    this.abortController.abort();
-  }
+  /**
+   * @deprecated
+   * is not needed
+   */
+  destroy(): void {}
 }
 
 export const createQueryParams = (options: QueryParamsOptions) =>

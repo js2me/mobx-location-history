@@ -1,20 +1,33 @@
 import type { History } from 'history';
+import type {
+  buildSearchString,
+  ParsedSearchString,
+  parseSearchString,
+} from './utils/index.js';
 
-export type RawQueryParamsData = Record<string, string>;
+export type RawQueryParamsData = ParsedSearchString;
 
-export interface QueryParamsOptions {
+export interface QueryParamsOptions<TData = ParsedSearchString> {
   history: History;
+  buildOptions?: Parameters<typeof buildSearchString>[1];
+  parseOptions?: Parameters<typeof parseSearchString>[1];
+  parser?: typeof parseSearchString<TData>;
+  builder?: typeof buildSearchString;
+
+  /**
+   * @deprecated
+   */
   abortSignal?: AbortSignal;
 }
 
 /**
  * Interface for working with query parameters
  */
-export interface IQueryParams {
+export interface IQueryParams<TData = ParsedSearchString> {
   /**
    * Raw query parameter data (strings)
    */
-  data: RawQueryParamsData;
+  data: TData;
 
   /**
    * Sets the query parameters (replacing all existing query parameters in the address bar)
