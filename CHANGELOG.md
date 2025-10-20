@@ -1,5 +1,21 @@
 # mobx-location-history
 
+## 9.0.0
+
+### Major Changes
+
+- [`36de827`](https://github.com/js2me/mobx-location-history/commit/36de82704271df0ffa50509e59d851ffe1b08168) Thanks [@js2me](https://github.com/js2me)! - `buildSearchString` and `parseSearchString` now works via `qs` package
+
+### Minor Changes
+
+- [`46b7b66`](https://github.com/js2me/mobx-location-history/commit/46b7b6685ba5590a7e2455e018d19af927a596ab) Thanks [@js2me](https://github.com/js2me)! - mark `abortSignal` and `abortContoller` as deprecated in `QueryParams`
+
+- [`36de827`](https://github.com/js2me/mobx-location-history/commit/36de82704271df0ffa50509e59d851ffe1b08168) Thanks [@js2me](https://github.com/js2me)! - added `TData` generic type to override type of `data` property in `QueryParams` and `IQueryParams`
+
+### Patch Changes
+
+- [`36de827`](https://github.com/js2me/mobx-location-history/commit/36de82704271df0ffa50509e59d851ffe1b08168) Thanks [@js2me](https://github.com/js2me)! - [internal] unify bundle (vite) + unify docs build (vitepress + sborshik)
+
 ## 8.1.2
 
 ### Patch Changes
