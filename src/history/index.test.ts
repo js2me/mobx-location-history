@@ -5,7 +5,26 @@ import {
   createBrowserHistory,
   createHashHistory,
   createMemoryHistory,
+  type History,
 } from './index.js';
+
+export const mockHistory = (history: History) => {
+  const spies = {
+    push: vi.spyOn(history, 'push'),
+    replace: vi.spyOn(history, 'replace'),
+  };
+
+  const clearMocks = () => {
+    spies.push.mockClear();
+    spies.replace.mockClear();
+  };
+
+  return {
+    ...history,
+    spies,
+    clearMocks,
+  };
+};
 
 describe('history', () => {
   const histories = [
