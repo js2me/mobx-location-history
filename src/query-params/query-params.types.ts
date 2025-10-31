@@ -48,6 +48,7 @@ export interface IQueryParams<TData = ParsedSearchString> {
 
   /**
    * Destroy the QueryParams instance
+   * @deprecated
    */
   destroy(): void;
 }
