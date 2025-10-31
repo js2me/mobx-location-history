@@ -11,7 +11,7 @@ import {
   type Transition,
 } from 'history';
 import { computed, makeObservable, observable, runInAction } from 'mobx';
-import type { AnyObject } from 'yummies/utils/types';
+import type { AnyObject } from 'yummies/types';
 
 export * from 'history';
 
