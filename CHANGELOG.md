@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.1.1
+
+### Patch Changes
+
+- [`b04be2a`](https://github.com/js2me/mobx-location-history/commit/b04be2a7446187098b8b5ddc4d88d63788e5f3d9) Thanks [@js2me](https://github.com/js2me)! - fixed `QueryParams` data work
+
 ## 9.1.0
 
 ### Minor Changes
