@@ -12,5 +12,24 @@ describe('query params', () => {
     const qp = new QueryParams({ history });
 
     expect(qp.data).toEqual({ a: '3', b: '1,2,3' });
+
+    qp.update({ bar: 1, baz: 2 });
+
+    expect(qp.data).toEqual({ a: '3', b: '1,2,3', bar: '1', baz: '2' });
+
+    qp.set({ bar: 1, baz: 2 });
+
+    expect(qp.data).toEqual({
+      bar: '1',
+      baz: '2',
+    });
+
+    history.push('/baabba');
+
+    expect(qp.data).toEqual({});
+
+    qp.set({ kkee: null });
+
+    expect(history.location.search).toBe('');
   });
 });
