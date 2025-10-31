@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.1.0
+
+### Minor Changes
+
+- [`daf9f05`](https://github.com/js2me/mobx-location-history/commit/daf9f056cc212d4f4572a9f01a1d65646c65548e) Thanks [@js2me](https://github.com/js2me)! - [internal] migration to yummies 6.x
+
 ## 9.0.0
 
 ### Major Changes
