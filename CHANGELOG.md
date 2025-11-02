@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.1.2
+
+### Patch Changes
+
+- [`676706c`](https://github.com/js2me/mobx-location-history/commit/676706c243821e4bf3a921672a94e7209fb12ce5) Thanks [@js2me](https://github.com/js2me)! - [internal] build modification
+
 ## 9.1.1
 
 ### Patch Changes
