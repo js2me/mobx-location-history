@@ -64,8 +64,8 @@ importers:
         specifier: ^3.1.10
         version: 3.1.10
       sborshik:
-        specifier: ^1.9.6
-        version: 1.9.6(@algolia/client-search@5.40.1)(@types/debug@4.1.12)(jiti@2.6.1)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3)
+        specifier: ^1.9.7
+        version: 1.9.7(@algolia/client-search@5.40.1)(@types/debug@4.1.12)(jiti@2.6.1)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3)
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -3299,8 +3299,8 @@ packages:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
 
-  sborshik@1.9.6:
-    resolution: {integrity: sha512-3Glrp/hzVYx9HHHlBmY93xW/cZ2AHLuLsfv51d6amFIKBI2owS3HBPt/OfYm2YxHqZ/bxw7+kY7mQ+/gskFAlA==}
+  sborshik@1.9.7:
+    resolution: {integrity: sha512-EJHos26jEzmK3LT4qwk9w6VM9xpN9whVU1qQd25KDB12psDsYLztVaeuZRtRGLCnB0Timaah5o9+g/U11upG1A==}
     hasBin: true
 
   search-insights@2.17.3:
@@ -7622,7 +7622,7 @@ snapshots:
     dependencies:
       xmlchars: 2.2.0
 
-  sborshik@1.9.6(@algolia/client-search@5.40.1)(@types/debug@4.1.12)(jiti@2.6.1)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3):
+  sborshik@1.9.7(@algolia/client-search@5.40.1)(@types/debug@4.1.12)(jiti@2.6.1)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.8.3):
     dependencies:
       '@iconify-json/logos': 1.2.10
       '@types/jsdom': 27.0.0
