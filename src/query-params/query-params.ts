@@ -1,5 +1,6 @@
 import { LinkedAbortController } from 'linked-abort-controller';
-import { action, computed, makeObservable } from 'mobx';
+import { action, computed } from 'mobx';
+import { applyObservable } from 'yummies/mobx';
 import type { History, ParsedSearchString } from '../index.js';
 import type { IQueryParams, QueryParamsOptions } from './query-params.types.js';
 import { buildSearchString, parseSearchString } from './utils/index.js';
@@ -22,11 +23,10 @@ export class QueryParams<TData = ParsedSearchString>
     this.parser = options.parser || parseSearchString;
     this.builder = options.builder || buildSearchString;
 
-    computed.struct(this, 'data');
-    action.bound(this, 'set');
-    action.bound(this, 'update');
-
-    makeObservable(this);
+    applyObservable(this, [
+      [computed.struct, 'data'],
+      [action.bound, 'set', 'update'],
+    ]);
   }
 
   get data(): TData {

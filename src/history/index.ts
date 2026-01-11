@@ -10,7 +10,8 @@ import {
   type MemoryHistoryOptions,
   type Transition,
 } from 'history';
-import { computed, makeObservable, observable, runInAction } from 'mobx';
+import { computed, observable, runInAction } from 'mobx';
+import { applyObservable } from 'yummies/mobx';
 import type { AnyObject } from 'yummies/types';
 
 export * from 'history';
@@ -78,13 +79,11 @@ const makeHistoryObservable = <THistory extends History>(
     },
   });
 
-  computed.struct(history, 'isBlocked');
-  computed.struct(history, 'locationUrl');
-  observable.deep(history, 'location');
-  observable.ref(history, 'action');
-  observable.ref(history, 'blockersCount');
-  observable.ref(history, 'lastBlockedTx');
-  makeObservable(history);
+  applyObservable(history, [
+    [computed.struct, 'isBlocked', 'locationUrl'],
+    [observable.deep, 'location'],
+    [observable.ref, 'action', 'blockersCount', 'lastBlockedTx'],
+  ]);
 
   const unsubscribe = history.listen((update) => {
     runInAction(() => {

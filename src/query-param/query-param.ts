@@ -1,4 +1,5 @@
-import { action, computed, makeObservable } from 'mobx';
+import { action, computed } from 'mobx';
+import { applyObservable } from 'yummies/mobx';
 import type {
   DefinePresetByType,
   QueryParamsFieldModelConfig,
@@ -16,11 +17,10 @@ export class QueryParam<T> {
   constructor(private config: QueryParamsFieldModelConfig<T>) {
     this.name = this.config.name;
 
-    computed.struct(this, 'rawValue');
-    computed.struct(this, 'value');
-    action(this, 'set');
-
-    makeObservable(this);
+    applyObservable(this, [
+      [computed.struct, 'rawValue', 'value'],
+      [action, 'set'],
+    ]);
   }
 
   get rawValue() {
