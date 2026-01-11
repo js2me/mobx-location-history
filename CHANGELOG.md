@@ -1,5 +1,15 @@
 # mobx-location-history
 
+## 9.2.0
+
+### Minor Changes
+
+- [`79985ff`](https://github.com/js2me/mobx-location-history/commit/79985ff02af4336f15c7dc73750107e748593e10) Thanks [@js2me](https://github.com/js2me)! - update yummies to 7.x.x use `applyObservable`
+
+### Patch Changes
+
+- [`676706c`](https://github.com/js2me/mobx-location-history/commit/676706c243821e4bf3a921672a94e7209fb12ce5) Thanks [@js2me](https://github.com/js2me)! - [internal] build modification
+
 ## 9.1.1
 
 ### Patch Changes
