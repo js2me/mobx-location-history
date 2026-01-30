@@ -21,8 +21,8 @@ importers:
         specifier: ^6.13.3
         version: 6.13.7
       qs:
-        specifier: ^6.14.0
-        version: 6.14.0
+        specifier: ^6.14.1
+        version: 6.14.1
       yummies:
         specifier: ^7.0.0
         version: 7.0.0(mobx@6.13.7)
@@ -3158,8 +3158,8 @@ packages:
     resolution: {integrity: sha512-l1jNAspIBSFqbT+y+5FosojNpVpF94nlI+wDUpqP9enwOTfHx9f0gh5nB96vl+6yTpsJsypeNrwfzPrKuHB41A==}
     engines: {node: '>=8'}
 
-  qs@6.14.0:
-    resolution: {integrity: sha512-YWWTjgABSKcvs/nWBi9PycY/JiPJqOD4JA6o9Sej2AtvSGarXxKC3OQSk4pAarbdQlKAh5D4FCQkJNkW+GAn3w==}
+  qs@6.14.1:
+    resolution: {integrity: sha512-4EK3+xJl8Ts67nLYNwqw/dsFVnCf+qR7RgXSK9jEEm9unao3njwMDdmsdvoKBKHzxd7tCYz5e5M+SnMjdtXGQQ==}
     engines: {node: '>=0.6'}
 
   quansync@0.2.10:
@@ -7434,7 +7434,7 @@ snapshots:
     dependencies:
       escape-goat: 2.1.1
 
-  qs@6.14.0:
+  qs@6.14.1:
     dependencies:
       side-channel: 1.1.0
 
