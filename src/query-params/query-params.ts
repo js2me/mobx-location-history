@@ -29,6 +29,9 @@ export class QueryParams<TData = ParsedSearchString>
     ]);
   }
 
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#data)
+   */
   get data(): TData {
     return this.parser(
       this.options.history.location.search,
@@ -44,17 +47,53 @@ export class QueryParams<TData = ParsedSearchString>
     }
   }
 
-  buildUrl(data: Record<string, any>) {
-    const searchString = this.builder(data, this.options.buildOptions);
-    return `${this.history.location.pathname}${searchString}`;
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#tostringdata-addqueryprefix)
+   */
+  toString(data?: Record<string, any>, addQueryPrefix?: boolean) {
+    const buildOptions =
+      addQueryPrefix === undefined
+        ? this.options.buildOptions
+        : {
+            ...this.options.buildOptions,
+            addQueryPrefix,
+          };
+
+    return this.builder(
+      data ?? (this.data as Record<string, any>),
+      buildOptions,
+    );
   }
 
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#createurldata-path)
+   */
+  createUrl(
+    data: Record<string, any>,
+    path: string = this.history.location.pathname,
+  ) {
+    return `${path}${this.toString(data)}`;
+  }
+
+  /**
+   * @deprecated use `createUrl`
+   */
+  buildUrl(data: Record<string, any>) {
+    return this.createUrl(data);
+  }
+
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#setdata-replace)
+   */
   set(data: Record<string, any>, replace?: boolean) {
-    const nextUrl = this.buildUrl(data);
+    const nextUrl = this.createUrl(data);
 
     this.navigate(nextUrl, replace);
   }
 
+  /**
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#updatedata-replace)
+   */
   update(data: Record<string, any>, replace?: boolean) {
     this.set(
       {

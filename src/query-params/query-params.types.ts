@@ -44,7 +44,7 @@ export interface IQueryParams<TData = ParsedSearchString> {
   /**
    * Builds a URL with the query parameters (first argument)
    */
-  buildUrl(data: Record<string, any>): string;
+  createUrl(data: Record<string, any>): string;
 
   /**
    * Destroy the QueryParams instance

@@ -58,7 +58,7 @@ export class QueryParam<T> {
       this.config.queryParams,
     );
 
-    return this.config.queryParams.buildUrl({
+    return this.config.queryParams.createUrl({
       [this.name]: serializedValue,
     });
   };
