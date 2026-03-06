@@ -1,5 +1,19 @@
 # mobx-location-history
 
+## 9.3.0
+
+### Minor Changes
+
+- [`8ca289a`](https://github.com/js2me/mobx-location-history/commit/8ca289addbab2a589182841ced3956ba812c535c) Thanks [@js2me](https://github.com/js2me)! - added `toString()` method for `QueryParams` (stringify query params)
+
+- [`8ca289a`](https://github.com/js2me/mobx-location-history/commit/8ca289addbab2a589182841ced3956ba812c535c) Thanks [@js2me](https://github.com/js2me)! - add more documentation for `QueryParams`
+
+- [`8ca289a`](https://github.com/js2me/mobx-location-history/commit/8ca289addbab2a589182841ced3956ba812c535c) Thanks [@js2me](https://github.com/js2me)! - improve `createUrl` method to pass custom path as second argument for `QueryParams`
+
+### Patch Changes
+
+- [`8ca289a`](https://github.com/js2me/mobx-location-history/commit/8ca289addbab2a589182841ced3956ba812c535c) Thanks [@js2me](https://github.com/js2me)! - [deprecation] rename `buildUrl` -> `createUrl` for `QueryParams`
+
 ## 9.2.1
 
 ### Patch Changes
