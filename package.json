@@ -46,11 +46,11 @@
     "url": "git://github.com/js2me/mobx-location-history"
   },
   "dependencies": {
-    "@types/qs": "^6.14.0",
+    "@types/qs": "^6.15.0",
     "history": "^5.3.0",
-    "linked-abort-controller": "^1.1.0",
-    "qs": "^6.14.1",
-    "yummies": "^7.0.0"
+    "linked-abort-controller": "^1.1.1",
+    "qs": "^6.15.0",
+    "yummies": "^7.10.0"
   },
   "peerDependencies": {
     "mobx": "^6.13.3"
@@ -61,17 +61,16 @@
     "@changesets/cli": "^2.29.5",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.15.21",
-    "@vitejs/plugin-react-swc": "^3.9.0",
-    "@vitest/coverage-istanbul": "^3.1.4",
+    "@vitest/coverage-istanbul": "^4.0.18",
     "commitfmt": "^1.0.4",
-    "js2me-biome-config": "^1.0.5",
+    "js2me-biome-config": "^1.1.0",
     "jsdom": "^26.1.0",
     "lefthook": "^1.11.16",
     "nodemon": "^3.1.10",
-    "sborshik": "^1.9.7",
+    "sborshik": "^2.1.0",
     "typescript": "^5.8.3",
-    "vite": "^7.1.11",
-    "vitest": "^3.2.4"
+    "vite": "^7.3.1",
+    "vitest": "^4.0.18"
   },
   "packageManager": "pnpm@9.5.0"
 }
