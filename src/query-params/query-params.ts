@@ -2,7 +2,11 @@ import { LinkedAbortController } from 'linked-abort-controller';
 import { action, computed } from 'mobx';
 import { applyObservable } from 'yummies/mobx';
 import type { History, ParsedSearchString } from '../index.js';
-import type { IQueryParams, QueryParamsOptions } from './query-params.types.js';
+import type {
+  IQueryParams,
+  QueryParamsOptions,
+  QueryParamsUpdateOptions,
+} from './query-params.types.js';
 import { buildSearchString, parseSearchString } from './utils/index.js';
 
 export class QueryParams<TData = ParsedSearchString>
@@ -25,7 +29,7 @@ export class QueryParams<TData = ParsedSearchString>
 
     applyObservable(this, [
       [computed.struct, 'data'],
-      [action.bound, 'set', 'update'],
+      [action.bound, 'set', 'update', 'delete'],
     ]);
   }
 
@@ -92,16 +96,51 @@ export class QueryParams<TData = ParsedSearchString>
   }
 
   /**
+   * Merges the given data into the current query parameters.
+   * Values of `null` or `undefined` will remove the corresponding key.
+   * You can also pass an options object as the second argument to delete keys and control navigation behavior.
+   *
    * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#updatedata-replace)
    */
-  update(data: Record<string, any>, replace?: boolean) {
+  update(
+    data: Record<string, any>,
+    replaceOrOptions?: boolean | QueryParamsUpdateOptions,
+  ) {
+    const options =
+      typeof replaceOrOptions === 'object'
+        ? replaceOrOptions
+        : { replace: replaceOrOptions };
+
+    const currentData = { ...(this.data as Record<string, any>) };
+
+    if (options.delete) {
+      for (const key of options.delete) {
+        delete currentData[key];
+      }
+    }
+
     this.set(
       {
-        ...this.data,
+        ...currentData,
         ...data,
       },
-      replace,
+      options.replace,
     );
+  }
+
+  /**
+   * Removes query parameters by their keys.
+   *
+   * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#deletekeys-replace)
+   */
+  delete(keys: string[], replace?: boolean) {
+    const data = { ...(this.data as Record<string, any>) };
+
+    for (const key of keys) {
+      delete data[key];
+    }
+
+    this.set(data, replace);
   }
 
   /**

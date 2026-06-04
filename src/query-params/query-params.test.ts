@@ -160,4 +160,162 @@ describe('query params', () => {
 
     expect(result).toBe('/users');
   });
+
+  describe('delete', () => {
+    it('should remove specified keys', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2&c=3');
+      const qp = new QueryParams({ history });
+
+      qp.delete(['b', 'c']);
+
+      expect(history.location.search).toBe('?a=1');
+    });
+
+    it('should remove a single key', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2');
+      const qp = new QueryParams({ history });
+
+      qp.delete(['a']);
+
+      expect(history.location.search).toBe('?b=2');
+    });
+
+    it('should ignore keys that do not exist', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2');
+      const qp = new QueryParams({ history });
+
+      qp.delete(['c', 'd']);
+
+      expect(history.location.search).toBe('?a=1&b=2');
+    });
+
+    it('should remove all keys', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2');
+      const qp = new QueryParams({ history });
+
+      qp.delete(['a', 'b']);
+
+      expect(history.location.search).toBe('');
+    });
+
+    it('should use replace when replace flag is true', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2');
+      history.clearMocks();
+      const qp = new QueryParams({ history });
+
+      qp.delete(['b'], true);
+
+      expect(history.spies.replace).toHaveBeenCalledTimes(1);
+      expect(history.spies.push).not.toHaveBeenCalled();
+    });
+
+    it('should use push by default', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2');
+      history.clearMocks();
+      const qp = new QueryParams({ history });
+
+      qp.delete(['b']);
+
+      expect(history.spies.push).toHaveBeenCalledTimes(1);
+      expect(history.spies.replace).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('update with options', () => {
+    it('should accept boolean replace as second argument (backward compat)', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1');
+      history.clearMocks();
+      const qp = new QueryParams({ history });
+
+      qp.update({ b: 2 }, true);
+
+      expect(history.location.search).toBe('?a=1&b=2');
+      expect(history.spies.replace).toHaveBeenCalledTimes(1);
+      expect(history.spies.push).not.toHaveBeenCalled();
+    });
+
+    it('should accept options object with replace', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1');
+      history.clearMocks();
+      const qp = new QueryParams({ history });
+
+      qp.update({ b: 2 }, { replace: true });
+
+      expect(history.location.search).toBe('?a=1&b=2');
+      expect(history.spies.replace).toHaveBeenCalledTimes(1);
+      expect(history.spies.push).not.toHaveBeenCalled();
+    });
+
+    it('should delete keys via options.delete', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2&c=3');
+      const qp = new QueryParams({ history });
+
+      qp.update({ d: 4 }, { delete: ['b', 'c'] });
+
+      expect(history.location.search).toBe('?a=1&d=4');
+    });
+
+    it('should combine update and delete in one call', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2&c=3&d=4');
+      const qp = new QueryParams({ history });
+
+      qp.update({ e: 5, a: 10 }, { delete: ['b', 'c'] });
+
+      expect(history.location.search).toBe('?a=10&d=4&e=5');
+    });
+
+    it('should ignore non-existent keys in options.delete', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2');
+      const qp = new QueryParams({ history });
+
+      qp.update({ c: 3 }, { delete: ['x', 'y'] });
+
+      expect(history.location.search).toBe('?a=1&b=2&c=3');
+    });
+
+    it('should handle update with only delete (no data changes)', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1&b=2&c=3');
+      const qp = new QueryParams({ history });
+
+      qp.update({}, { delete: ['a', 'c'] });
+
+      expect(history.location.search).toBe('?b=2');
+    });
+
+    it('should use push by default with options object', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1');
+      history.clearMocks();
+      const qp = new QueryParams({ history });
+
+      qp.update({ b: 2 }, { delete: ['a'] });
+
+      expect(history.spies.push).toHaveBeenCalledTimes(1);
+      expect(history.spies.replace).not.toHaveBeenCalled();
+    });
+
+    it('should use replace when specified in options', () => {
+      const history = mockHistory(createMemoryHistory());
+      history.push('/items?a=1');
+      history.clearMocks();
+      const qp = new QueryParams({ history });
+
+      qp.update({ b: 2 }, { replace: true, delete: ['a'] });
+
+      expect(history.spies.replace).toHaveBeenCalledTimes(1);
+      expect(history.spies.push).not.toHaveBeenCalled();
+    });
+  });
 });
