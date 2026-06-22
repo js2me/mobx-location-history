@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.4.1
+
+### Patch Changes
+
+- [`826d494`](https://github.com/js2me/mobx-location-history/commit/826d49482633dd6c1bf9dc73e445f953bde95cc7) Thanks [@js2me](https://github.com/js2me)! - migration to gh publish npm actions
+
 ## 9.4.0
 
 ### Minor Changes
