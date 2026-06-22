@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.4.0
+
+### Minor Changes
+
+- [`551be71`](https://github.com/js2me/mobx-location-history/commit/551be71b3de83abbcb4e37d2a536f4e21a53c628) Thanks [@js2me](https://github.com/js2me)! - improve `QueryParams` class add method `delete()` + update method `update()` (added delete option)
+
 ## 9.3.1
 
 ### Patch Changes
