@@ -7,6 +7,10 @@ export default defineConfig({
   },
   github: 'http://github.com/js2me/mobx-location-history',
   packageJsonPath: '.',
+  base: `/@{packageJson.name}/`,
+  title: '@{packageJson.name}',
+  description: '@{packageJson.description}',
+  search: 'local',
   changelog: { src: 'CHANGELOG.md' },
   logos: {
     main: '/public/logo.png',
