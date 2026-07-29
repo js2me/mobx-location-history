@@ -3,7 +3,7 @@
 layout: home
 
 hero:
-  name: '{packageJson.name}'
+  name: "@{packageJson.name}"
   text: Remix's history package
   tagline: + other MobX utilities
   image:
@@ -14,11 +14,11 @@ hero:
       link: /introduction/overview.md
     - theme: alt
       text: View on GitHub
-      link: https://github.com/{packageJson.author}/{packageJson.name}
+      link: https://github.com/@{packageJson.author}/@{packageJson.name}
 
 features:
   - title: MobX-based
-    icon: <span class="i-logos:mobx-icon"></span>
+    icon: <span class="i-logos:mobx"></span>
     details: Experience the power of MobX
   - title: TypeScript
     icon: <span class="i-logos:typescript-icon"></span>

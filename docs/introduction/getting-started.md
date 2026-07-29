@@ -9,21 +9,20 @@ title: Getting started
 ::: code-group
 
 ```bash [npm]
-npm install {packageJson.name}
+npm install @{packageJson.name}
 ```
 
 ```bash [yarn]
-yarn add {packageJson.name}
+yarn add @{packageJson.name}
 ```
 
 ```bash [pnpm]
-pnpm add {packageJson.name}
+pnpm add @{packageJson.name}
 ```
 
 :::
 
-
-## Usage   
+## Usage
 
 ```ts
 import {
@@ -38,19 +37,19 @@ const history = createBrowserHistory();
 
 reaction(
   () => history.location,
-  location => {
-    console.log(location)
-  }
+  (location) => {
+    console.log(location);
+  },
 );
 
 const queryParams = createQueryParams({
-  history
+  history,
 });
 
 reaction(
   () => queryParams.data,
-  queryParams => {
-    console.log(queryParams)
-  }
+  (queryParams) => {
+    console.log(queryParams);
+  },
 );
 ```
