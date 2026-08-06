@@ -1,6 +1,6 @@
 <img src="docs/public/logo.png" align="right" width="176" alt="logo" />
 
-# mobx-location-history  
+# mobx-location-history    
 
 [![NPM version][npm-image]][npm-url] [![test status][github-test-actions-image]][github-actions-url] [![build status][github-build-actions-image]][github-actions-url] [![npm download][download-image]][download-url] [![bundle size][bundlephobia-image]][bundlephobia-url]
 
