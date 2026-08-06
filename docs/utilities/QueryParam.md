@@ -10,6 +10,7 @@ import {
   createBrowserHistory,
   createQueryParam,
   createQueryParamFromPreset,
+  queryParamPresets,
 } from "mobx-location-history"
 
 const queryParams = createQueryParams({
@@ -25,6 +26,9 @@ createQueryParam({
   strategy: 'push', // 'replace'
 });
 
+> `createQueryParamFromPreset` is deprecated. Use `createQueryParam` with an
+> object preset instead.
+
 createQueryParamFromPreset({
   queryParams,
   preset: 'boolean',
@@ -34,4 +38,3 @@ createQueryParamFromPreset({
 });
 
 ```
-

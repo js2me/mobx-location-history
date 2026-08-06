@@ -2,8 +2,11 @@ import { action, computed } from 'mobx';
 import { applyObservable } from 'yummies/mobx';
 import type {
   DefinePresetByType,
+  PresetValueFromObject,
+  QueryParamPreset,
   QueryParamsFieldModelConfig,
   QueryParamsFieldModelPresetConfig,
+  QueryParamsFieldModelPresetObjectConfig,
 } from './query-param.types.js';
 import { queryParamPresets } from './query-param-presets.js';
 
@@ -68,15 +71,32 @@ export class QueryParam<T> {
  * Create get\set value, which is synchronized with the query parameter
  * Manual handling of the query parameter
  */
-export const createQueryParam = <T>(
+export function createQueryParam<T>(
   config: QueryParamsFieldModelConfig<T>,
-): QueryParam<T> => {
+): QueryParam<T>;
+export function createQueryParam<Preset extends QueryParamPreset>(
+  config: QueryParamsFieldModelPresetObjectConfig<Preset>,
+): QueryParam<PresetValueFromObject<Preset>>;
+export function createQueryParam<T>(
+  config:
+    | QueryParamsFieldModelConfig<T>
+    | QueryParamsFieldModelPresetObjectConfig<QueryParamPreset>,
+): QueryParam<T> {
+  if ('preset' in config) {
+    return new QueryParam<any>({
+      ...config,
+      ...config.preset,
+    });
+  }
+
   return new QueryParam<any>(config);
-};
+}
 
 /**
  * Create get\set value, which is synchronized with the query parameter
  * Create by preset
+ *
+ * @deprecated Use `createQueryParam` with an object preset instead.
  */
 export const createQueryParamFromPreset = <T>(
   config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
