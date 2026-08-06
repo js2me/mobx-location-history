@@ -4,3 +4,4 @@ dist
 .vscode
 coverage
 docs/.vitepress/cache
+graphify-out

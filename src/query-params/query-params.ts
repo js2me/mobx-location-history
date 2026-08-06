@@ -76,7 +76,31 @@ export class QueryParams<TData = ParsedSearchString>
     data: Record<string, any>,
     path: string = this.history.location.pathname,
   ) {
-    return `${path}${this.toString(data)}`;
+    if (Object.keys(data).length === 0) {
+      return path;
+    }
+
+    if (!path.includes('?') && !path.includes('#')) {
+      return `${path}${this.toString(data)}`;
+    }
+
+    const hashIndex = path.indexOf('#');
+    const hash = hashIndex === -1 ? '' : path.slice(hashIndex);
+    const pathWithoutHash = hashIndex === -1 ? path : path.slice(0, hashIndex);
+    const queryIndex = pathWithoutHash.indexOf('?');
+    const pathname =
+      queryIndex === -1
+        ? pathWithoutHash
+        : pathWithoutHash.slice(0, queryIndex);
+    const pathData =
+      queryIndex === -1
+        ? {}
+        : (this.parser(pathWithoutHash.slice(queryIndex)) as Record<
+            string,
+            any
+          >);
+
+    return `${pathname}${this.toString({ ...pathData, ...data })}${hash}`;
   }
 
   /**

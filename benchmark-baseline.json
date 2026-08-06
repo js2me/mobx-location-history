@@ -1,0 +1,12 @@
+{
+  "benchmarks": [
+    {
+      "name": "100 calls without an existing query",
+      "mean": 0.0902581642302828
+    },
+    {
+      "name": "100 calls with an existing query",
+      "mean": 0.41557925166113197
+    }
+  ]
+}

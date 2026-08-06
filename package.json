@@ -16,6 +16,7 @@
     "pub:minor": "PUBLISH_VERSION=minor pnpm run build",
     "pub:major": "PUBLISH_VERSION=major pnpm run build",
     "test": "vitest run --config vitest.config.ts",
+    "profile:bench": "vitest bench --config vitest.config.ts",
     "test:watch": "vitest watch --config vitest.config.ts",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "docs": "pnpm build && docusite dev",

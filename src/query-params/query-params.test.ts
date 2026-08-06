@@ -105,6 +105,29 @@ describe('query params', () => {
     expect(result).toBe('/custom/path?a=1');
   });
 
+  it('createUrl should append query params to a path with existing query', () => {
+    const history = mockHistory(createMemoryHistory());
+    const qp = new QueryParams({ history });
+
+    const result = qp.createUrl(
+      { TeamcityAgent: 23 },
+      '/nova/products/details/6637?tab=runners',
+    );
+
+    expect(result).toBe(
+      '/nova/products/details/6637?tab=runners&TeamcityAgent=23',
+    );
+  });
+
+  it('createUrl should prefer data when query keys are duplicated', () => {
+    const history = mockHistory(createMemoryHistory());
+    const qp = new QueryParams({ history });
+
+    const result = qp.createUrl({ tab: 'new' }, '/products?tab=old&page=2');
+
+    expect(result).toBe('/products?tab=new&page=2');
+  });
+
   it('toString should prefer explicit addQueryPrefix over buildOptions', () => {
     const history = mockHistory(createMemoryHistory());
     const qp = new QueryParams({
