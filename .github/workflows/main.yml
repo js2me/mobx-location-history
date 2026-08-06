@@ -31,6 +31,8 @@ jobs:
 
       - run: pnpm build
 
+      - run: pnpm size
+
       - run: pnpm docs:build
 
       - run: pnpm test:coverage

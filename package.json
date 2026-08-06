@@ -10,6 +10,7 @@
     "prebuild": "npm run clean && npm run check",
     "build:watch": "npm run build && nodemon --watch src --ext ts --exec \"tsc && node ./post-build.mjs\"",
     "build": "vite build",
+    "size": "size-limit",
     "pub": "pnpm build && sborshik publish --useDistDir",
     "changeset:version": "bash scripts/changeset-version.sh",
     "pub:patch": "PUBLISH_VERSION=patch pnpm run build",
@@ -60,6 +61,7 @@
     "@biomejs/biome": "2.2.4",
     "@changesets/changelog-github": "^0.5.1",
     "@changesets/cli": "^2.29.5",
+    "@size-limit/file": "^13.0.3",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^22.15.21",
     "@vitest/coverage-istanbul": "^4.0.18",
@@ -70,9 +72,20 @@
     "lefthook": "^1.11.16",
     "nodemon": "^3.1.10",
     "sborshik": "^2.1.0",
+    "size-limit": "^13.0.3",
     "typescript": "^5.8.3",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
   },
-  "packageManager": "pnpm@9.5.0"
+  "packageManager": "pnpm@9.5.0",
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "2.5 KB"
+    },
+    {
+      "path": "dist/index.cjs",
+      "limit": "2.6 KB"
+    }
+  ]
 }

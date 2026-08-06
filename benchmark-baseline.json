@@ -1,12 +1,47 @@
 {
   "benchmarks": [
+    { "name": "createMemoryHistory", "mean": 0.022433031001839174 },
+    { "name": "createBrowserHistory", "mean": 0.17631135318998845 },
+    { "name": "createHashHistory", "mean": 0.3754695810810836 },
+    { "name": "isObservableHistory", "mean": 0.021487536269876033 },
+    {
+      "name": "push and update observable location",
+      "mean": 0.028253873424873982
+    },
+    {
+      "name": "replace and update observable location",
+      "mean": 0.02678635593220323
+    },
+    { "name": "block and unblock", "mean": 0.02272211061122854 },
+    {
+      "name": "createQueryParam and read value",
+      "mean": 0.060703363846060954
+    },
+    { "name": "QueryParam.set", "mean": 0.05793891402085883 },
+    { "name": "buildUrl", "mean": 0.039163706117332615 },
+    { "name": "string[]", "mean": 0.04609678961925014 },
+    { "name": "number[]", "mean": 0.04783737498814786 },
+    { "name": "boolean", "mean": 0.04662093053613076 },
+    { "name": "json", "mean": 0.04822272658886874 },
+    { "name": "create and dispose", "mean": 0.03852121494472052 },
+    { "name": "react to state change", "mean": 0.03533446922478982 },
     {
       "name": "100 calls without an existing query",
-      "mean": 0.0902581642302828
+      "mean": 0.09039542136659343
     },
     {
       "name": "100 calls with an existing query",
-      "mean": 0.41557925166113197
-    }
+      "mean": 0.4675338065420551
+    },
+    { "name": "QueryParams.set", "mean": 0.04870147034187222 },
+    { "name": "QueryParams.update", "mean": 0.051522340133953036 },
+    { "name": "QueryParams.delete", "mean": 0.053386218129405985 },
+    { "name": "toString", "mean": 0.03503891640389633 },
+    {
+      "name": "deprecated buildUrl alias",
+      "mean": 0.03264709310524453
+    },
+    { "name": "buildSearchString", "mean": 0.002137385216152906 },
+    { "name": "parseSearchString", "mean": 0.003224365705810594 }
   ]
 }
