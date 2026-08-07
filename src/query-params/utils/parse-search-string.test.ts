@@ -21,6 +21,12 @@ describe('parseSearchString', () => {
     expect(result).toStrictEqual(data);
   });
 
+  it('merges custom parser options with defaults', () => {
+    expect(parseSearchString('?foo=bar', { comma: true })).toEqual({
+      foo: 'bar',
+    });
+  });
+
   buildSearchStringTestCases.forEach(({ description, input, expected }) => {
     it(`test-case-from-builder<(${description})`, () => {
       const result = parseSearchString(expected);

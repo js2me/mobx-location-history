@@ -13,4 +13,8 @@ describe('date preset', () => {
     expect(datePreset.deserialize('invalid')).toBeNull();
     expect(datePreset.serialize(new Date('invalid'))).toBeUndefined();
   });
+
+  it('returns null for a missing value', () => {
+    expect(datePreset.deserialize(undefined)).toBeNull();
+  });
 });

@@ -6,6 +6,7 @@ import {
   createHashHistory,
   createMemoryHistory,
   type History,
+  isObservableHistory,
 } from './index.js';
 
 export const mockHistory = (history: History) => {
@@ -27,6 +28,24 @@ export const mockHistory = (history: History) => {
 };
 
 describe('history', () => {
+  it('detects observable histories', () => {
+    expect(isObservableHistory(createMemoryHistory())).toBe(true);
+    expect(isObservableHistory({} as History)).toBe(false);
+  });
+
+  it('notifies the configured listener and can be destroyed', () => {
+    const listener = vi.fn();
+    const instance = createMemoryHistory({ listener });
+
+    instance.push('/with-hash#section');
+    expect(listener).toHaveBeenCalledTimes(1);
+    expect(instance.location.hash).toBe('#section');
+
+    instance.destroy();
+    instance.push('/after-destroy');
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
+
   const histories = [
     { name: 'browser', creator: () => createBrowserHistory() },
     { name: 'hash', creator: () => createHashHistory() },

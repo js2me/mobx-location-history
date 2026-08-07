@@ -1,6 +1,10 @@
-import { describe, expectTypeOf, it } from 'vitest';
+import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import type { IQueryParams } from '../query-params/index.js';
-import { createQueryParam, type QueryParam } from './query-param.js';
+import {
+  createQueryParam,
+  createQueryParamFromPreset,
+  QueryParam,
+} from './query-param.js';
 import { queryParamPresets } from './query-param-presets.js';
 
 describe('createQueryParam preset types', () => {
@@ -98,5 +102,79 @@ describe('createQueryParam preset types', () => {
     expectTypeOf<typeof statusParam>().toEqualTypeOf<
       QueryParam<'draft' | 'published'>
     >();
+  });
+});
+
+describe('QueryParam', () => {
+  const createQueryParams = (data: Record<string, unknown> = {}) =>
+    ({
+      data,
+      update: vi.fn(),
+      createUrl: vi.fn((value) => `/?${Object.values(value)[0]}`),
+    }) as any;
+
+  it('reads defaults, serializes updates, and builds URLs', async () => {
+    const queryParams = createQueryParams();
+    const param = new QueryParam({
+      queryParams,
+      name: 'page',
+      defaultValue: 1,
+      serialize: (value) => String(value),
+      deserialize: (value) => (value ? Number(value) : null),
+    });
+
+    expect(param.rawValue).toBeUndefined();
+    expect(param.value).toBe(1);
+    await param.set(2);
+    expect(queryParams.update).toHaveBeenCalledWith({ page: '2' }, true);
+    expect(param.buildUrl(3)).toBe('/?3');
+  });
+
+  it('skips unchanged values and supports push strategy', async () => {
+    const queryParams = createQueryParams({ page: '2' });
+    const param = new QueryParam({
+      queryParams,
+      name: 'page',
+      defaultValue: 1,
+      strategy: 'push',
+      serialize: Number,
+      deserialize: Number,
+    });
+
+    await param.set(2);
+    expect(queryParams.update).not.toHaveBeenCalled();
+    await param.set(3);
+    expect(queryParams.update).toHaveBeenCalledWith({ page: 3 }, false);
+    expect(param.buildUrl()).toBe('/?2');
+  });
+
+  it('supports object and legacy presets', () => {
+    const queryParams = createQueryParams();
+    const objectParam = createQueryParam({
+      queryParams,
+      name: 'enabled',
+      preset: queryParamPresets.boolean,
+      defaultValue: false,
+    });
+    const legacyParam = createQueryParamFromPreset({
+      queryParams,
+      name: 'count',
+      preset: 'number',
+      defaultValue: 0,
+    });
+
+    expect(objectParam.value).toBe(false);
+    expect(legacyParam.value).toBe(0);
+  });
+
+  it('creates a parameter without a preset', () => {
+    const queryParams = createQueryParams();
+    const param = createQueryParam({
+      queryParams,
+      name: 'value',
+      defaultValue: 'default',
+    });
+
+    expect(param.value).toBe('default');
   });
 });

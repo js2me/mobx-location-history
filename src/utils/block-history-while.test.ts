@@ -1,7 +1,10 @@
 import { observable, runInAction } from 'mobx';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { createMemoryHistory } from '../history/index.js';
+import {
+  createMemoryHistory,
+  type ObservableHistory,
+} from '../history/index.js';
 
 import { blockHistoryWhile } from './block-history-while.js';
 
@@ -63,5 +66,46 @@ describe('block-history-while', () => {
     history.push('/foo/bar/baz/bag');
 
     expect(history.location.pathname).toBe('/foo/bar/baz/bag');
+  });
+
+  it('accepts a history directly and cleans up on abort', () => {
+    const box = observable.box(true);
+    const history = createMemoryHistory();
+    const controller = new AbortController();
+
+    blockHistoryWhile(() => box.get(), {
+      history,
+      signal: controller.signal,
+    });
+    expect(history.isBlocked).toBe(true);
+
+    controller.abort();
+    expect(history.isBlocked).toBe(false);
+
+    const cleanup = blockHistoryWhile(() => box.get(), history);
+    history.push('/blocked');
+    cleanup();
+  });
+
+  it('uses the default blocker when no blocker is provided', () => {
+    const block = vi.fn(() => () => {});
+    const tick = observable.box(0);
+    const history = {
+      go: vi.fn(),
+      block,
+    } as unknown as ObservableHistory<any>;
+
+    const cleanup = blockHistoryWhile(
+      () => {
+        tick.get();
+        return true;
+      },
+      { history, equals: () => false },
+    );
+
+    runInAction(() => tick.set(1));
+
+    expect(block).toHaveBeenCalledWith(expect.any(Function));
+    cleanup();
   });
 });

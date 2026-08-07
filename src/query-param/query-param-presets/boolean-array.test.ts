@@ -11,4 +11,8 @@ describe('boolean[] preset', () => {
     expect(booleanArrPreset.deserialize('1,yes,0')).toBeNull();
     expect(booleanArrPreset.deserialize('')).toBeNull();
   });
+
+  it('returns undefined for an empty array', () => {
+    expect(booleanArrPreset.serialize([])).toBeUndefined();
+  });
 });

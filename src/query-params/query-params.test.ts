@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createMemoryHistory } from '../history/index.js';
 import { mockHistory } from '../history/index.test.js';
-import { QueryParams } from './query-params.js';
+import { createQueryParams, QueryParams } from './query-params.js';
 
 describe('query params', () => {
   it('test', () => {
@@ -47,6 +47,14 @@ describe('query params', () => {
 
     expect(result).toBe('?foo=1');
     expect(builder).toHaveBeenCalledWith({ foo: 1 }, buildOptions);
+  });
+
+  it('creates QueryParams through the factory', () => {
+    const history = mockHistory(createMemoryHistory());
+    const queryParams = createQueryParams({ history });
+
+    expect(queryParams).toBeInstanceOf(QueryParams);
+    queryParams.destroy();
   });
 
   it('toString should return empty string for empty object', () => {
@@ -182,6 +190,42 @@ describe('query params', () => {
     const result = qp.createUrl({}, '/users');
 
     expect(result).toBe('/users');
+  });
+
+  it('supports hash paths, URL caching, and the deprecated buildUrl alias', () => {
+    const history = mockHistory(createMemoryHistory());
+    const qp = new QueryParams({ history });
+
+    expect(qp.createUrl({ foo: 1 }, '/users#details')).toBe(
+      '/users?foo=1#details',
+    );
+    expect(qp.createUrl({ bar: 2 }, '/users#details')).toBe(
+      '/users?bar=2#details',
+    );
+    expect(qp.buildUrl({ foo: 1 })).toBe('/?foo=1');
+  });
+
+  it('does not cache paths when custom parse options are used', () => {
+    const history = mockHistory(createMemoryHistory());
+    const parser = vi.fn().mockReturnValue({ old: 'value' });
+    const qp = new QueryParams({ history, parser, parseOptions: {} });
+
+    expect(qp.createUrl({ next: 'value' }, '/users?old=value')).toBe(
+      '/users?old=value&next=value',
+    );
+    expect(qp.createUrl({ next: 'again' }, '/users?old=value')).toBe(
+      '/users?old=value&next=again',
+    );
+    expect(parser).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps query-like text in a hash fragment intact', () => {
+    const history = mockHistory(createMemoryHistory());
+    const qp = new QueryParams({ history });
+
+    expect(qp.createUrl({ next: 'value' }, '/users#section?tab=old')).toBe(
+      '/users?next=value#section?tab=old',
+    );
   });
 
   describe('delete', () => {

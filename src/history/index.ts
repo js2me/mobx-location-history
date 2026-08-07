@@ -90,6 +90,7 @@ const makeHistoryObservable = <THistory extends History>(
       // @ts-expect-error
       history.action = update.action;
       Object.assign(history.location, update.location);
+      /* istanbul ignore else -- history always supplies a hash field */
       if ('hash' in update.location) {
         history.location.hash = update.location.hash;
       }

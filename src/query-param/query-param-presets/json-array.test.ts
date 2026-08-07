@@ -13,4 +13,9 @@ describe('json[] preset', () => {
     expect(jsonArrPreset.deserialize('{"id":1}')).toBeNull();
     expect(jsonArrPreset.deserialize('{invalid')).toBeNull();
   });
+
+  it('returns undefined for an empty array', () => {
+    expect(jsonArrPreset.serialize([])).toBeUndefined();
+    expect(jsonArrPreset.deserialize(undefined)).toBeNull();
+  });
 });
