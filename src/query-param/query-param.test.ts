@@ -91,10 +91,7 @@ describe('createQueryParam preset types', () => {
     const statusParam = createQueryParam({
       queryParams,
       name: 'status',
-      preset: queryParamPresets.createEnumPreset([
-        'draft',
-        'published',
-      ] as const),
+      preset: queryParamPresets.enum(['draft', 'published'] as const),
       defaultValue: 'draft',
     });
 

@@ -107,14 +107,14 @@ Synchronize one query parameter with a typed value using a custom serializer or 
 import {
   createQueryParams,
   createQueryParam,
-  queryParamPresets,
+  presets,
 } from "mobx-location-history";
 
 const queryParams = createQueryParams({ history });
 const isVisible = createQueryParam({
   queryParams,
   name: "isVisible",
-  preset: queryParamPresets.boolean,
+  preset: presets.boolean,
   defaultValue: false,
   strategy: "replace",
 });
@@ -127,8 +127,26 @@ isVisible.buildUrl(false);
 
 Available presets include `string`, `number`, `boolean`, `json`, `stringArray`, `numberArray`, `booleanArray` and `jsonArray`.
 
-`queryParamPresets['number[]']` is deprecated. Use `queryParamPresets.numberArray` instead.
+`queryParamPresets['number[]']` is deprecated. Use `presets.numberArray` instead.
 The `string[]`, `boolean[]` and `json[]` presets are also deprecated; use their `*Array` aliases instead.
+
+Additional examples:
+
+```ts
+const ids = createQueryParam({
+  queryParams,
+  name: "ids",
+  preset: presets.numberArray,
+  defaultValue: [],
+});
+
+const status = createQueryParam({
+  queryParams,
+  name: "status",
+  preset: presets.enum(["draft", "published"] as const),
+  defaultValue: "draft",
+});
+```
 
 ### 🛡️ Reactive Navigation Blocking
 

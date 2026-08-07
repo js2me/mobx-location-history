@@ -1,9 +1,8 @@
 import { typeGuard } from 'yummies/type-guard';
 import type { QueryParamPresetConfig } from '../query-param.types.js';
-import { stringArrPreset } from './string[].js';
+import { stringArrPreset } from './string-array.js';
 
-export const numberArrPreset: QueryParamPresetConfig<number[], 'number[]'> = {
-  presetName: 'number[]',
+export const numberArrPreset: QueryParamPresetConfig<number[]> = {
   deserialize: (raw): any => {
     const rawItems = stringArrPreset.deserialize(raw);
 

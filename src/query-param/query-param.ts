@@ -10,6 +10,8 @@ import type {
 } from './query-param.types.js';
 import { queryParamPresets } from './query-param-presets.js';
 
+const identityFn = (value: any) => value;
+
 /**
  * Create get\set value, which is synchronized with the query parameter
  * Manual handling of the query parameter
@@ -17,7 +19,15 @@ import { queryParamPresets } from './query-param-presets.js';
 export class QueryParam<T> {
   name: string;
 
-  constructor(private config: QueryParamsFieldModelConfig<T>) {
+  private config: QueryParamsFieldModelConfig<T> &
+    Required<Pick<QueryParamsFieldModelConfig<T>, 'serialize' | 'deserialize'>>;
+
+  constructor(config: QueryParamsFieldModelConfig<T>) {
+    this.config = {
+      ...config,
+      serialize: config.serialize ?? identityFn,
+      deserialize: config.deserialize ?? identityFn,
+    };
     this.name = this.config.name;
 
     applyObservable(this, [

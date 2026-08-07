@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { booleanArrPreset } from './boolean[].js';
+import { booleanArrPreset } from './boolean-array.js';
 
 describe('boolean[] preset', () => {
   it('serializes and deserializes boolean arrays', () => {

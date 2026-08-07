@@ -1,7 +1,6 @@
 import type { QueryParamPresetConfig } from '../query-param.types.js';
 
-export const datePreset: QueryParamPresetConfig<Date, 'date'> = {
-  presetName: 'date',
+export const datePreset: QueryParamPresetConfig<Date> = {
   deserialize: (value) => {
     if (!value) return null;
 

@@ -1,8 +1,7 @@
 import { typeGuard } from 'yummies/type-guard';
 import type { QueryParamPresetConfig } from '../query-param.types.js';
 
-export const numberPreset: QueryParamPresetConfig<number, 'number'> = {
-  presetName: 'number',
+export const numberPreset: QueryParamPresetConfig<number> = {
   deserialize: (value) => {
     if (value === '' || !typeGuard.isNumber(+value)) return null;
     return +value;

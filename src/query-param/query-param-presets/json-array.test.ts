@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { jsonArrPreset } from './json[].js';
+import { jsonArrPreset } from './json-array.js';
 
 describe('json[] preset', () => {
   it('serializes and deserializes arrays', () => {

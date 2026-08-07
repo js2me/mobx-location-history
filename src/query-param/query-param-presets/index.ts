@@ -3,24 +3,24 @@ export { booleanPreset as 'boolean' } from './boolean.js';
 export {
   booleanArrPreset as booleanArray,
   booleanArrPreset as 'boolean[]',
-} from './boolean[].js';
+} from './boolean-array.js';
 export { datePreset as 'date' } from './date.js';
-export { createEnumPreset } from './enum.js';
+export { enumPreset as enum } from './enum.js';
 export { jsonPreset as 'json' } from './json.js';
 /** @deprecated Use `jsonArray` instead. */
 export {
   jsonArrPreset as jsonArray,
   jsonArrPreset as 'json[]',
-} from './json[].js';
+} from './json-array.js';
 export { numberPreset as 'number' } from './number.js';
 /** @deprecated Use `numberArray` instead. */
 export {
   numberArrPreset as numberArray,
   numberArrPreset as 'number[]',
-} from './number[].js';
+} from './number-array.js';
 export { stringPreset as 'string' } from './string.js';
 /** @deprecated Use `stringArray` instead. */
 export {
   stringArrPreset as stringArray,
   stringArrPreset as 'string[]',
-} from './string[].js';
+} from './string-array.js';

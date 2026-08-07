@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { createEnumPreset } from './enum.js';
+import { enumPreset } from './enum.js';
 
-const statusPreset = createEnumPreset(['draft', 'published'] as const);
+const statusPreset = enumPreset(['draft', 'published'] as const);
 
 describe('enum preset', () => {
   it('serializes and deserializes allowed values', () => {

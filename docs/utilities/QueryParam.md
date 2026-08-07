@@ -1,40 +1,92 @@
-# `QueryParam`   
+# `QueryParam`
 
-Utility to watch\change **ONLY ONE** query parameter   
+Utility to watch and change one query parameter.
 
-## Usage   
+## Usage
 
 ```ts
 import {
-  createQueryParams,
   createBrowserHistory,
   createQueryParam,
-  createQueryParamFromPreset,
-  queryParamPresets,
-} from "mobx-location-history"
+  createQueryParams,
+  presets,
+} from 'mobx-location-history';
 
 const queryParams = createQueryParams({
   history: createBrowserHistory(),
 });
 
-createQueryParam({
+const page = createQueryParam({
   queryParams,
-  defaultValue: false,
-  name: 'isVisible',
-  deserialize: (isVisible) => isVisible === '1',
-  serialize: (value) => (value === true ? '1' : undefined),
-  strategy: 'push', // 'replace'
+  name: 'page',
+  preset: presets.number,
+  defaultValue: 1,
+  strategy: 'replace', // 'push'
 });
 
-> `createQueryParamFromPreset` is deprecated. Use `createQueryParam` with an
-> object preset instead.
-
-createQueryParamFromPreset({
-  queryParams,
-  preset: 'boolean',
-  defaultValue: false,
-  name: 'isVisible',
-  strategy: 'push', // 'replace'
-});
-
+page.value; // number
+await page.set(2);
+page.rawValue; // string | undefined
+page.buildUrl(3);
 ```
+
+## Presets
+
+Built-in presets are passed as objects. The value type is inferred from the
+preset.
+
+```ts
+const search = createQueryParam({
+  queryParams,
+  name: 'search',
+  preset: presets.string,
+  defaultValue: '',
+});
+
+const ids = createQueryParam({
+  queryParams,
+  name: 'ids',
+  preset: presets.numberArray,
+  defaultValue: [],
+});
+
+const enabled = createQueryParam({
+  queryParams,
+  name: 'enabled',
+  preset: presets.boolean,
+  defaultValue: false,
+});
+
+const filters = createQueryParam({
+  queryParams,
+  name: 'filters',
+  preset: presets.json,
+  defaultValue: {},
+});
+
+const createdAt = createQueryParam({
+  queryParams,
+  name: 'createdAt',
+  preset: presets.date,
+  defaultValue: new Date(),
+});
+```
+
+Available presets: `string`, `number`, `boolean`, `json`, `date`,
+`stringArray`, `numberArray`, `booleanArray` and `jsonArray`.
+
+For a typed enum, use the enum preset factory:
+
+```ts
+const status = createQueryParam({
+  queryParams,
+  name: 'status',
+  preset: presets.enum(['draft', 'published'] as const),
+  defaultValue: 'draft',
+});
+// QueryParam<'draft' | 'published'>
+```
+
+`createQueryParamFromPreset` and `queryParamPresets` are deprecated. Use
+`createQueryParam` with `presets` instead. Preset names containing `[]` are
+also deprecated; use their `*Array` aliases.

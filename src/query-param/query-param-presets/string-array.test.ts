@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { stringArrPreset } from './string[].js';
+import { stringArrPreset } from './string-array.js';
 
 describe('string[] preset', () => {
   it('splits serialized values by commas', () => {

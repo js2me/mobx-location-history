@@ -1,7 +1,6 @@
 import type { QueryParamPresetConfig } from '../query-param.types.js';
 
-export const jsonPreset: QueryParamPresetConfig<Record<string, any>, 'json'> = {
-  presetName: 'json',
+export const jsonPreset: QueryParamPresetConfig<Record<string, any>> = {
   deserialize: (value) => {
     try {
       if (value == null || value === '') return null;

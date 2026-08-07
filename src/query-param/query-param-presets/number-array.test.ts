@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { numberArrPreset } from './number[].js';
+import { numberArrPreset } from './number-array.js';
 
 describe('number[] preset', () => {
   it('deserializes valid numbers', () => {
