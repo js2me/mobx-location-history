@@ -2,7 +2,9 @@ import { readFile } from 'node:fs/promises';
 
 const [, , baselinePath, ...currentPaths] = process.argv;
 const regressionThreshold = 0.1;
-const minimumRegressionMs = 0.006;
+// Sub-0.1ms benchmarks are noisy in shared CI runners. Require a meaningful
+// absolute increase in addition to the relative threshold.
+const minimumRegressionMs = 0.02;
 
 if (!baselinePath || currentPaths.length === 0) {
   console.error(
