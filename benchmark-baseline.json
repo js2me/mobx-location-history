@@ -1,62 +1,128 @@
 {
   "benchmarks": [
-    { "name": "createMemoryHistory", "mean": 0.022433031001839174 },
-    { "name": "createBrowserHistory", "mean": 0.17631135318998845 },
-    { "name": "createHashHistory", "mean": 0.3754695810810836 },
-    { "name": "isObservableHistory", "mean": 0.021487536269876033 },
+    {
+      "name": "createMemoryHistory",
+      "mean": 0.025275189051205682
+    },
+    {
+      "name": "createBrowserHistory",
+      "mean": 0.18575311139992615
+    },
+    {
+      "name": "createHashHistory",
+      "mean": 0.30033568468468774
+    },
+    {
+      "name": "isObservableHistory",
+      "mean": 0.02045108008507678
+    },
     {
       "name": "push and update observable location",
-      "mean": 0.028253873424873982
+      "mean": 0.02798503863712267
     },
     {
       "name": "replace and update observable location",
-      "mean": 0.02678635593220323
+      "mean": 0.026777044181438402
     },
-    { "name": "block and unblock", "mean": 0.02272211061122854 },
+    {
+      "name": "block and unblock",
+      "mean": 0.024148824245349008
+    },
     {
       "name": "createQueryParam and read value",
-      "mean": 0.060703363846060954
+      "mean": 0.05776775462107195
     },
-    { "name": "QueryParam.set", "mean": 0.05793891402085883 },
-    { "name": "buildUrl", "mean": 0.039163706117332615 },
-    { "name": "string[]", "mean": 0.04609678961925014 },
-    { "name": "number[]", "mean": 0.04783737498814786 },
-    { "name": "boolean", "mean": 0.04662093053613076 },
-    { "name": "json", "mean": 0.04822272658886874 },
-    { "name": "create and dispose", "mean": 0.03852121494472052 },
-    { "name": "react to state change", "mean": 0.03533446922478982 },
+    {
+      "name": "QueryParam.set",
+      "mean": 0.05662519093997699
+    },
+    {
+      "name": "buildUrl",
+      "mean": 0.04301858745590426
+    },
+    {
+      "name": "string[]",
+      "mean": 0.04765549833222188
+    },
+    {
+      "name": "number[]",
+      "mean": 0.04762324063714972
+    },
+    {
+      "name": "boolean",
+      "mean": 0.04744285729196289
+    },
+    {
+      "name": "json",
+      "mean": 0.04715270303659112
+    },
     {
       "name": "100 calls without an existing query",
-      "mean": 0.09039542136659343
+      "mean": 0.09157725256410237
     },
     {
       "name": "100 calls with an existing query",
-      "mean": 0.4675338065420551
+      "mean": 0.18161887327523618
     },
-    { "name": "empty data", "mean": 0.00005267411088736418 },
+    {
+      "name": "empty data",
+      "mean": 0.00005782138051767785
+    },
     {
       "name": "existing query and hash",
-      "mean": 0.0031329436887116567
+      "mean": 0.0014474092489398607
     },
-    { "name": "createQueryParams", "mean": 0.03134473213390921 },
-    { "name": "data", "mean": 0.03711881560388716 },
-    { "name": "QueryParams.set", "mean": 0.04870147034187222 },
-    { "name": "QueryParams.update", "mean": 0.051522340133953036 },
+    {
+      "name": "createQueryParams",
+      "mean": 0.03323207869201241
+    },
+    {
+      "name": "data",
+      "mean": 0.0366105976716866
+    },
+    {
+      "name": "QueryParams.set",
+      "mean": 0.0380912152814836
+    },
+    {
+      "name": "QueryParams.update",
+      "mean": 0.047652032879067205
+    },
     {
       "name": "QueryParams.update with delete and replace",
-      "mean": 0.04852713383153124
+      "mean": 0.05066320911853895
     },
-    { "name": "QueryParams.delete", "mean": 0.053386218129405985 },
+    {
+      "name": "QueryParams.delete",
+      "mean": 0.04895409114940137
+    },
     {
       "name": "QueryParams.delete with replace",
-      "mean": 0.04530787640448971
+      "mean": 0.046858709680452956
     },
-    { "name": "toString", "mean": 0.03503891640389633 },
+    {
+      "name": "toString",
+      "mean": 0.03301363886162692
+    },
     {
       "name": "deprecated buildUrl alias",
-      "mean": 0.03264709310524453
+      "mean": 0.03181425074118306
     },
-    { "name": "buildSearchString", "mean": 0.001931117836536541 },
-    { "name": "parseSearchString", "mean": 0.00309488047636442 }
+    {
+      "name": "buildSearchString",
+      "mean": 0.002455085201247289
+    },
+    {
+      "name": "parseSearchString",
+      "mean": 0.003160069262129346
+    },
+    {
+      "name": "create and dispose",
+      "mean": 0.04323862634036617
+    },
+    {
+      "name": "react to state change",
+      "mean": 0.03763545664609467
+    }
   ]
 }

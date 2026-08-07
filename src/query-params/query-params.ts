@@ -1,4 +1,3 @@
-import { LinkedAbortController } from 'linked-abort-controller';
 import { action, computed } from 'mobx';
 import { applyObservable } from 'yummies/mobx';
 import type { History, ParsedSearchString } from '../index.js';
@@ -20,10 +19,16 @@ export class QueryParams<TData = ParsedSearchString>
 
   protected parser: typeof parseSearchString<TData>;
   protected builder: typeof buildSearchString;
+  private createUrlPathCache?: [
+    path: string,
+    hash: string,
+    pathname: string,
+    pathData: Record<string, any>,
+  ];
 
   constructor(protected options: QueryParamsOptions<TData>) {
     this.history = options.history;
-    this.abortController = new LinkedAbortController();
+    this.abortController = new AbortController();
     this.parser = options.parser || parseSearchString;
     this.builder = options.builder || buildSearchString;
 
@@ -37,10 +42,7 @@ export class QueryParams<TData = ParsedSearchString>
    * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#data)
    */
   get data(): TData {
-    return this.parser(
-      this.options.history.location.search,
-      this.options.parseOptions,
-    );
+    return this.parser(this.history.location.search, this.options.parseOptions);
   }
 
   protected navigate(url: string, replace?: boolean) {
@@ -80,27 +82,43 @@ export class QueryParams<TData = ParsedSearchString>
       return path;
     }
 
-    if (!path.includes('?') && !path.includes('#')) {
+    const hashIndex = path.indexOf('#');
+    const queryIndex = path.indexOf('?');
+
+    if (queryIndex === -1 && hashIndex === -1) {
       return `${path}${this.toString(data)}`;
     }
 
-    const hashIndex = path.indexOf('#');
-    const hash = hashIndex === -1 ? '' : path.slice(hashIndex);
-    const pathWithoutHash = hashIndex === -1 ? path : path.slice(0, hashIndex);
-    const queryIndex = pathWithoutHash.indexOf('?');
-    const pathname =
-      queryIndex === -1
-        ? pathWithoutHash
-        : pathWithoutHash.slice(0, queryIndex);
-    const pathData =
-      queryIndex === -1
-        ? {}
-        : (this.parser(pathWithoutHash.slice(queryIndex)) as Record<
-            string,
-            any
-          >);
+    let cachedPath = this.createUrlPathCache;
 
-    return `${pathname}${this.toString({ ...pathData, ...data })}${hash}`;
+    if (!cachedPath || cachedPath[0] !== path) {
+      const hash = hashIndex === -1 ? '' : path.slice(hashIndex);
+      const pathWithoutHash =
+        hashIndex === -1 ? path : path.slice(0, hashIndex);
+      const hasQuery =
+        queryIndex !== -1 && (hashIndex === -1 || queryIndex < hashIndex);
+
+      cachedPath = [
+        path,
+        hash,
+        hasQuery ? pathWithoutHash.slice(0, queryIndex) : pathWithoutHash,
+        hasQuery
+          ? (this.parser(pathWithoutHash.slice(queryIndex)) as Record<
+              string,
+              any
+            >)
+          : {},
+      ];
+
+      if (this.parser === parseSearchString && !this.options.parseOptions) {
+        this.createUrlPathCache = cachedPath;
+      }
+    }
+
+    return `${cachedPath[2]}${this.toString({
+      ...cachedPath[3],
+      ...data,
+    })}${cachedPath[1]}`;
   }
 
   /**
@@ -130,15 +148,19 @@ export class QueryParams<TData = ParsedSearchString>
     data: Record<string, any>,
     replaceOrOptions?: boolean | QueryParamsUpdateOptions,
   ) {
-    const options =
+    const replace =
       typeof replaceOrOptions === 'object'
-        ? replaceOrOptions
-        : { replace: replaceOrOptions };
+        ? replaceOrOptions.replace
+        : replaceOrOptions;
+    const deleteKeys =
+      typeof replaceOrOptions === 'object'
+        ? replaceOrOptions.delete
+        : undefined;
 
     const currentData = { ...(this.data as Record<string, any>) };
 
-    if (options.delete) {
-      for (const key of options.delete) {
+    if (deleteKeys) {
+      for (const key of deleteKeys) {
         delete currentData[key];
       }
     }
@@ -148,7 +170,7 @@ export class QueryParams<TData = ParsedSearchString>
         ...currentData,
         ...data,
       },
-      options.replace,
+      replace,
     );
   }
 

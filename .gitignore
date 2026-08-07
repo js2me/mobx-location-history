@@ -3,5 +3,6 @@ dist
 .idea
 .vscode
 coverage
+benchmark-current.json
 docs/.vitepress/cache
 graphify-out

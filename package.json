@@ -17,7 +17,8 @@
     "pub:minor": "PUBLISH_VERSION=minor pnpm run build",
     "pub:major": "PUBLISH_VERSION=major pnpm run build",
     "test": "vitest run --config vitest.config.ts",
-    "profile:bench": "vitest bench --config vitest.config.ts",
+    "profile:bench": "vitest bench --config vitest.config.ts --run",
+    "profile:bench:update-baseline": "pnpm profile:bench --outputJson=benchmark-current.json && node scripts/update-benchmark-baseline.mjs benchmark-current.json",
     "test:watch": "vitest watch --config vitest.config.ts",
     "test:coverage": "vitest run --config vitest.config.ts --coverage",
     "docs": "pnpm build && docusite dev",
@@ -50,7 +51,6 @@
   "dependencies": {
     "@types/qs": "^6.15.1",
     "history": "^5.3.0",
-    "linked-abort-controller": "^1.1.1",
     "qs": "^6.15.2",
     "yummies": "^7.20.1"
   },
@@ -81,11 +81,11 @@
   "size-limit": [
     {
       "path": "dist/index.js",
-      "limit": "2.9 KB"
+      "limit": "2.1 KB"
     },
     {
       "path": "dist/index.cjs",
-      "limit": "3 KB"
+      "limit": "2.1 KB"
     }
   ]
 }
