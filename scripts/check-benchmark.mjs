@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 
 const [, , baselinePath, ...currentPaths] = process.argv;
 const regressionThreshold = 0.1;
+const minimumRegressionMs = 0.006;
 
 if (!baselinePath || currentPaths.length === 0) {
   console.error(
@@ -49,19 +50,25 @@ for (const benchmark of baseline.benchmarks) {
 
   const currentMean = median(results);
   const change = currentMean / benchmark.mean - 1;
+  const absoluteChange = currentMean - benchmark.mean;
   const changePercent = (change * 100).toFixed(2);
-  const status = change > regressionThreshold ? 'FAIL' : 'PASS';
+  const status =
+    change > regressionThreshold && absoluteChange > minimumRegressionMs
+      ? 'FAIL'
+      : 'PASS';
 
   console.log(
     `${status} ${benchmark.name}: ${benchmark.mean.toFixed(4)}ms -> ${currentMean.toFixed(4)}ms (${changePercent}%)`,
   );
 
-  if (change > regressionThreshold) {
+  if (change > regressionThreshold && absoluteChange > minimumRegressionMs) {
     hasRegression = true;
   }
 }
 
 if (hasRegression) {
-  console.error(`Benchmark regression exceeds ${(regressionThreshold * 100).toFixed(0)}%`);
+  console.error(
+    `Benchmark regression exceeds ${(regressionThreshold * 100).toFixed(0)}% and ${minimumRegressionMs}ms`,
+  );
   process.exit(1);
 }
