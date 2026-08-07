@@ -1,43 +1,59 @@
 import { readFile } from 'node:fs/promises';
 
-const [, , baselinePath, currentPath] = process.argv;
+const [, , baselinePath, ...currentPaths] = process.argv;
 const regressionThreshold = 0.1;
 
-if (!baselinePath || !currentPath) {
-  console.error('Usage: node scripts/check-benchmark.mjs <baseline> <current>');
+if (!baselinePath || currentPaths.length === 0) {
+  console.error(
+    'Usage: node scripts/check-benchmark.mjs <baseline> <current> [...current]',
+  );
   process.exit(1);
 }
 
-const [baseline, current] = await Promise.all([
+const [baseline, ...currentRuns] = await Promise.all([
   readFile(baselinePath, 'utf8').then(JSON.parse),
-  readFile(currentPath, 'utf8').then(JSON.parse),
+  ...currentPaths.map((path) => readFile(path, 'utf8').then(JSON.parse)),
 ]);
 
-const currentBenchmarks = new Map(
-  current.files.flatMap((file) =>
-    file.groups.flatMap((group) =>
-      group.benchmarks.map((benchmark) => [benchmark.name, benchmark]),
+const currentBenchmarkRuns = currentRuns.map(
+  (current) =>
+    new Map(
+      current.files.flatMap((file) =>
+        file.groups.flatMap((group) =>
+          group.benchmarks.map((benchmark) => [benchmark.name, benchmark]),
+        ),
+      ),
     ),
-  ),
 );
+
+const median = (values) => {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0
+    ? (sorted[middle - 1] + sorted[middle]) / 2
+    : sorted[middle];
+};
 
 let hasRegression = false;
 
 for (const benchmark of baseline.benchmarks) {
-  const result = currentBenchmarks.get(benchmark.name);
+  const results = currentBenchmarkRuns
+    .map((run) => run.get(benchmark.name)?.mean)
+    .filter((mean) => mean != null);
 
-  if (!result) {
+  if (results.length === 0) {
     console.error(`Missing benchmark: ${benchmark.name}`);
     hasRegression = true;
     continue;
   }
 
-  const change = result.mean / benchmark.mean - 1;
+  const currentMean = median(results);
+  const change = currentMean / benchmark.mean - 1;
   const changePercent = (change * 100).toFixed(2);
   const status = change > regressionThreshold ? 'FAIL' : 'PASS';
 
   console.log(
-    `${status} ${benchmark.name}: ${benchmark.mean.toFixed(4)}ms -> ${result.mean.toFixed(4)}ms (${changePercent}%)`,
+    `${status} ${benchmark.name}: ${benchmark.mean.toFixed(4)}ms -> ${currentMean.toFixed(4)}ms (${changePercent}%)`,
   );
 
   if (change > regressionThreshold) {
