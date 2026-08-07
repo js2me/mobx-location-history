@@ -4,13 +4,14 @@ export const enumPreset = <const Values extends readonly string[]>(
   values: Values,
 ) => {
   type Value = Values[number];
+  const valuesSet = new Set(values);
 
   return {
     deserialize: (value: any): Value | null => {
-      return values.includes(value) ? value : null;
+      return valuesSet.has(value) ? value : null;
     },
     serialize: (value: Value | undefined) => {
-      if (value == null || !values.includes(value)) return;
+      if (value == null || !valuesSet.has(value)) return;
       return value;
     },
   } satisfies QueryParamPresetConfig<Value>;

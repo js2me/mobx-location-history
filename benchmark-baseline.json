@@ -33,9 +33,24 @@
       "name": "100 calls with an existing query",
       "mean": 0.4675338065420551
     },
+    { "name": "empty data", "mean": 0.00005267411088736418 },
+    {
+      "name": "existing query and hash",
+      "mean": 0.0031329436887116567
+    },
+    { "name": "createQueryParams", "mean": 0.03134473213390921 },
+    { "name": "data", "mean": 0.03711881560388716 },
     { "name": "QueryParams.set", "mean": 0.04870147034187222 },
     { "name": "QueryParams.update", "mean": 0.051522340133953036 },
+    {
+      "name": "QueryParams.update with delete and replace",
+      "mean": 0.04852713383153124
+    },
     { "name": "QueryParams.delete", "mean": 0.053386218129405985 },
+    {
+      "name": "QueryParams.delete with replace",
+      "mean": 0.04530787640448971
+    },
     { "name": "toString", "mean": 0.03503891640389633 },
     {
       "name": "deprecated buildUrl alias",

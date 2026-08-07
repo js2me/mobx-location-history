@@ -1,6 +1,6 @@
 import { bench, describe } from 'vitest';
 import { createMemoryHistory } from '../history/index.js';
-import { QueryParams } from './query-params.js';
+import { createQueryParams, QueryParams } from './query-params.js';
 import { buildSearchString } from './utils/build-search-string.js';
 import { parseSearchString } from './utils/parse-search-string.js';
 
@@ -25,9 +25,29 @@ describe('QueryParams.createUrl', () => {
       );
     }
   });
+
+  bench('empty data', () => {
+    queryParams.createUrl({}, '/items');
+  });
+
+  bench('existing query and hash', () => {
+    queryParams.createUrl({ page: 2 }, '/items?filter=active#results');
+  });
 });
 
 describe('QueryParams operations', () => {
+  bench('createQueryParams', () => {
+    createQueryParams({ history: createMemoryHistory() });
+  });
+
+  bench('data', () => {
+    const history = createMemoryHistory({
+      initialEntries: ['/items?page=1&filter=active'],
+    });
+    const queryParams = new QueryParams({ history });
+    void queryParams.data;
+  });
+
   bench('QueryParams.set', () => {
     const queryParams = new QueryParams({ history: createMemoryHistory() });
     queryParams.set({ page: 2, filter: 'active' });
@@ -39,12 +59,28 @@ describe('QueryParams operations', () => {
     queryParams.update({ page: 2, filter: 'active' });
   });
 
+  bench('QueryParams.update with delete and replace', () => {
+    const history = createMemoryHistory({
+      initialEntries: ['/items?page=1&filter=active'],
+    });
+    const queryParams = new QueryParams({ history });
+    queryParams.update({ page: 2 }, { delete: ['filter'], replace: true });
+  });
+
   bench('QueryParams.delete', () => {
     const history = createMemoryHistory({
       initialEntries: ['/items?page=1&filter=active&sort=name'],
     });
     const queryParams = new QueryParams({ history });
     queryParams.delete(['filter']);
+  });
+
+  bench('QueryParams.delete with replace', () => {
+    const history = createMemoryHistory({
+      initialEntries: ['/items?page=1&filter=active'],
+    });
+    const queryParams = new QueryParams({ history });
+    queryParams.delete(['filter'], true);
   });
 
   bench('toString', () => {
