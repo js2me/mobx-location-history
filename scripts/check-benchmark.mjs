@@ -48,22 +48,31 @@ for (const benchmark of baseline.benchmarks) {
     continue;
   }
 
+  if (results.length !== currentBenchmarkRuns.length) {
+    console.error(`Incomplete benchmark: ${benchmark.name}`);
+    hasRegression = true;
+    continue;
+  }
+
   const currentMean = median(results);
   const change = currentMean / benchmark.mean - 1;
-  const absoluteChange = currentMean - benchmark.mean;
   const changePercent = (change * 100).toFixed(2);
-  const status =
-    change > regressionThreshold && absoluteChange > minimumRegressionMs
-      ? 'FAIL'
-      : 'PASS';
+  const isRegression = currentBenchmarkRuns.every((run) => {
+    const mean = run.get(benchmark.name)?.mean;
+
+    return (
+      mean != null &&
+      mean / benchmark.mean - 1 > regressionThreshold &&
+      mean - benchmark.mean > minimumRegressionMs
+    );
+  });
+  const status = isRegression ? 'FAIL' : 'PASS';
 
   console.log(
     `${status} ${benchmark.name}: ${benchmark.mean.toFixed(4)}ms -> ${currentMean.toFixed(4)}ms (${changePercent}%)`,
   );
 
-  if (change > regressionThreshold && absoluteChange > minimumRegressionMs) {
-    hasRegression = true;
-  }
+  hasRegression ||= isRegression;
 }
 
 if (hasRegression) {
