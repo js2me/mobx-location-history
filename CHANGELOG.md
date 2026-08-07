@@ -1,5 +1,18 @@
 # mobx-location-history
 
+## 9.4.2
+
+### Patch Changes
+
+- [`63404b5`](https://github.com/js2me/mobx-location-history/commit/63404b5100110d01a662595982c2295c21546384) Thanks [@js2me](https://github.com/js2me)! - Fixed `QueryParams.createUrl` query parameter merging. Values from `data` now
+  override duplicate parameters in the provided path.
+
+- [`afa74fb`](https://github.com/js2me/mobx-location-history/commit/afa74fb52937d5cd911cee23451dca2a29fe26cd) Thanks [@js2me](https://github.com/js2me)! - Added typed query parameter presets for dates, enums, boolean arrays, and JSON
+  arrays. Array presets now also have camelCase aliases such as `numberArray`.
+
+  Deprecated `createQueryParamFromPreset`, `queryParamPresets`, and array preset
+  names with `[]` in favor of the new APIs.
+
 ## 9.4.1
 
 ### Patch Changes
