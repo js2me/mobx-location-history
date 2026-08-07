@@ -56,7 +56,7 @@
       "name": "deprecated buildUrl alias",
       "mean": 0.03264709310524453
     },
-    { "name": "buildSearchString", "mean": 0.002137385216152906 },
-    { "name": "parseSearchString", "mean": 0.003224365705810594 }
+    { "name": "buildSearchString", "mean": 0.001931117836536541 },
+    { "name": "parseSearchString", "mean": 0.00309488047636442 }
   ]
 }
