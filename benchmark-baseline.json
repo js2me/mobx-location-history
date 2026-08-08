@@ -41,11 +41,11 @@
       "mean": 0.04301858745590426
     },
     {
-      "name": "string[]",
+      "name": "stringArray",
       "mean": 0.04765549833222188
     },
     {
-      "name": "number[]",
+      "name": "numberArray",
       "mean": 0.04762324063714972
     },
     {
@@ -103,10 +103,6 @@
     {
       "name": "toString",
       "mean": 0.03301363886162692
-    },
-    {
-      "name": "deprecated buildUrl alias",
-      "mean": 0.03181425074118306
     },
     {
       "name": "buildSearchString",

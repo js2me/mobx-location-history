@@ -101,8 +101,6 @@ Values set to `null` or `undefined` are omitted from the URL. Pass `true` as the
 
 Synchronize one query parameter with a typed value using a custom serializer or a built-in preset:
 
-> `createQueryParamFromPreset` is deprecated. Use `createQueryParam` with an object preset instead.
-
 ```ts
 import {
   createQueryParams,
@@ -126,9 +124,6 @@ isVisible.buildUrl(false);
 ```
 
 Available presets include `string`, `number`, `boolean`, `json`, `stringArray`, `numberArray`, `booleanArray` and `jsonArray`.
-
-`queryParamPresets['number[]']` is deprecated. Use `presets.numberArray` instead.
-The `string[]`, `boolean[]` and `json[]` presets are also deprecated; use their `*Array` aliases instead.
 
 Additional examples:
 

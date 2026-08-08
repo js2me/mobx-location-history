@@ -1,7 +1,8 @@
 import { bench, describe } from 'vitest';
 import { createMemoryHistory } from '../history/index.js';
 import { createQueryParams } from '../query-params/index.js';
-import { createQueryParam, createQueryParamFromPreset } from './query-param.js';
+import { createQueryParam } from './query-param.js';
+import { presets } from './query-param-presets.js';
 
 const createParams = (search = '') =>
   createQueryParams({
@@ -23,57 +24,57 @@ describe('QueryParam', () => {
 
   bench('QueryParam.set', () => {
     const queryParams = createParams();
-    const page = createQueryParamFromPreset({
+    const page = createQueryParam({
       queryParams,
       name: 'page',
       defaultValue: 1,
-      preset: 'number',
+      preset: presets.number,
     });
     page.set(2);
   });
 
   bench('buildUrl', () => {
     const queryParams = createParams('?page=1');
-    const page = createQueryParamFromPreset({
+    const page = createQueryParam({
       queryParams,
       name: 'page',
       defaultValue: 1,
-      preset: 'number',
+      preset: presets.number,
     });
     page.buildUrl(2);
   });
 });
 
 describe('QueryParam presets', () => {
-  bench('string[]', () => {
+  bench('stringArray', () => {
     const queryParams = createParams('?tags=one%2Ctwo%2Cthree');
-    const tags = createQueryParamFromPreset({
+    const tags = createQueryParam({
       queryParams,
       name: 'tags',
       defaultValue: [],
-      preset: 'string[]',
+      preset: presets.stringArray,
     });
     tags.value;
   });
 
-  bench('number[]', () => {
+  bench('numberArray', () => {
     const queryParams = createParams('?ids=1%2C2%2C3');
-    const ids = createQueryParamFromPreset<number[]>({
+    const ids = createQueryParam({
       queryParams,
       name: 'ids',
       defaultValue: [],
-      preset: 'number[]',
+      preset: presets.numberArray,
     });
     ids.value;
   });
 
   bench('boolean', () => {
     const queryParams = createParams('?enabled=1');
-    const enabled = createQueryParamFromPreset({
+    const enabled = createQueryParam({
       queryParams,
       name: 'enabled',
       defaultValue: false,
-      preset: 'boolean',
+      preset: presets.boolean,
     });
     enabled.value;
   });
@@ -82,11 +83,11 @@ describe('QueryParam presets', () => {
     const queryParams = createParams(
       '?filters=%7B%22status%22%3A%22active%22%7D',
     );
-    const filters = createQueryParamFromPreset({
+    const filters = createQueryParam({
       queryParams,
       name: 'filters',
       defaultValue: {},
-      preset: 'json',
+      preset: presets.json,
     });
     filters.value;
   });
