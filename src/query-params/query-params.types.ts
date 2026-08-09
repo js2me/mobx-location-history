@@ -23,11 +23,6 @@ export interface QueryParamsOptions<TData = ParsedSearchString> {
   parseOptions?: Parameters<typeof parseSearchString>[1];
   parser?: typeof parseSearchString<TData>;
   builder?: typeof buildSearchString;
-
-  /**
-   * @deprecated
-   */
-  abortSignal?: AbortSignal;
 }
 
 /**
@@ -64,10 +59,4 @@ export interface IQueryParams<TData = ParsedSearchString> {
    * Builds a URL with the query parameters (first argument)
    */
   createUrl(data: Record<string, any>): string;
-
-  /**
-   * Destroy the QueryParams instance
-   * @deprecated
-   */
-  destroy(): void;
 }

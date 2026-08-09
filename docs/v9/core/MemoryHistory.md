@@ -1,20 +1,18 @@
-# `HashHistory`  
-Hash history stores the location in window.location.hash. This makes it ideal
-for situations where you don't want to send the location to the server for
-some reason, either because you cannot configure it or the URL space is
-reserved for something else.
+# `MemoryHistory`  
+Memory history stores the current location in memory. It is designed for use
+in stateful non-browser environments like tests and React Native.
 
-The full documentation for `HashHistory` can be found in the [history API reference](https://github.com/remix-run/history/blob/main/docs/api-reference.md#history)   
+The full documentation for `MemoryHistory` can be found in the [history API reference](https://github.com/remix-run/history/blob/main/docs/api-reference.md#history)   
 
-[Reference to source code](/src/history/index.ts)   
+[Reference to source code](/v9/src/history/index.ts)   
 
 
 ## Usage   
 ```ts
-import { createHashHistory } from "mobx-location-history";
+import { createMemoryHistory } from "mobx-location-history";
 import { reaction } from "mobx";
 
-export const history = createHashHistory();
+export const history = createMemoryHistory();
 
 reaction(
   () => history.location.pathname,
@@ -44,7 +42,7 @@ This property is needed to detect block statement [provided by original history 
 This property is needed to detect block statement [provided by original history package](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyblockblocker-blocker)   
 
 ### `destroy()`   
-This method is needed for destroy all subscriptions and reactions created inside function `createHashHistory`   
+This method is needed for destroy all subscriptions and reactions created inside function `createMemoryHistory`   
 
 ### `locationUrl` <Badge type="warning" text="computed.struct" />   
 This property represents stringified version of the `location` property   
@@ -73,9 +71,9 @@ More information about blocking history you can find in the [history blocking do
 Example:
 
 ```ts
-import { createHashHistory } from "mobx-location-history";
+import { createMemoryHistory } from "mobx-location-history";
 
-const history = createHashHistory();
+const history = createMemoryHistory();
 
 ...
 const unblock = history.block(() => {

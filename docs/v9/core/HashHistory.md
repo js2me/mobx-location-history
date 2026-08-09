@@ -6,7 +6,7 @@ reserved for something else.
 
 The full documentation for `HashHistory` can be found in the [history API reference](https://github.com/remix-run/history/blob/main/docs/api-reference.md#history)   
 
-[Reference to source code](/src/history/index.ts)   
+[Reference to source code](/v9/src/history/index.ts)   
 
 
 ## Usage   

@@ -10,8 +10,8 @@ export * from "history";
 
 Modified exports:
 
-- [`createBrowserHistory`](/core/BrowserHistory)
-- [`createHashHistory`](/core/HashHistory)
-- [`createMemoryHistory`](/core/MemoryHistory)
+- [`createBrowserHistory`](/v9/core/BrowserHistory)
+- [`createHashHistory`](/v9/core/HashHistory)
+- [`createMemoryHistory`](/v9/core/MemoryHistory)
 
-Also this package has additional location and history utilities like [`QueryParams`](/utilities/QueryParams) (See sidebar)
+Also this package has additional location and history utilities like [`QueryParams`](/v9/utilities/QueryParams) (See sidebar)

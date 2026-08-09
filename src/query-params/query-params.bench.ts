@@ -87,11 +87,6 @@ describe('QueryParams operations', () => {
     const queryParams = new QueryParams({ history: createMemoryHistory() });
     queryParams.toString({ page: 2, tags: ['one', 'two'], enabled: true });
   });
-
-  bench('deprecated buildUrl alias', () => {
-    const queryParams = new QueryParams({ history: createMemoryHistory() });
-    queryParams.buildUrl({ page: 2 });
-  });
 });
 
 describe('query string utilities', () => {
