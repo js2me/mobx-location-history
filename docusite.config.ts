@@ -22,7 +22,7 @@ export default defineConfig({
   },
   nav: {
     '/v9': [
-      { text: 'Home', link: '/' },
+      { text: 'Home', link: '/v9' },
       { text: 'Introduction', link: '/v9/introduction/overview' },
     ],
     '/': [

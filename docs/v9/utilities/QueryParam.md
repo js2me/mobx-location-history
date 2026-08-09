@@ -86,7 +86,3 @@ const status = createQueryParam({
 });
 // QueryParam<'draft' | 'published'>
 ```
-
-`createQueryParamFromPreset` and `queryParamPresets` are deprecated. Use
-`createQueryParam` with `presets` instead. Preset names containing `[]` are
-also deprecated; use their `*Array` aliases.

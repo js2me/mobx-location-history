@@ -4,7 +4,7 @@ Browser history stores the location in regular URLs. This is the standard for
 most web apps, but it requires some configuration on the server to ensure you
 serve the same app at multiple URLs.
 
-The full documentation for `BrowserHistory` can be found [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#history)
+The full documentation for `BrowserHistory` can be found in the [history API reference](https://github.com/remix-run/history/blob/main/docs/api-reference.md#history)
 
 [Reference to source code](/v9/src/history/index.ts)
 
@@ -23,7 +23,7 @@ reaction(
   }
 );
 
-history.push();
+history.push('/home');
 ```
 
 ## MobX modifications
@@ -31,12 +31,12 @@ history.push();
 ### `location: Location` <Badge type="tip" text="observable.deep" />
 
 Original location property wrapped in _observable_  
-See documentation [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#location)
+See the [`Location` documentation](https://github.com/remix-run/history/blob/main/docs/api-reference.md#location)
 
 ### `action: Action` <Badge type="tip" text="observable.ref" />
 
 Original action property wrapped in _observable_  
-See documentation [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyaction)
+See the [`Action` documentation](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyaction)
 
 ### `isBlocked: boolean` <Badge type="warning" text="computed.struct" />
 
@@ -71,7 +71,7 @@ history.locationUrl; // '/en-US/docs/Location.search?q=123'
 
 Last blocked transition.  
 This property is helpful if you want to watch about blocked history transitions while history is blocked.  
-More information about blocking history you can find [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyblockblocker-blocker)
+More information about blocking history you can find in the [history blocking documentation](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyblockblocker-blocker)
 
 ::: tip will be `null` if history is not blocked
 :::

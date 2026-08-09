@@ -2,123 +2,123 @@
   "benchmarks": [
     {
       "name": "createMemoryHistory",
-      "mean": 0.025275189051205682
+      "mean": 0.0183
     },
     {
       "name": "createBrowserHistory",
-      "mean": 0.18575311139992615
+      "mean": 0.1485
     },
     {
       "name": "createHashHistory",
-      "mean": 0.30033568468468774
+      "mean": 0.3988
     },
     {
       "name": "isObservableHistory",
-      "mean": 0.02045108008507678
+      "mean": 0.0185
     },
     {
       "name": "push and update observable location",
-      "mean": 0.02798503863712267
+      "mean": 0.0204
     },
     {
       "name": "replace and update observable location",
-      "mean": 0.026777044181438402
+      "mean": 0.0204
     },
     {
       "name": "block and unblock",
-      "mean": 0.024148824245349008
+      "mean": 0.0192
     },
     {
       "name": "createQueryParam and read value",
-      "mean": 0.05776775462107195
+      "mean": 0.0341
     },
     {
       "name": "QueryParam.set",
-      "mean": 0.05662519093997699
+      "mean": 0.0335
     },
     {
       "name": "buildUrl",
-      "mean": 0.04301858745590426
+      "mean": 0.0277
     },
     {
       "name": "stringArray",
-      "mean": 0.04765549833222188
+      "mean": 0.0298
     },
     {
       "name": "numberArray",
-      "mean": 0.04762324063714972
+      "mean": 0.0301
     },
     {
       "name": "boolean",
-      "mean": 0.04744285729196289
+      "mean": 0.0299
     },
     {
       "name": "json",
-      "mean": 0.04715270303659112
+      "mean": 0.0304
     },
     {
       "name": "100 calls without an existing query",
-      "mean": 0.09157725256410237
+      "mean": 0.069
     },
     {
       "name": "100 calls with an existing query",
-      "mean": 0.18161887327523618
+      "mean": 0.1359
     },
     {
       "name": "empty data",
-      "mean": 0.00005782138051767785
+      "mean": 0.0001
     },
     {
       "name": "existing query and hash",
-      "mean": 0.0014474092489398607
+      "mean": 0.0011
     },
     {
       "name": "createQueryParams",
-      "mean": 0.03323207869201241
+      "mean": 0.0238
     },
     {
       "name": "data",
-      "mean": 0.0366105976716866
+      "mean": 0.0264
     },
     {
       "name": "QueryParams.set",
-      "mean": 0.0380912152814836
+      "mean": 0.0286
     },
     {
       "name": "QueryParams.update",
-      "mean": 0.047652032879067205
+      "mean": 0.034
     },
     {
       "name": "QueryParams.update with delete and replace",
-      "mean": 0.05066320911853895
+      "mean": 0.0304
     },
     {
       "name": "QueryParams.delete",
-      "mean": 0.04895409114940137
+      "mean": 0.0314
     },
     {
       "name": "QueryParams.delete with replace",
-      "mean": 0.046858709680452956
+      "mean": 0.0305
     },
     {
       "name": "toString",
-      "mean": 0.03301363886162692
+      "mean": 0.025
     },
     {
       "name": "buildSearchString",
-      "mean": 0.002455085201247289
+      "mean": 0.0016
     },
     {
       "name": "parseSearchString",
-      "mean": 0.003160069262129346
+      "mean": 0.0024
     },
     {
       "name": "create and dispose",
-      "mean": 0.04323862634036617
+      "mean": 0.0262
     },
     {
       "name": "react to state change",
-      "mean": 0.03763545664609467
+      "mean": 0.0251
     }
   ]
 }

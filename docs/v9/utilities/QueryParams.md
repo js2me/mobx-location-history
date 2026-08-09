@@ -1,10 +1,10 @@
 # `QueryParams`   
 
-Utility to watch\change query parameters   
+Utility to watch and change query parameters   
 
 
 ::: tip  
-In most cases is needed to create only one instance for your applicaton
+In most cases is needed to create only one instance for your application
 :::
 
 ## Usage   
@@ -13,13 +13,11 @@ In most cases is needed to create only one instance for your applicaton
 import {
   createQueryParams,
   createBrowserHistory,
-  QueryParams,
 } from "mobx-location-history";
 import { reaction } from "mobx";
 
 const history = createBrowserHistory();
 
-// export const queryParams = new QueryParams({
 export const queryParams = createQueryParams({ history });
 
 
