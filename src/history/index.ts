@@ -16,7 +16,7 @@ import type { AnyObject } from 'yummies/types';
 
 export * from 'history';
 
-export type ObservableHistory<THistory extends History> = THistory & {
+export type ObservableHistory<THistory extends History = History> = THistory & {
   /**
    * [**Documentation**](https://js2me.github.io/mobx-location-history/core/BrowserHistory#blockerscount-number)
    */
