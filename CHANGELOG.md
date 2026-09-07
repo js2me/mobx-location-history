@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.4.3
+
+### Patch Changes
+
+- [`f2e0ec3`](https://github.com/js2me/mobx-location-history/commit/f2e0ec39aec232ca33f7bff7303057e9eed6683c) Thanks [@js2me](https://github.com/js2me)! - make generic type optional for `ObservableHistory`
+
 ## 9.4.2
 
 ### Patch Changes
