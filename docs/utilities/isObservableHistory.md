@@ -1,6 +1,6 @@
 # `isObservableHistory`   
 
-Allows to detect is history observable (created using this package)   
+Detects whether a history instance is observable.
 
 
 Example:   

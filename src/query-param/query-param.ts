@@ -1,14 +1,11 @@
 import { action, computed } from 'mobx';
 import { applyObservable } from 'yummies/mobx';
 import type {
-  DefinePresetByType,
   PresetValueFromObject,
   QueryParamPreset,
   QueryParamsFieldModelConfig,
-  QueryParamsFieldModelPresetConfig,
   QueryParamsFieldModelPresetObjectConfig,
 } from './query-param.types.js';
-import { queryParamPresets } from './query-param-presets.js';
 
 const identityFn = (value: any) => value;
 
@@ -101,21 +98,3 @@ export function createQueryParam<T>(
 
   return new QueryParam<any>(config);
 }
-
-/**
- * Create get\set value, which is synchronized with the query parameter
- * Create by preset
- *
- * @deprecated Use `createQueryParam` with an object preset instead.
- */
-export const createQueryParamFromPreset = <T>(
-  config: QueryParamsFieldModelPresetConfig<DefinePresetByType<T>, T>,
-): QueryParam<T> => {
-  const { serialize, deserialize } = queryParamPresets[config.preset]!;
-
-  return new QueryParam<any>({
-    ...config,
-    serialize,
-    deserialize,
-  });
-};

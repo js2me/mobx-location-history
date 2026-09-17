@@ -1,11 +1,7 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import type { IQueryParams } from '../query-params/index.js';
-import {
-  createQueryParam,
-  createQueryParamFromPreset,
-  QueryParam,
-} from './query-param.js';
-import { queryParamPresets } from './query-param-presets.js';
+import { createQueryParam, QueryParam } from './query-param.js';
+import { presets } from './query-param-presets.js';
 
 describe('createQueryParam preset types', () => {
   const queryParams = {} as IQueryParams;
@@ -14,25 +10,25 @@ describe('createQueryParam preset types', () => {
     const booleanParam = createQueryParam({
       queryParams,
       name: 'enabled',
-      preset: queryParamPresets.boolean,
+      preset: presets.boolean,
       defaultValue: false,
     });
     const dateParam = createQueryParam({
       queryParams,
       name: 'createdAt',
-      preset: queryParamPresets.date,
+      preset: presets.date,
       defaultValue: new Date(),
     });
     const numberParam = createQueryParam({
       queryParams,
       name: 'page',
-      preset: queryParamPresets.number,
+      preset: presets.number,
       defaultValue: 1,
     });
     const stringParam = createQueryParam({
       queryParams,
       name: 'search',
-      preset: queryParamPresets.string,
+      preset: presets.string,
       defaultValue: '',
     });
 
@@ -46,31 +42,31 @@ describe('createQueryParam preset types', () => {
     const booleanArrayParam = createQueryParam({
       queryParams,
       name: 'flags',
-      preset: queryParamPresets.booleanArray,
+      preset: presets.booleanArray,
       defaultValue: [],
     });
     const jsonParam = createQueryParam({
       queryParams,
       name: 'filters',
-      preset: queryParamPresets.json,
+      preset: presets.json,
       defaultValue: {},
     });
     const jsonArrayParam = createQueryParam({
       queryParams,
       name: 'items',
-      preset: queryParamPresets.jsonArray,
+      preset: presets.jsonArray,
       defaultValue: [],
     });
     const numberArrayParam = createQueryParam({
       queryParams,
       name: 'ids',
-      preset: queryParamPresets.numberArray,
+      preset: presets.numberArray,
       defaultValue: [],
     });
     const stringArrayParam = createQueryParam({
       queryParams,
       name: 'tags',
-      preset: queryParamPresets.stringArray,
+      preset: presets.stringArray,
       defaultValue: [],
     });
 
@@ -95,7 +91,7 @@ describe('createQueryParam preset types', () => {
     const statusParam = createQueryParam({
       queryParams,
       name: 'status',
-      preset: queryParamPresets.enum(['draft', 'published'] as const),
+      preset: presets.enum(['draft', 'published'] as const),
       defaultValue: 'draft',
     });
 
@@ -148,23 +144,16 @@ describe('QueryParam', () => {
     expect(param.buildUrl()).toBe('/?2');
   });
 
-  it('supports object and legacy presets', () => {
+  it('supports object presets', () => {
     const queryParams = createQueryParams();
     const objectParam = createQueryParam({
       queryParams,
       name: 'enabled',
-      preset: queryParamPresets.boolean,
+      preset: presets.boolean,
       defaultValue: false,
-    });
-    const legacyParam = createQueryParamFromPreset({
-      queryParams,
-      name: 'count',
-      preset: 'number',
-      defaultValue: 0,
     });
 
     expect(objectParam.value).toBe(false);
-    expect(legacyParam.value).toBe(0);
   });
 
   it('creates a parameter without a preset', () => {
