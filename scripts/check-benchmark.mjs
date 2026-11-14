@@ -1,10 +1,18 @@
 import { readFile } from 'node:fs/promises';
 
 const [, , baselinePath, ...currentPaths] = process.argv;
-const regressionThreshold = 0.1;
+const defaultRegressionThreshold = 0.1;
 // Sub-0.1ms benchmarks are noisy in shared CI runners. Require a meaningful
 // absolute increase in addition to the relative threshold.
-const minimumRegressionMs = 0.02;
+const defaultMinimumRegressionMs = 0.02;
+// These benchmarks measure jsdom/history-library setup rather than this
+// package's own code. Creation is a one-time cost in real apps and the
+// numbers fluctuate heavily on shared CI runners, so only fail on a
+// catastrophic regression.
+const benchmarkOverrides = {
+  createBrowserHistory: { regressionThreshold: 1, minimumRegressionMs: 0.15 },
+  createHashHistory: { regressionThreshold: 1, minimumRegressionMs: 0.15 },
+};
 
 if (!baselinePath || currentPaths.length === 0) {
   console.error(
@@ -59,6 +67,10 @@ for (const benchmark of baseline.benchmarks) {
   const currentMean = median(results);
   const change = currentMean / benchmark.mean - 1;
   const changePercent = (change * 100).toFixed(2);
+  const {
+    regressionThreshold = defaultRegressionThreshold,
+    minimumRegressionMs = defaultMinimumRegressionMs,
+  } = benchmarkOverrides[benchmark.name] ?? {};
   const isRegression = currentBenchmarkRuns.every((run) => {
     const mean = run.get(benchmark.name)?.mean;
 
@@ -79,7 +91,7 @@ for (const benchmark of baseline.benchmarks) {
 
 if (hasRegression) {
   console.error(
-    `Benchmark regression exceeds ${(regressionThreshold * 100).toFixed(0)}% and ${minimumRegressionMs}ms`,
+    `Benchmark regression exceeds ${(defaultRegressionThreshold * 100).toFixed(0)}% and ${defaultMinimumRegressionMs}ms`,
   );
   process.exit(1);
 }

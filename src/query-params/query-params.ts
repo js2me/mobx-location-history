@@ -11,10 +11,6 @@ import { buildSearchString, parseSearchString } from './utils/index.js';
 export class QueryParams<TData = ParsedSearchString>
   implements IQueryParams<TData>
 {
-  /**
-   * @deprecated not needed
-   */
-  protected abortController: AbortController;
   private history: History;
 
   protected parser: typeof parseSearchString<TData>;
@@ -28,7 +24,6 @@ export class QueryParams<TData = ParsedSearchString>
 
   constructor(protected options: QueryParamsOptions<TData>) {
     this.history = options.history;
-    this.abortController = new AbortController();
     this.parser = options.parser || parseSearchString;
     this.builder = options.builder || buildSearchString;
 
@@ -122,13 +117,6 @@ export class QueryParams<TData = ParsedSearchString>
   }
 
   /**
-   * @deprecated use `createUrl`
-   */
-  buildUrl(data: Record<string, any>) {
-    return this.createUrl(data);
-  }
-
-  /**
    * [**Documentation**](https://js2me.github.io/mobx-location-history/utilities/QueryParams#setdata-replace)
    */
   set(data: Record<string, any>, replace?: boolean) {
@@ -188,12 +176,6 @@ export class QueryParams<TData = ParsedSearchString>
 
     this.set(data, replace);
   }
-
-  /**
-   * @deprecated
-   * is not needed
-   */
-  destroy(): void {}
 }
 
 export const createQueryParams = (options: QueryParamsOptions) =>

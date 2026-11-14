@@ -1,5 +1,3 @@
-import type { AnyObject } from 'yummies/types';
-
 import type { IQueryParams } from '../query-params/index.js';
 import type { presets } from './query-param-presets.js';
 
@@ -49,26 +47,6 @@ export type PresetValueMap = {
 };
 
 export type PresetValue<Preset extends PresetName> = PresetValueMap[Preset];
-
-/** @deprecated - use preset */
-export type DefinePresetByType<T> = T extends string[]
-  ? 'string[]'
-  : T extends number[]
-    ? 'number[]'
-    : T extends string
-      ? 'string'
-      : T extends boolean
-        ? 'boolean'
-        : T extends number
-          ? 'number'
-          : T extends AnyObject
-            ? 'json'
-            : 'string';
-
-export interface QueryParamsFieldModelPresetConfig<Preset extends PresetName, T>
-  extends Omit<QueryParamsFieldModelConfig<T>, 'serialize' | 'deserialize'> {
-  preset: Preset;
-}
 
 export type QueryParamPreset = QueryParamPresetConfig<any>;
 

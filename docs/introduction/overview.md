@@ -1,6 +1,6 @@
 # Overview
 
-This package is **MobX** charged version of the [**history** npm package](https://www.npmjs.com/package/history) _(version: `@{packageJson.dependencies.history}`)_ created by [Remix](https://remix.run/)
+This package is a **MobX**-powered version of the [**history** npm package](https://www.npmjs.com/package/history) _(version: `@{packageJson.dependencies.history}`)_ created by [Remix](https://remix.run/)
 
 So @{packageJson.name} has all identical exports as provided in [**history** npm package](https://www.npmjs.com/package/history) because:
 

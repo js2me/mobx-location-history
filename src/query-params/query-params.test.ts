@@ -54,7 +54,6 @@ describe('query params', () => {
     const queryParams = createQueryParams({ history });
 
     expect(queryParams).toBeInstanceOf(QueryParams);
-    queryParams.destroy();
   });
 
   it('toString should return empty string for empty object', () => {
@@ -192,7 +191,7 @@ describe('query params', () => {
     expect(result).toBe('/users');
   });
 
-  it('supports hash paths, URL caching, and the deprecated buildUrl alias', () => {
+  it('supports hash paths and URL caching', () => {
     const history = mockHistory(createMemoryHistory());
     const qp = new QueryParams({ history });
 
@@ -202,7 +201,6 @@ describe('query params', () => {
     expect(qp.createUrl({ bar: 2 }, '/users#details')).toBe(
       '/users?bar=2#details',
     );
-    expect(qp.buildUrl({ foo: 1 })).toBe('/?foo=1');
   });
 
   it('does not cache paths when custom parse options are used', () => {
