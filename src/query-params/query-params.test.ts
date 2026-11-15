@@ -33,6 +33,18 @@ describe('query params', () => {
     expect(history.location.search).toBe('');
   });
 
+  it('keeps query parameter actions bound when extracted', () => {
+    const history = mockHistory(createMemoryHistory());
+    const qp = new QueryParams({ history });
+    const { set, update, delete: deleteParams } = qp;
+
+    set({ first: 'one' });
+    update({ second: 'two' });
+    deleteParams(['first']);
+
+    expect(history.location.search).toBe('?second=two');
+  });
+
   it('toString should use passed data and build options', () => {
     const history = mockHistory(createMemoryHistory());
     const buildOptions = { encode: false };

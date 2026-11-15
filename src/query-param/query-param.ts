@@ -1,4 +1,5 @@
-import { action, computed } from 'mobx';
+import { action } from 'mobx';
+import * as annotation from 'yummies/mobx';
 import { applyObservable } from 'yummies/mobx';
 import type {
   DefinePresetByType,
@@ -31,7 +32,7 @@ export class QueryParam<T> {
     this.name = this.config.name;
 
     applyObservable(this, [
-      [computed.struct, 'rawValue', 'value'],
+      [annotation.computedStruct, 'rawValue', 'value'],
       [action, 'set'],
     ]);
   }

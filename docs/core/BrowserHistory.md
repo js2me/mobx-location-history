@@ -28,21 +28,21 @@ history.push();
 
 ## MobX modifications
 
-### `location: Location` <Badge type="tip" text="observable.deep" />
+### `location: Location` <Badge type="tip" text="deep observable" />
 
 Original location property wrapped in _observable_  
 See documentation [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#location)
 
-### `action: Action` <Badge type="tip" text="observable.ref" />
+### `action: Action` <Badge type="tip" text="reference observable" />
 
 Original action property wrapped in _observable_  
 See documentation [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyaction)
 
-### `isBlocked: boolean` <Badge type="warning" text="computed.struct" />
+### `isBlocked: boolean` <Badge type="warning" text="computed structural" />
 
 This property is needed to detect block statement [provided by original history package](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyblockblocker-blocker)
 
-### `blockersCount: number` <Badge type="tip" text="observable.ref" />
+### `blockersCount: number` <Badge type="tip" text="reference observable" />
 
 This property is needed to detect block statement [provided by original history package](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyblockblocker-blocker)
 
@@ -50,7 +50,7 @@ This property is needed to detect block statement [provided by original history 
 
 This method is needed for destroy all subscriptions and reactions created inside function `createBrowserHistory`
 
-### `locationUrl` <Badge type="warning" text="computed.struct" />
+### `locationUrl` <Badge type="warning" text="computed structural" />
 
 This property represents stringified version of the `location` property
 
@@ -67,7 +67,7 @@ Example:
 history.locationUrl; // '/en-US/docs/Location.search?q=123'
 ```
 
-### `lastBlockedTx: Transition | null` <Badge type="tip" text="observable.ref" />
+### `lastBlockedTx: Transition | null` <Badge type="tip" text="reference observable" />
 
 Last blocked transition.  
 This property is helpful if you want to watch about blocked history transitions while history is blocked.  

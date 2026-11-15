@@ -10,7 +10,8 @@ import {
   type MemoryHistoryOptions,
   type Transition,
 } from 'history';
-import { computed, observable, runInAction } from 'mobx';
+import { runInAction } from 'mobx';
+import * as annotation from 'yummies/mobx';
 import { applyObservable } from 'yummies/mobx';
 import type { AnyObject } from 'yummies/types';
 
@@ -80,9 +81,9 @@ const makeHistoryObservable = <THistory extends History>(
   });
 
   applyObservable(history, [
-    [computed.struct, 'isBlocked', 'locationUrl'],
-    [observable.deep, 'location'],
-    [observable.ref, 'action', 'blockersCount', 'lastBlockedTx'],
+    [annotation.computedStruct, 'isBlocked', 'locationUrl'],
+    [annotation.observableDeep, 'location'],
+    [annotation.observableRef, 'action', 'blockersCount', 'lastBlockedTx'],
   ]);
 
   const unsubscribe = history.listen((update) => {
@@ -130,11 +131,10 @@ const makeHistoryObservable = <THistory extends History>(
  *
  * @see https://github.com/remix-run/history/tree/main/docs/api-reference.md#createbrowserhistory
  *
- * MobX enhancers:
- * - `observable.deep` `history.location`
- * - `observable.ref` `history.action`
- * - `observable.ref` `history.blockersCount`
- * - `computed.struct` `history.isBlocked`
+ * MobX annotations:
+ * - `history.location` is deeply observable
+ * - `history.action` and `history.blockersCount` are reference observables
+ * - `history.isBlocked` uses structural comparison
  */
 export const createBrowserHistory = (
   options?: WithObservableHistoryParams<BrowserHistoryOptions>,
@@ -148,11 +148,10 @@ export const createBrowserHistory = (
  *
  * @see https://github.com/remix-run/history/tree/main/docs/api-reference.md#createhashhistory
  *
- * MobX enhancers:
- * - `observable.deep` `history.location`
- * - `observable.ref` `history.action`
- * - `observable.ref` `history.blockersCount`
- * - `computed.struct` `history.isBlocked`
+ * MobX annotations:
+ * - `history.location` is deeply observable
+ * - `history.action` and `history.blockersCount` are reference observables
+ * - `history.isBlocked` uses structural comparison
  */
 export const createHashHistory = (
   options?: WithObservableHistoryParams<HashHistoryOptions>,
@@ -164,11 +163,10 @@ export const createHashHistory = (
  *
  * @see https://github.com/remix-run/history/tree/main/docs/api-reference.md#creatememoryhistory
  *
- * MobX enhancers:
- * - `observable.deep` `history.location`
- * - `observable.ref` `history.action`
- * - `observable.ref` `history.blockersCount`
- * - `computed.struct` `history.isBlocked`
+ * MobX annotations:
+ * - `history.location` is deeply observable
+ * - `history.action` and `history.blockersCount` are reference observables
+ * - `history.isBlocked` uses structural comparison
  */
 export const createMemoryHistory = (
   options?: WithObservableHistoryParams<MemoryHistoryOptions>,
