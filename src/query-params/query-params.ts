@@ -1,5 +1,5 @@
-import { action, computed } from 'mobx';
-import { applyObservable } from 'yummies/mobx';
+import * as annotation from 'yummies/mobx';
+import { applyObservable, observableVariants } from 'yummies/mobx';
 import type { History, ParsedSearchString } from '../index.js';
 import type {
   IQueryParams,
@@ -33,8 +33,8 @@ export class QueryParams<TData = ParsedSearchString>
     this.builder = options.builder || buildSearchString;
 
     applyObservable(this, [
-      [computed.struct, 'data'],
-      [action.bound, 'set', 'update', 'delete'],
+      [annotation.computedStruct, 'data'],
+      [annotation.actionBound, 'set', 'update', 'delete'],
     ]);
   }
 
