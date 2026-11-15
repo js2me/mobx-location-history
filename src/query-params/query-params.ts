@@ -1,5 +1,5 @@
 import * as annotation from 'yummies/mobx';
-import { applyObservable, observableVariants } from 'yummies/mobx';
+import { applyObservable } from 'yummies/mobx';
 import type { History, ParsedSearchString } from '../index.js';
 import type {
   IQueryParams,
