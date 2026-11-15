@@ -37,7 +37,7 @@ See documentation [here](https://github.com/remix-run/history/blob/main/docs/api
 Original action property wrapped in _observable_  
 See documentation [here](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyaction)   
 
-### `isBlocked: boolean` <Badge type="warning" text="structural comparison" />
+### `isBlocked: boolean` <Badge type="warning" text="computed structural" />
 This property is needed to detect block statement [provided by original history package](https://github.com/remix-run/history/blob/main/docs/api-reference.md#historyblockblocker-blocker)   
 
 ### `blockersCount: number` <Badge type="tip" text="reference observable" />
@@ -46,7 +46,7 @@ This property is needed to detect block statement [provided by original history 
 ### `destroy()`   
 This method is needed for destroy all subscriptions and reactions created inside function `createHashHistory`   
 
-### `locationUrl` <Badge type="warning" text="structural comparison" />
+### `locationUrl` <Badge type="warning" text="computed structural" />
 This property represents stringified version of the `location` property   
 
 Example:   
