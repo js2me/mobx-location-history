@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.5.0
+
+### Minor Changes
+
+- [#22](https://github.com/js2me/mobx-location-history/pull/22) [`260e565`](https://github.com/js2me/mobx-location-history/commit/260e565dcbedd3a737bc66cad95c125d73f720ad) Thanks [@js2me](https://github.com/js2me)! - Add MobX 7 compatibility for observable annotations and support MobX 7 as a peer dependency.
+
 ## 9.4.3
 
 ### Patch Changes
