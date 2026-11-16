@@ -1,5 +1,11 @@
 # mobx-location-history
 
+## 9.5.1
+
+### Patch Changes
+
+- [#24](https://github.com/js2me/mobx-location-history/pull/24) [`edcf74d`](https://github.com/js2me/mobx-location-history/commit/edcf74d9a642b7f822a9965b20d7593b98ce6721) Thanks [@js2me](https://github.com/js2me)! - Bump yummies to 7.23.2 to fix MobX 6 bundler compatibility.
+
 ## 9.5.0
 
 ### Minor Changes
